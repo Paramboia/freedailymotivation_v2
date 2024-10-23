@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { ThemeProvider } from "@/contexts/theme-context";
+import ThemeToggle from "@/components/theme-toggle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,22 +20,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header className="p-4 flex justify-between items-center bg-white shadow-sm">
-          <Link href="/" className="text-xl font-bold">
-            Free Daily Motivation
-          </Link>
-          <nav>
-            <Link href="/about" className="mr-4">
-              About Us
+        <ThemeProvider>
+          <header className="p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm">
+            <Link href="/" className="text-xl font-bold dark:text-white">
+              Free Daily Motivation
             </Link>
-            <Button variant="outline" size="icon">
-              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
-          </nav>
-        </header>
-        {children}
+            <nav className="flex items-center">
+              <Link href="/about" className="mr-4 dark:text-white">
+                About Us
+              </Link>
+              <ThemeToggle />
+            </nav>
+          </header>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
