@@ -21,18 +21,20 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          <header className="p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm">
+          <header className="fixed top-0 left-0 right-0 p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm z-10">
             <Link href="/" className="text-xl font-bold dark:text-white">
               Free Daily Motivation
             </Link>
-            <nav className="flex items-center">
-              <Link href="/about" className="mr-4 dark:text-white">
+            <nav className="flex items-center space-x-4">
+              <Link href="/about" className="text-sm dark:text-white hover:underline">
                 About Us
               </Link>
               <ThemeToggle />
             </nav>
           </header>
-          {children}
+          <main className="pt-16">
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>
