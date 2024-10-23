@@ -54,7 +54,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center p-8 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-purple-800 dark:to-pink-800">
-      <div className="fixed top-20 left-0 right-0 flex flex-col items-center">
+      <div className="flex flex-col items-center w-full max-w-4xl mx-auto pt-24"> {/* Added pt-24 for top padding */}
         {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
         <CategoryButtons 
           categories={categories} 

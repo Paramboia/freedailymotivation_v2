@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import Image from "next/image";
 import { ThemeProvider } from "@/contexts/theme-context";
 import ThemeToggle from "@/components/theme-toggle";
 
@@ -22,8 +23,15 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <header className="fixed top-0 left-0 right-0 p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm z-10">
-            <Link href="/" className="text-xl font-bold dark:text-white">
-              Free Daily Motivation
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/logo.webp"
+                alt="Free Daily Motivation Logo"
+                width={50}
+                height={50}
+                className="mr-2"
+              />
+              <span className="text-xl font-bold dark:text-white">Free Daily Motivation</span>
             </Link>
             <nav className="flex items-center space-x-4">
               <Link href="/about" className="text-sm dark:text-white hover:underline">
@@ -32,7 +40,7 @@ export default function RootLayout({
               <ThemeToggle />
             </nav>
           </header>
-          <main className="pt-16">
+          <main className="pt-20">
             {children}
           </main>
         </ThemeProvider>
