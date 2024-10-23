@@ -1,122 +1,30 @@
-[
-  {
-    "id": "1",
-    "text": "The greatest glory in living lies not in never falling, but in rising every time we fall.",
-    "author": "Nelson Mandela",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "2",
-    "text": "The way to get started is to quit talking and begin doing.",
-    "author": "Walt Disney",
-    "category": "Business",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "3",
-    "text": "Your time is limited, don't waste it living someone else's life.",
-    "author": "Steve Jobs",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "4",
-    "text": "If life were predictable it would cease to be life, and be without flavor.",
-    "author": "Eleanor Roosevelt",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "5",
-    "text": "If you look at what you have in life, you'll always have more.",
-    "author": "Oprah Winfrey",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "6",
-    "text": "Life is what happens when you're busy making other plans.",
-    "author": "John Lennon",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "7",
-    "text": "Spread love everywhere you go. Let no one ever come to you without leaving happier.",
-    "author": "Mother Teresa",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "8",
-    "text": "When you reach the end of your rope, tie a knot in it and hang on.",
-    "author": "Franklin D. Roosevelt",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "9",
-    "text": "Always remember that you are absolutely unique. Just like everyone else.",
-    "author": "Margaret Mead",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "10",
-    "text": "Don't judge each day by the harvest you reap but by the seeds that you plant.",
-    "author": "Robert Louis Stevenson",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "11",
-    "text": "The future belongs to those who believe in the beauty of their dreams.",
-    "author": "Eleanor Roosevelt",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "12",
-    "text": "Tell me and I forget. Teach me and I remember. Involve me and I learn.",
-    "author": "Benjamin Franklin",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "13",
-    "text": "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
-    "author": "Helen Keller",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "14",
-    "text": "It is during our darkest moments that we must focus to see the light.",
-    "author": "Aristotle",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  },
-  {
-    "id": "15",
-    "text": "Whoever is happy will make others happy too.",
-    "author": "Anne Frank",
-    "category": "Life",
-    "likes": 0,
-    "dislikes": 0
-  }
-]
+{
+  "business": [
+    "The only limit to our realization of tomorrow is our doubts of today. - Franklin D. Roosevelt",
+    "Success is not how high you have climbed, but how you make a positive difference to the world. - Anonymous",
+    "Don't be afraid to give up the good to go for the great. - John D. Rockefeller",
+    "The secret to success is to know something nobody else knows. - Aristotle Onassis",
+    "The best revenge is massive success. - Frank Sinatra"
+  ],
+  "sport": [
+    "You have to expect things of yourself before you can do them. - Michael Jordan",
+    "Talent wins games, but teamwork and intelligence wins championships. - Michael Jordan",
+    "The only way to achieve the impossible is to believe it is possible. - Charles Kingsleigh",
+    "The more you practice, the luckier you get. - Gary Player",
+    "To be the best, you must be able to handle the worst. - Wilson Kanadi"
+  ],
+  "science": [
+    "Science is the great antidote to the poison of enthusiasm and superstition. - Adam Smith",
+    "The good thing about science is that it's true whether or not you believe in it. - Neil deGrasse Tyson",
+    "The unexamined life is not worth living. - Socrates",
+    "To invent, you need a good imagination and a pile of junk. - Thomas Edison",
+    "The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge. - Stephen Hawking"
+  ],
+  "life": [
+    "Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth. - Marcus Aurelius",
+    "We don't see things as they are, we see them as we are. - Anaïs Nin",
+    "The only thing necessary for the triumph of evil is for good men to do nothing. - Edmund Burke",
+    "The greatest wealth is to live content with little. - Plato",
+    "Life is a journey that must be traveled no matter how bad the roads and accommodations. - Oliver Goldsmith"
+  ]
+}
