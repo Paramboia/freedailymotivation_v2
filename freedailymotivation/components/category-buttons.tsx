@@ -32,7 +32,7 @@ export default function CategoryButtons({ categories, onCategorySelect, selected
               : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
           )}
         >
-          {category}
+          {category.charAt(0).toUpperCase() + category.slice(1)} {/* Capitalize the first letter */}
         </Button>
       ))}
     </div>
