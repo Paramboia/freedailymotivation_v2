@@ -12,6 +12,7 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs';
+import { User } from 'lucide-react'; // Import the User icon from Lucide
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,7 +48,9 @@ export default function RootLayout({
                 </Link>
                 <ThemeToggle />
                 <SignedOut>
-                  <SignInButton />
+                  <SignInButton>
+                    <User className="w-6 h-6 text-gray-800 dark:text-white" />
+                  </SignInButton>
                 </SignedOut>
                 <SignedIn>
                   <UserButton />
