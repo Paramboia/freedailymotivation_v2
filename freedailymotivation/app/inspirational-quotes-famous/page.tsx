@@ -31,7 +31,7 @@ export default async function InspirationalQuotesFamous() {
           <h1 className="text-4xl font-bold mb-8 dark:text-white">Famous Inspirational Quotes</h1>
           <div className="max-w-2xl text-center mb-8">
             <p className="mb-4 dark:text-gray-300">
-              Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? Free Daily Motivation has you covered! With thousands of famous quotes at your fingertips, you'll discover insights from legends like Albert Einstein, Steve Jobs, and Oprah Winfrey. Whether you're looking to enhance your social media posts, presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. Explore categories like business, sport, and life, and let Free Daily Motivation fuel your journey to success.
+              Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? <Link href="/" className="text-blue-500 hover:underline dark:text-blue-400">Free Daily Motivation</Link> has you covered! With thousands of famous quotes at your fingertips, you'll discover insights from legends like Albert Einstein, Steve Jobs, and Oprah Winfrey. Whether you're looking to enhance your social media posts, presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. Explore categories like business, sport, and life, and let Free Daily Motivation fuel your journey to success.
             </p>
           </div>
           <h2 className="text-2xl font-semibold mb-4 dark:text-white">Check out the top inspirational quotes from famous people!</h2>

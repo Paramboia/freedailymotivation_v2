@@ -46,7 +46,7 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
           <h1 className="text-4xl font-bold mb-8 dark:text-white">Famous Inspirational Quotes - {authorName}</h1>
           <div className="max-w-2xl text-center mb-8">
             <p className="mb-4 dark:text-gray-300">
-              Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? Free Daily Motivation has you covered! Discover insights from {authorName}, a legendary figure known for their wisdom and impact. Whether you're looking to enhance your social media posts, presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. Let {authorName}'s words fuel your journey to success.
+              Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? <Link href="/" className="text-blue-500 hover:underline dark:text-blue-400">Free Daily Motivation</Link> has you covered! Discover insights from {authorName}, a legendary figure known for their wisdom and impact. Whether you're looking to enhance your social media posts, presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. Let {authorName}'s words fuel your journey to success.
             </p>
           </div>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
