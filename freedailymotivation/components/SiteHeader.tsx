@@ -20,7 +20,7 @@ const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.
 
 const SiteHeader = () => {
   return (
-    <header className="py-2 px-4 flex justify-between items-center bg-transparent dark:shadow-dark">
+    <header className="py-2 px-4 flex justify-between items-center bg-transparent dark:bg-black dark:shadow-dark">
       <Header />
       <div className="flex items-center space-x-2">
         <Link href="/about">
