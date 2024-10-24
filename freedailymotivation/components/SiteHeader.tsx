@@ -11,7 +11,7 @@ const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.
   <Button
     variant="ghost"
     size="sm"
-    className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent"
+    className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white"
     {...props}
   >
     {children}
@@ -20,7 +20,7 @@ const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.
 
 const SiteHeader = () => {
   return (
-    <header className="py-2 px-4 flex justify-between items-center">
+    <header className="py-2 px-4 flex justify-between items-center bg-transparent dark:shadow-dark">
       <Header />
       <div className="flex items-center space-x-2">
         <Link href="/about">
@@ -28,7 +28,7 @@ const SiteHeader = () => {
             <Info className="h-4 w-4" />
           </HeaderIconButton>
         </Link>
-        <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent" />
+        <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
         <SignedOut>
           <SignInButton>
             <HeaderIconButton>

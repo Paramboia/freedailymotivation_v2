@@ -26,10 +26,10 @@ export default function CategoryButtons({ categories, onCategorySelect, selected
           variant="secondary"
           onClick={() => handleCategoryClick(category)}
           className={cn(
-            "transition-colors",
+            "transition-colors font-bold",
             selectedCategory === category
-              ? "bg-primary text-primary-foreground hover:bg-primary/90"
-              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              ? "bg-primary text-primary-foreground dark:bg-white dark:text-black"
+              : "bg-secondary text-secondary-foreground dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
           )}
         >
           {category.charAt(0).toUpperCase() + category.slice(1)} {/* Capitalize the first letter */}

@@ -7,6 +7,7 @@ import QuoteBox from "@/components/quote-box";
 import CategoryButtons from "@/components/category-buttons";
 import BookmarkReminder from "@/components/bookmark-reminder";
 import SavePagePopup from "@/components/SavePagePopup";
+import ThemeWrapper from "@/components/ThemeWrapper";
 
 export default function Home() {
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -53,7 +54,7 @@ export default function Home() {
   if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   return (
-    <>
+    <ThemeWrapper>
       <main className="flex-grow flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
           {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
@@ -69,6 +70,6 @@ export default function Home() {
         © 2024 Free Daily Motivation. All rights reserved.
       </footer>
       {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
-    </>
+    </ThemeWrapper>
   );
 }

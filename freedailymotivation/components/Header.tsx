@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const Header = () => {
   return (
-    <Link href="/" className="flex items-center text-white text-lg font-bold">
+    <Link href="/" className="flex items-center text-white dark:text-gray-300 text-lg font-bold">
       <Image
         src="/logo.webp"
         alt="Free Daily Motivation Logo"
