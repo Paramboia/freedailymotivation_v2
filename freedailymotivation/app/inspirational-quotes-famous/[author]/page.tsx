@@ -2,10 +2,16 @@ import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
-import QuoteBox from "@/components/quote-box";
+import dynamic from 'next/dynamic';
 import { Quote } from '@/types';
 
+const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
+
 export const revalidate = 3600; // Revalidate every hour
+
+function capitalizeWords(str: string) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
 
 async function getAuthorQuotes(authorName: string) {
   const supabase = createClient();
@@ -22,15 +28,15 @@ async function getAuthorQuotes(authorName: string) {
   return data.map(item => ({
     id: item.id,
     text: item.quote_text,
-    author: authorName, // Use the authorName directly
-    likes: 0, // You might want to implement a likes system in the future
-    category: '', // Add a default value for category
-    dislikes: 0 // Add a default value for dislikes
+    author: capitalizeWords(authorName),
+    likes: 0,
+    category: '',
+    dislikes: 0
   }));
 }
 
 export default async function AuthorQuotes({ params }: { params: { author: string } }) {
-  const authorName = decodeURIComponent(params.author.replace('-', ' '));
+  const authorName = capitalizeWords(decodeURIComponent(params.author.replace('-', ' ')));
   const quotes = await getAuthorQuotes(authorName);
 
   return (
@@ -43,10 +49,9 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
               Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? Free Daily Motivation has you covered! Discover insights from {authorName}, a legendary figure known for their wisdom and impact. Whether you're looking to enhance your social media posts, presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. Let {authorName}'s words fuel your journey to success.
             </p>
           </div>
-          <h2 className="text-2xl font-semibold mb-4 dark:text-white">Inspirational Quotes by {authorName}</h2>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
             {quotes.map((quote: Quote) => (
-              <QuoteBox key={quote.id} quote={quote} onNewQuote={() => {}} />
+              <QuoteBox key={quote.id} quote={quote} />
             ))}
           </div>
           <Link href="/" className="mt-8">
@@ -64,7 +69,7 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
 }
 
 export async function generateMetadata({ params }: { params: { author: string } }) {
-  const authorName = decodeURIComponent(params.author.replace('-', ' '));
+  const authorName = capitalizeWords(decodeURIComponent(params.author.replace('-', ' ')));
   return {
     title: `Inspirational Quotes by ${authorName} | Free Daily Motivation`,
     description: `Discover inspiring quotes from ${authorName}. Get your daily dose of motivation and wisdom.`,

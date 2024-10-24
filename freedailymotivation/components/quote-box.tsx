@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 interface QuoteBoxProps {
   quote: Quote;
-  onNewQuote: () => void;
+  onNewQuote?: () => void;
 }
 
 export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
@@ -55,7 +55,9 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
   };
 
   const handleNewQuote = () => {
-    onNewQuote();
+    if (onNewQuote) {
+      onNewQuote();
+    }
   };
 
   return (
@@ -86,16 +88,18 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
             </TooltipContent>
           </Tooltip>
           <div className="flex space-x-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleNewQuote} className="bg-white dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
-                  <RefreshCw className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Get a new quote</p>
-              </TooltipContent>
-            </Tooltip>
+            {onNewQuote && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon" onClick={handleNewQuote} className="bg-white dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Get a new quote</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="icon" onClick={copyQuote} className="bg-white dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
