@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ClerkProvider } from '@clerk/nextjs';
 import SiteHeader from "@/components/SiteHeader";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,11 +14,13 @@ export const metadata: Metadata = {
   description: "Get your daily dose of inspiration and motivation",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const supabase = createServerComponentClient({ cookies });
+
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>

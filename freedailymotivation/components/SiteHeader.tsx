@@ -3,7 +3,7 @@
 import Header from "./Header";
 import { ThemeToggle } from "./theme-toggle";
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { User, Info } from 'lucide-react';
+import { User, Info, Quote } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 
@@ -23,6 +23,11 @@ const SiteHeader = () => {
     <header className="py-2 px-4 flex justify-between items-center bg-transparent dark:bg-black dark:shadow-dark">
       <Header />
       <div className="flex items-center space-x-2">
+        <Link href="/inspirational-quotes-famous">
+          <HeaderIconButton>
+            <Quote className="h-4 w-4" />
+          </HeaderIconButton>
+        </Link>
         <Link href="/about">
           <HeaderIconButton>
             <Info className="h-4 w-4" />
