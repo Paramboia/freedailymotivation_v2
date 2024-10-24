@@ -19,9 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-          <ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-400 to-pink-400 dark:from-purple-800 dark:to-pink-800">
               <SiteHeader />
               {children}
