@@ -1,5 +1,4 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
@@ -7,9 +6,9 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 export const revalidate = 3600; // Revalidate every hour
 
 async function getAuthors() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createClient();
   const { data, error } = await supabase
-    .from('Authors')
+    .from('authors')  // Changed 'Authors' to 'authors'
     .select('name')
     .order('name');
 
