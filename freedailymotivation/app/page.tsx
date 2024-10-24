@@ -1,5 +1,6 @@
 "use client";
 
+import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { getRandomQuote, loadQuotes, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
@@ -59,22 +60,28 @@ export default function Home() {
   if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   return (
-    <ThemeWrapper>
-      <main className="flex-grow flex flex-col items-center justify-center p-8">
-        <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
-          {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
-          <CategoryButtons 
-            categories={categories} 
-            onCategorySelect={handleCategorySelect}
-            selectedCategory={selectedCategory}
-          />
-        </div>
-      </main>
-      <BookmarkReminder />
-      <footer className="p-4 text-sm text-white text-center">
-        © 2024 Free Daily Motivation. All rights reserved.
-      </footer>
-      {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
-    </ThemeWrapper>
+    <>
+      <Head>
+        <title>Free Daily Motivation - Inspirational Quotes</title>
+        <meta name="description" content="Get your daily dose of motivation with free inspirational quotes. Discover wisdom from famous thinkers, leaders, and innovators to boost your day and inspire greatness." />
+      </Head>
+      <ThemeWrapper>
+        <main className="flex-grow flex flex-col items-center justify-center p-8">
+          <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
+            {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
+            <CategoryButtons 
+              categories={categories} 
+              onCategorySelect={handleCategorySelect}
+              selectedCategory={selectedCategory}
+            />
+          </div>
+        </main>
+        <BookmarkReminder />
+        <footer className="p-4 text-sm text-white text-center">
+          © 2024 Free Daily Motivation. All rights reserved.
+        </footer>
+        {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
+      </ThemeWrapper>
+    </>
   );
 }
