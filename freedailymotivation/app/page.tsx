@@ -53,20 +53,22 @@ export default function Home() {
   if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-8 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-purple-800 dark:to-pink-800">
-      <div className="flex flex-col items-center w-full max-w-4xl mx-auto pt-24"> {/* Added pt-24 for top padding */}
-        {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
-        <CategoryButtons 
-          categories={categories} 
-          onCategorySelect={handleCategorySelect}
-          selectedCategory={selectedCategory}
-        />
-      </div>
+    <>
+      <main className="flex-grow flex flex-col items-center justify-center p-8">
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
+          {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
+          <CategoryButtons 
+            categories={categories} 
+            onCategorySelect={handleCategorySelect}
+            selectedCategory={selectedCategory}
+          />
+        </div>
+      </main>
       <BookmarkReminder />
-      <footer className="mt-auto text-sm text-white">
+      <footer className="p-4 text-sm text-white text-center">
         © 2024 Free Daily Motivation. All rights reserved.
       </footer>
       {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
-    </div>
+    </>
   );
 }

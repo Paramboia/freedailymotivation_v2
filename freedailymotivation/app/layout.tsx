@@ -1,18 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import Image from "next/image";
 import { ThemeProvider } from "@/contexts/theme-context";
-import ThemeToggle from "@/components/theme-toggle";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs';
-import { User } from 'lucide-react'; // Import the User icon from Lucide
+import { ClerkProvider } from '@clerk/nextjs';
+import SiteHeader from "@/components/SiteHeader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,35 +22,10 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <ThemeProvider>
-            <header className="fixed top-0 left-0 right-0 p-4 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm z-10">
-              <Link href="/" className="flex items-center">
-                <Image
-                  src="/logo.webp"
-                  alt="Free Daily Motivation Logo"
-                  width={50}
-                  height={50}
-                  className="mr-2"
-                />
-                <span className="text-xl font-bold dark:text-white">Free Daily Motivation</span>
-              </Link>
-              <nav className="flex items-center space-x-4">
-                <Link href="/about" className="text-sm dark:text-white hover:underline">
-                  About Us
-                </Link>
-                <ThemeToggle />
-                <SignedOut>
-                  <SignInButton>
-                    <User className="w-6 h-6 text-gray-800 dark:text-white" />
-                  </SignInButton>
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              </nav>
-            </header>
-            <main className="pt-20">
+            <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-400 to-pink-400 dark:from-purple-800 dark:to-pink-800">
+              <SiteHeader />
               {children}
-            </main>
+            </div>
           </ThemeProvider>
         </body>
       </html>
