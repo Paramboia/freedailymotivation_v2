@@ -134,11 +134,11 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
                 className={cn(
                   "transition-colors font-bold",
                   isLiked 
-                    ? "bg-primary text-primary-foreground dark:bg-white dark:text-black" 
-                    : "bg-white text-black dark:bg-[#444] dark:text-white dark:hover:bg-[#555]"
+                    ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent hover:from-pink-600 hover:to-purple-600"
+                    : "bg-white text-black hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]"
                 )}
               >
-                <ThumbsUp className="h-4 w-4 mr-2" />
+                <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
                 Like ({likeCount})
               </Button>
             </TooltipTrigger>
@@ -150,7 +150,7 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
             {onNewQuote && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleNewQuote} className="bg-white dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
+                  <Button variant="outline" size="icon" onClick={handleNewQuote} className="bg-white hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
@@ -161,7 +161,7 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
             )}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={copyQuote} className="bg-white dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
+                <Button variant="outline" size="icon" onClick={copyQuote} className="bg-white hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
                   <Copy className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -171,7 +171,7 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleShareQuote} className="bg-white dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
+                <Button variant="outline" size="icon" onClick={handleShareQuote} className="bg-white hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
                   <Share2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
