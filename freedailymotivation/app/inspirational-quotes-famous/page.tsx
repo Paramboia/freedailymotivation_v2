@@ -3,6 +3,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,11 @@ export const dynamic = 'force-dynamic';
 function nameToSlug(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
 }
+
+export const metadata: Metadata = {
+  title: 'Famous Inspirational Quotes | Free Daily Motivation',
+  description: 'Discover inspirational quotes from famous figures like Albert Einstein, Steve Jobs, and more. Enhance your presentations, social media, and personal growth with our curated collection of motivational sayings.',
+};
 
 export default async function InspirationalQuotesFamous() {
   const supabase = createServerComponentClient({ cookies });

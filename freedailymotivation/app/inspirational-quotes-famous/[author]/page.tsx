@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import dynamic from 'next/dynamic';
 import { Quote } from '@/types';
+import { Metadata } from 'next';
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -69,10 +70,10 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
   );
 }
 
-export async function generateMetadata({ params }: { params: { author: string } }) {
+export async function generateMetadata({ params }: { params: { author: string } }): Promise<Metadata> {
   const authorName = capitalizeWords(decodeURIComponent(params.author.replace('-', ' ')));
   return {
     title: `Inspirational Quotes by ${authorName} | Free Daily Motivation`,
-    description: `Discover inspiring quotes from ${authorName}. Get your daily dose of motivation and wisdom.`,
+    description: `Explore inspiring quotes from ${authorName}. Find wisdom and motivation to fuel your success. Perfect for presentations, social media, and personal growth.`,
   };
 }
