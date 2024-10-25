@@ -4,10 +4,19 @@ import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ClerkProvider } from '@clerk/nextjs';
 import SiteHeader from "@/components/SiteHeader";
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import dynamic from 'next/dynamic';
 
 const inter = Inter({ subsets: ["latin"] });
+
+const SupabaseUserProvider = dynamic(
+  () => import('@/components/SupabaseUserProvider').then(mod => mod.SupabaseUserProvider),
+  { ssr: false }
+);
+
+const ErrorBoundary = dynamic(
+  () => import('@/components/ErrorBoundary'),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "Free Daily Motivation",
@@ -29,28 +38,29 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   themeColor: '#ffffff',
-  msTileColor: '#da532c',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createServerComponentClient({ cookies });
-
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <ClerkProvider>
         <body className={inter.className}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <div className="min-h-screen flex flex-col transition-colors duration-300 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
               <SiteHeader />
-              {children}
+              <ErrorBoundary>
+                <SupabaseUserProvider>
+                  {children}
+                </SupabaseUserProvider>
+              </ErrorBoundary>
             </div>
           </ThemeProvider>
         </body>
-      </html>
-    </ClerkProvider>
+      </ClerkProvider>
+    </html>
   );
 }

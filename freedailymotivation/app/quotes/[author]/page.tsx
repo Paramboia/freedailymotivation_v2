@@ -1,8 +1,12 @@
 import Head from 'next/head';
 
-export default function AuthorQuotes({ params }) {
+interface Params {
+  author: string;
+}
+
+export default function AuthorQuotes({ params }: { params: Params }) {
   const { author } = params;
-  const formattedAuthor = author.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  const formattedAuthor = author.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   return (
     <>

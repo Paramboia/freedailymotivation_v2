@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, Copy, Share2, ThumbsUp } from "lucide-react";
 import { Quote } from '@/types';
-import { toggleLikeQuote, isQuoteLiked } from '@/lib/quotes';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
+import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/supabase-client';
+import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 
 interface QuoteBoxProps {
   quote: Quote;
@@ -18,11 +20,26 @@ interface QuoteBoxProps {
 export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(quote.likes);
+  const { user } = useUser();
+  const { supabaseUserId } = useSupabaseUser();
 
   useEffect(() => {
     setCurrentQuote(quote);
-    setIsLiked(isQuoteLiked(quote.id));
+    setLikeCount(quote.likes);
   }, [quote]);
+
+  useEffect(() => {
+    async function fetchLikeStatus() {
+      if (supabaseUserId && quote.id) {
+        const likeStatus = await getLikeStatus(supabaseUserId, quote.id);
+        setIsLiked(likeStatus);
+        const count = await getLikeCount(quote.id);
+        setLikeCount(count);
+      }
+    }
+    fetchLikeStatus();
+  }, [supabaseUserId, quote.id]);
 
   const copyQuote = () => {
     navigator.clipboard.writeText(`"${currentQuote.text}" - ${currentQuote.author}`);
@@ -49,10 +66,24 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
     }
   };
 
-  const handleLike = () => {
-    const updatedQuote = toggleLikeQuote(currentQuote.id);
-    setCurrentQuote(updatedQuote);
-    setIsLiked(!isLiked);
+  const handleLike = async () => {
+    if (!supabaseUserId) {
+      console.error('No user ID available');
+      // You might want to show a login prompt here
+      return;
+    }
+    try {
+      console.log('Toggling like for user:', supabaseUserId, 'quote:', currentQuote.id);
+      const newLikeStatus = await toggleLike(supabaseUserId, currentQuote.id);
+      console.log('New like status:', newLikeStatus);
+      setIsLiked(newLikeStatus);
+      
+      // Update the like count
+      const newLikeCount = await getLikeCount(currentQuote.id);
+      setLikeCount(newLikeCount);
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
   };
 
   const handleNewQuote = () => {
@@ -108,7 +139,7 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
                 )}
               >
                 <ThumbsUp className="h-4 w-4 mr-2" />
-                Like ({currentQuote.likes})
+                Like ({likeCount})
               </Button>
             </TooltipTrigger>
             <TooltipContent>
