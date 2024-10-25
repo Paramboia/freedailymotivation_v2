@@ -98,33 +98,110 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Cle
     The account portal is the fastest way to add authentication, but Clerk has pre-built, customizable components to use in your app too.
     Continue to the Next.js guide
 
+- Supabase: https://supabase.com/docs/guides/auth/auth-helpers/nextjs
+    I have already created the supabase project and the database, with the following tables: 
+     -- Create Users table
+    CREATE TABLE Users (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Create Authors table
+    CREATE TABLE Authors (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Create Categories table
+    CREATE TABLE Categories (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        category_name TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Create Quotes table (with foreign keys to Authors and Categories)
+    CREATE TABLE Quotes (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        quote_text TEXT NOT NULL,
+        author_id UUID REFERENCES Authors(id) ON DELETE CASCADE,
+        category_id UUID REFERENCES Categories(id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE Favorites (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES Users(id) ON DELETE CASCADE,
+    quote_id UUID REFERENCES Quotes(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (user_id, quote_id)  -- Ensures only one like per user per quote
+    );
 
 # Current File Structure:
-FreeDailyMotivation
-├── .next
-├── app
-│   ├── fonts
-│   ├── favicon.ico
+FreeDailyMotivation/
+├── app/
+│   ├── about/
+│   │   └── page.tsx
+│   ├── api/
+│   │   └── quotes/
+│   │       └── route.ts
+│   ├── inspirational-quotes-famous/
+│   │   ├── [author]/
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   ├── sign-in/
+│   │   └── [[...sign-in]]/
+│   │       └── page.tsx
+│   ├── sign-up/
+│   │   └── [[...sign-up]]/
+│   │       └── page.tsx
 │   ├── globals.css
+│   ├── headers.ts
 │   ├── layout.tsx
 │   └── page.tsx
-├── components
-├── hooks
-├── lib
-├── node_modules
-├── requirements
-│   └── instructions.md
-├── .eslintrc.json
-├── .gitignore
-├── components.json
-├── next-env.d.ts
-├── next.config.mjs
-├── package-lock.json
+├── components/
+│   ├── ui/
+│   │   ├── button.tsx
+│   │   ├── dialog.tsx
+│   │   └── table.tsx
+│   ├── AuthComponent.tsx
+│   ├── AuthPopup.tsx
+│   ├── BookmarkReminder.tsx
+│   ├── CategoryButtons.tsx
+│   ├── Header.tsx
+│   ├── QuoteBox.tsx
+│   ├── SavePagePopup.tsx
+│   ├── SiteHeader.tsx
+│   ├── ThemeToggle.tsx
+│   └── ThemeWrapper.tsx
+├── contexts/
+│   └── theme-context.tsx
+├── lib/
+│   └── quotes.ts
+├── pages/
+│   └── _app.tsx
+├── public/
+│   ├── favicon.ico
+│   ├── favicon-16x16.png
+│   ├── favicon-32x32.png
+│   ├── favicon-192x192.png
+│   ├── favicon-512x512.png
+│   ├── apple-touch-icon.png
+│   ├── safari-pinned-tab.svg
+│   ├── site.webmanifest
+│   └── sitemap.xml
+├── types/
+│   └── index.ts
+├── utils/
+│   └── supabase/
+│       └── server.ts
+├── .env.local
+├── middleware.ts
+├── next.config.js
 ├── package.json
-├── postcss.config.js
-├── README.md
-├── tailwind.config.ts
-└── tsconfig.json
+└── README.md
 
 # Rules
 - All new components should be added to the components folder and be named like example-component.tsx unless otherwise specified.
