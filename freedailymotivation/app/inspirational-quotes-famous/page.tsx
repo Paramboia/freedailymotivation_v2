@@ -1,58 +1,54 @@
-import { createClient } from '@/utils/supabase/server';
+import React from 'react';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { Button } from "@/components/ui/button";
-import ThemeWrapper from "@/components/ThemeWrapper";
+import { cn } from "@/lib/utils";
 
-export const revalidate = 3600; // Revalidate every hour
+export const dynamic = 'force-dynamic';
 
-async function getAuthors() {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('authors')  // Changed 'Authors' to 'authors'
-    .select('name')
+export default async function InspirationalQuotesFamous() {
+  const supabase = createServerComponentClient({ cookies });
+
+  const { data: authors, error } = await supabase
+    .from('authors')
+    .select('*')
     .order('name');
 
   if (error) {
     console.error('Error fetching authors:', error);
-    return [];
+    return <div>Error loading authors. Please try again later.</div>;
   }
 
-  console.log('Fetched authors:', data); // Add this line for debugging
-  return data?.map(author => author.name) || [];
-}
-
-export default async function InspirationalQuotesFamous() {
-  const authors = await getAuthors();
-
   return (
-    <ThemeWrapper>
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-grow flex flex-col items-center justify-center p-8">
-          <h1 className="text-4xl font-bold mb-8 dark:text-white">Famous Inspirational Quotes</h1>
-          <div className="max-w-2xl text-center mb-8">
-            <p className="mb-4 dark:text-gray-300">
-              Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? <Link href="/" className="text-blue-500 hover:underline dark:text-blue-400">Free Daily Motivation</Link> has you covered! With thousands of famous quotes at your fingertips, you'll discover insights from legends like Albert Einstein, Steve Jobs, and Oprah Winfrey. Whether you're looking to enhance your social media posts, presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. Explore categories like business, sport, and life, and let Free Daily Motivation fuel your journey to success.
-            </p>
-          </div>
-          <h2 className="text-2xl font-semibold mb-4 dark:text-white">Check out the top inspirational quotes from famous people!</h2>
-          <div className="flex flex-wrap justify-center gap-2 max-w-3xl mb-8">
-            {authors.length > 0 ? (
-              authors.map((author) => (
-                <Link key={author} href={`/inspirational-quotes-famous/${encodeURIComponent(author.toLowerCase().replace(' ', '-'))}`}>
-                  <Button variant="secondary" size="sm" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">
-                    {author}
-                  </Button>
-                </Link>
-              ))
-            ) : (
-              <p className="text-center dark:text-gray-300">No authors found. Please check the database connection.</p>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold mb-6 text-center">Famous Inspirational Quotes</h1>
+      <p className="text-lg mb-8 text-center">
+        Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? 
+        <Link href="/" className="text-blue-600 hover:underline"> Free Daily Motivation </Link> 
+        has you covered! With thousands of famous quotes at your fingertips, you'll discover insights from legends like 
+        Albert Einstein, Steve Jobs, and Oprah Winfrey. Whether you're looking to enhance your social media posts, 
+        presentations, or personal mindset, our platform makes it easy to find and share quotes that resonate with your goals. 
+        Explore categories like business, sport, and life, and let Free Daily Motivation fuel your journey to success.
+      </p>
+      
+      <h2 className="text-3xl font-semibold mb-6 text-center">Check out the top inspirational quotes from famous people!</h2>
+      
+      <div className="flex flex-wrap justify-center gap-2 mt-4">
+        {authors?.map((author) => (
+          <Link 
+            key={author.id} 
+            href={`/author/${author.id}`}
+            className={cn(
+              "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+              "h-10 px-4 py-2",
+              "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+              "dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
             )}
-          </div>
-        </main>
-        <footer className="p-4 text-sm text-white text-center dark:text-gray-300">
-          © 2024 Free Daily Motivation. All rights reserved.
-        </footer>
+          >
+            {author.name}
+          </Link>
+        ))}
       </div>
-    </ThemeWrapper>
+    </div>
   );
 }
