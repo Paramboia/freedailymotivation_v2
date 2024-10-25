@@ -6,6 +6,11 @@ import { cn } from "@/lib/utils";
 
 export const dynamic = 'force-dynamic';
 
+// Helper function to convert author name to URL-friendly format
+function nameToSlug(name: string) {
+  return name.toLowerCase().replace(/\s+/g, '-');
+}
+
 export default async function InspirationalQuotesFamous() {
   const supabase = createServerComponentClient({ cookies });
 
@@ -37,7 +42,7 @@ export default async function InspirationalQuotesFamous() {
         {authors?.map((author) => (
           <Link 
             key={author.id} 
-            href={`/author/${author.id}`}
+            href={`/inspirational-quotes-famous/${nameToSlug(author.name)}`}
             className={cn(
               "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
               "h-10 px-4 py-2",

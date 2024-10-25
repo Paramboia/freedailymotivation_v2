@@ -1,4 +1,5 @@
-import { createClient } from '@/utils/supabase/server';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
@@ -14,7 +15,7 @@ function capitalizeWords(str: string) {
 }
 
 async function getAuthorQuotes(authorName: string) {
-  const supabase = createClient();
+  const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from('quotes')
     .select('id, quote_text, authors!inner(name)')
@@ -54,9 +55,9 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
               <QuoteBox key={quote.id} quote={quote} />
             ))}
           </div>
-          <Link href="/" className="mt-8">
+          <Link href="/inspirational-quotes-famous" className="mt-8">
             <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">
-              Find More Quotes
+              Back to Famous Quotes
             </Button>
           </Link>
         </main>
