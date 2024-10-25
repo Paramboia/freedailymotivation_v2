@@ -62,7 +62,7 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
             </Button>
           </Link>
         </main>
-        <footer className="p-4 text-sm text-white text-center dark:text-gray-300">
+        <footer className="p-4 text-sm text-center text-white dark:text-gray-300">
           © 2024 Free Daily Motivation. All rights reserved.
         </footer>
       </div>
