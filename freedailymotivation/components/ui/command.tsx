@@ -142,7 +142,7 @@ const CommandShortcut = ({
 }
 CommandShortcut.displayName = "CommandShortcut"
 
-// @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface CommandProps extends CommandPrimitive.CommandProps {}
 
 export {
