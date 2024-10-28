@@ -46,26 +46,6 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
     // You might want to add a toast notification here
   };
 
-  const shareQuote = async () => {
-    const shareText = `"${currentQuote.text}" - ${currentQuote.author}\n\nVisit www.FreeDailyMotivation.com for more inspirational quotes ⭐`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Free Daily Motivation',
-          text: shareText,
-          url: 'https://www.FreeDailyMotivation.com',
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      // Fallback for browsers that don't support the Web Share API
-      navigator.clipboard.writeText(shareText);
-      alert('Share text copied to clipboard!');
-    }
-  };
-
   const handleLike = async () => {
     if (!supabaseUserId) {
       console.error('No user ID available');

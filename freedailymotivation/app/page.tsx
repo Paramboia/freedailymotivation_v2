@@ -15,7 +15,6 @@ export default function Home() {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [clickCount, setClickCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -33,12 +32,7 @@ export default function Home() {
     initializeQuotes();
 
     const handleClick = () => {
-      setClickCount(prevCount => {
-        if (prevCount === 2) {
-          setShowPopup(true);
-        }
-        return prevCount + 1;
-      });
+      setShowPopup(true);
     };
 
     document.addEventListener('click', handleClick);
