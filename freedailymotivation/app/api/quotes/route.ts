@@ -2,15 +2,15 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-interface QuoteRow {
+interface DatabaseQuote {
   id: string;
   quote_text: string;
   authors: {
     name: string;
-  };
+  }[];
   categories: {
     category_name: string;
-  };
+  }[];
 }
 
 export async function GET(_request: Request) {
@@ -25,11 +25,11 @@ export async function GET(_request: Request) {
     return NextResponse.json({ error: 'Failed to load quotes' }, { status: 500 });
   }
 
-  const quotes = (data as QuoteRow[]).map(item => ({
+  const quotes = (data as DatabaseQuote[]).map(item => ({
     id: item.id,
     text: item.quote_text,
-    author: item.authors.name,
-    category: item.categories.category_name,
+    author: item.authors[0]?.name || 'Unknown Author',
+    category: item.categories[0]?.category_name || 'Uncategorized',
     likes: 0,
     dislikes: 0
   }));
