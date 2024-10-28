@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   // Content Security Policy
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.clerk.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.clerk.dev https://clerk.freedailymotivation.com;"
+    'default-src &apos;self&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; https://cdn.clerk.io; style-src &apos;self&apos; &apos;unsafe-inline&apos; https://fonts.googleapis.com; font-src &apos;self&apos; https://fonts.gstatic.com; img-src &apos;self&apos; data: https:; connect-src &apos;self&apos; https://api.clerk.dev https://clerk.freedailymotivation.com;'
   );
 
   // Strict Transport Security
