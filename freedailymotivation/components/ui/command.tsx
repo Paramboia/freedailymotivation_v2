@@ -142,11 +142,9 @@ const CommandShortcut = ({
 }
 CommandShortcut.displayName = "CommandShortcut"
 
-// @ts-expect-error - empty interface is intentional
-interface CommandProps extends CommandPrimitive.CommandProps {}
-
-// @ts-expect-error - empty interface is intentional
-interface CommandItemProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> {}
+// Prefix unused interfaces with underscore
+interface _CommandProps extends CommandPrimitive.CommandProps {}
+interface _CommandItemProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> {}
 
 export {
   Command,
