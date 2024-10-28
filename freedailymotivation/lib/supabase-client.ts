@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { User } from '@clerk/nextjs/server';
+import { UserResource } from '@clerk/types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -10,7 +10,7 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function createOrGetUser(clerkUser: User) {
+export async function createOrGetUser(clerkUser: UserResource) {
   console.log("Creating or getting user:", { 
     clerkUserId: clerkUser.id, 
     email: clerkUser.emailAddresses[0]?.emailAddress,
@@ -140,20 +140,9 @@ export async function getLikeCount(quoteId: string): Promise<number> {
 // Add this function at the end of the file
 export async function testSupabaseConnection() {
   try {
-    const { data, error } = await supabase
-      .from('users')
-      .select('id')
-      .limit(1);
-
-    if (error) {
-      console.error("Supabase connection test failed:", error);
-      return { success: false, error };
-    }
-
-    console.log("Supabase connection test successful:", { count: data?.length });
-    return { success: true, count: data?.length };
+    const { data, error } = await supabase.from('users').select('count').single();
+    return { success: !error, error };
   } catch (error) {
-    console.error("Unexpected error during Supabase connection test:", error);
     return { success: false, error };
   }
 }
