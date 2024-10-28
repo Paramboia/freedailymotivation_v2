@@ -50,6 +50,9 @@ const ChartContainer = React.forwardRef<
   }
 >(({ children, config, className, ...props }, ref) => {
   const chartId = React.useId()
+  const validChild = React.Children.toArray(children).find(
+    child => React.isValidElement(child)
+  ) as React.ReactElement | undefined
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -63,7 +66,7 @@ const ChartContainer = React.forwardRef<
       >
         <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer width="100%" height="100%">
-          {React.isValidElement(children) ? children : null}
+          {validChild || <div>No valid chart element found</div>}
         </RechartsPrimitive.ResponsiveContainer>
       </div>
     </ChartContext.Provider>
