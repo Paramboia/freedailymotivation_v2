@@ -19,16 +19,16 @@ export async function createOrGetUser(clerkUser: User) {
 
   try {
     // First, try to get the user
-    let { data: user, error } = await supabase
+    const { data: user, error: initialError } = await supabase
       .from('users')
       .select('id, clerk_user_id, email')
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
-    console.log("Supabase query result:", { user, error });
+    console.log("Supabase query result:", { user, error: initialError });
 
-    if (error) {
-      if (error.code === 'PGRST116') {
+    if (initialError) {
+      if (initialError.code === 'PGRST116') {
         console.log("User not found, creating new user");
         // User not found, so create a new one
         const { data: newUser, error: createError } = await supabase
@@ -48,7 +48,7 @@ export async function createOrGetUser(clerkUser: User) {
         console.log("New user created:", newUser);
         user = newUser;
       } else {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching user:", initialError);
         return null;
       }
     }

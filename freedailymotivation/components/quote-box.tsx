@@ -21,7 +21,7 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
-  const { user } = useUser();
+  const { user: _user } = useUser();
   const { supabaseUserId } = useSupabaseUser();
 
   useEffect(() => {

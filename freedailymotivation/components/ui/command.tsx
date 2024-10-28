@@ -142,6 +142,9 @@ const CommandShortcut = ({
 }
 CommandShortcut.displayName = "CommandShortcut"
 
+// @typescript-eslint/no-empty-interface
+interface CommandProps extends CommandPrimitive.CommandProps {}
+
 export {
   Command,
   CommandDialog,
