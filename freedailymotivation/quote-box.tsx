@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
-import { createOrGetUser, testSupabaseConnection } from "../utils/supabase-client";
+import { createOrGetUser, testSupabaseConnection } from "@/lib/supabase-client";
 
 export default function QuoteBox() {
   const { isLoaded, isSignedIn, user } = useUser();
