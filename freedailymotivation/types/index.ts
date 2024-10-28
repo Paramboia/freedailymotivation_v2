@@ -1,4 +1,5 @@
-export interface Quote {
+// Define the Quote interface
+interface Quote {
   id: string;
   text: string;
   author: string;
@@ -7,4 +8,5 @@ export interface Quote {
   dislikes: number;
 }
 
+// Export only once
 export type { Quote };
