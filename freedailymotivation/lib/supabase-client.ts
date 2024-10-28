@@ -10,6 +10,15 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+export async function testSupabaseConnection() {
+  try {
+    const { error } = await supabase.from('users').select('count').single();
+    return { success: !error, error };
+  } catch (error) {
+    return { success: false, error };
+  }
+}
+
 export async function createOrGetUser(clerkUser: UserResource) {
   console.log("Creating or getting user:", { 
     clerkUserId: clerkUser.id, 
@@ -18,19 +27,15 @@ export async function createOrGetUser(clerkUser: UserResource) {
   });
 
   try {
-    // First, try to get the user
     const { data: existingUser, error: initialError } = await supabase
       .from('users')
       .select('id, clerk_user_id, email')
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
-    console.log("Supabase query result:", { user: existingUser, error: initialError });
-
     if (initialError) {
       if (initialError.code === 'PGRST116') {
         console.log("User not found, creating new user");
-        // User not found, so create a new one
         const { data: newUser, error: createError } = await supabase
           .from('users')
           .insert({
@@ -45,7 +50,6 @@ export async function createOrGetUser(clerkUser: UserResource) {
           return null;
         }
 
-        console.log("New user created:", newUser);
         return newUser?.id;
       } else {
         console.error("Error fetching user:", initialError);
@@ -53,7 +57,6 @@ export async function createOrGetUser(clerkUser: UserResource) {
       }
     }
 
-    console.log("User from Supabase:", existingUser);
     return existingUser?.id;
   } catch (error) {
     console.error("Unexpected error:", error);
@@ -135,14 +138,4 @@ export async function getLikeCount(quoteId: string): Promise<number> {
   }
 
   return count || 0;
-}
-
-// Add this function at the end of the file
-export async function testSupabaseConnection() {
-  try {
-    const { data, error } = await supabase.from('users').select('count').single();
-    return { success: !error, error };
-  } catch (error) {
-    return { success: false, error };
-  }
 }
