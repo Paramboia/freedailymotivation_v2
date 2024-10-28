@@ -10,16 +10,17 @@
         "ignoreRestSiblings": true
       }
     ],
-    "@typescript-eslint/no-empty-interface": ["warn", {
-      "allowSingleExtends": true
-    }],
+    "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-explicit-any": "off"
   },
   "overrides": [
     {
       "files": ["components/ui/**/*.tsx"],
       "rules": {
-        "@typescript-eslint/no-empty-interface": "off"
+        "@typescript-eslint/no-unused-vars": ["error", {
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_"
+        }]
       }
     }
   ]
