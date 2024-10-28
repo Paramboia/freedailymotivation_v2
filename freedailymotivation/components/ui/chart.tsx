@@ -62,8 +62,8 @@ const ChartContainer = React.forwardRef<
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>
-          {React.Children.only(children)}
+        <RechartsPrimitive.ResponsiveContainer width="100%" height="100%">
+          {React.isValidElement(children) ? children : null}
         </RechartsPrimitive.ResponsiveContainer>
       </div>
     </ChartContext.Provider>
