@@ -142,9 +142,8 @@ const CommandShortcut = ({
 }
 CommandShortcut.displayName = "CommandShortcut"
 
-// Prefix unused interfaces with underscore
-interface _CommandProps extends CommandPrimitive.CommandProps {}
-interface _CommandItemProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> {}
+type CommandProps = CommandPrimitive.CommandProps;
+type CommandItemProps = React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>;
 
 export {
   Command,
