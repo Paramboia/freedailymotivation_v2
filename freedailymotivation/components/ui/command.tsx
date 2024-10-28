@@ -142,8 +142,11 @@ const CommandShortcut = ({
 }
 CommandShortcut.displayName = "CommandShortcut"
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-unused-vars
+// @ts-expect-error - empty interface is intentional
 interface CommandProps extends CommandPrimitive.CommandProps {}
+
+// @ts-expect-error - empty interface is intentional
+interface CommandItemProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item> {}
 
 export {
   Command,
