@@ -11,7 +11,7 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 function Calendar({
   className,
-  classNames,
+  classNames: _props,
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
@@ -57,7 +57,7 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
-        ...classNames,
+        ..._props,
       }}
       components={{
         IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,

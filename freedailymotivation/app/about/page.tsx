@@ -22,7 +22,7 @@ export default function AboutUs() {
                 Whether you're looking to enhance your work presentation or boost your social media content, our website provides a rich resource for finding the perfect quote to inspire and engage your audience.
               </p>
               <p className="mb-8 dark:text-gray-300">
-                At Free Daily Motivation, we are dedicated to delivering daily doses of motivation and positivity through carefully curated quotes. We are passionate about helping you stay focused and inspired each day with messages that resonate with you.
+                At Free Daily Motivation, we&apos;re committed to providing you with the best motivational content to help you achieve your goals and dreams.
               </p>
             </div>
             <Link href="/">

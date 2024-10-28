@@ -19,7 +19,7 @@ export async function createOrGetUser(clerkUser: User) {
 
   try {
     // First, try to get the user
-    let { data: user, error } = await supabase
+    const { data: user, error } = await supabase
       .from('users')
       .select('id, clerk_user_id, email')
       .eq('clerk_user_id', clerkUser.id)
