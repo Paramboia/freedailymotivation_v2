@@ -1,7 +1,7 @@
 import { supabase } from './supabase'
-import { User } from '@clerk/nextjs/server'
+import { UserResource } from '@clerk/types'
 
-export async function getOrCreateSupabaseUser(clerkUser: User) {
+export async function getOrCreateSupabaseUser(clerkUser: UserResource) {
   console.log('Creating or getting user:', { clerkUserId: clerkUser.id, email: clerkUser.emailAddresses[0]?.emailAddress })
 
   try {
