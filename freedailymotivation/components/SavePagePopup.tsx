@@ -22,7 +22,7 @@ export default function SavePagePopup({ onClose }: SavePagePopupProps) {
         </Button>
         
         <h2 className="text-xl font-semibold mb-4 dark:text-white">
-          Enjoying what you see? 💫
+          Having fun? 💫
         </h2>
         
         <p className="text-gray-600 dark:text-gray-300 mb-6">
