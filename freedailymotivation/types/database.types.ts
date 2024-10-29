@@ -19,30 +19,45 @@ export interface Database {
         Insert: {
           clerk_user_id: string
           email?: string | null
-          created_at?: string
         }
         Update: {
           clerk_user_id?: string
           email?: string | null
-          created_at?: string
         }
       }
       favorites: {
         Row: {
           id: string
           user_id: string
-          quote_id: strings
+          quote_id: string
           created_at: string
         }
         Insert: {
           user_id: string
           quote_id: string
-          created_at?: string
         }
         Update: {
           user_id?: string
           quote_id?: string
-          created_at?: string
+        }
+      }
+      quotes: {
+        Row: {
+          id: string
+          quote_text: string
+          author_id: string
+          category_id: string | null
+          created_at: string
+        }
+        Insert: {
+          quote_text: string
+          author_id: string
+          category_id?: string | null
+        }
+        Update: {
+          quote_text?: string
+          author_id?: string
+          category_id?: string | null
         }
       }
       authors: {
@@ -53,37 +68,24 @@ export interface Database {
         }
         Insert: {
           name: string
-          created_at?: string
         }
         Update: {
           name?: string
-          created_at?: string
         }
       }
       categories: {
         Row: {
           id: string
-          name: string
+          category_name: string
           created_at: string
         }
         Insert: {
-          name: string
-          created_at?: string
+          category_name: string
         }
         Update: {
-          name?: string
-          created_at?: string
+          category_name?: string
         }
       }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      [_ in never]: never
-    }
-    Enums: {
-      [_ in never]: never
     }
   }
 }
@@ -93,4 +95,5 @@ export type Tables<T extends keyof Database['public']['Tables']> =
 export type Insertable<T extends keyof Database['public']['Tables']> = 
   Database['public']['Tables'][T]['Insert']
 export type Updateable<T extends keyof Database['public']['Tables']> = 
+  Database['public']['Tables'][T]['Update'] 
   Database['public']['Tables'][T]['Update'] 
