@@ -65,7 +65,10 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
 
   return (
     <TooltipProvider>
-      <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-gray-800">
+      <Card className={cn(
+        "w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-gray-800",
+        isAuthorPage && "mb-12"
+      )}>
         <div className="space-y-6">
           <div>
             <p className="text-2xl font-medium text-gray-900 dark:text-gray-100">
