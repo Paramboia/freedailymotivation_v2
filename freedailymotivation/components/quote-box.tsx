@@ -85,11 +85,14 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
                     size="sm"
                     onClick={handleLike}
                     disabled={!supabaseUserId}
-                    className="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-[#444]"
+                    className={cn(
+                      "flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-[#444]",
+                      isLiked && "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 dark:hover:from-pink-600 dark:hover:via-purple-600 dark:hover:to-indigo-600"
+                    )}
                   >
                     <ThumbsUp className={cn(
                       "h-5 w-5",
-                      isLiked ? "fill-current text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" : ""
+                      isLiked && "fill-current text-white"
                     )} />
                     <span>{likeCount > 0 ? `(${likeCount})` : '(0)'}</span>
                   </Button>
