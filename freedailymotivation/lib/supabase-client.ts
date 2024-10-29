@@ -28,6 +28,12 @@ export async function testSupabaseConnection() {
   }
 }
 
+interface DbUser {
+  id: string;
+  clerk_user_id: string;
+  email: string | null;
+}
+
 export async function createOrGetUser(clerkUser: UserResource): Promise<string | null> {
   console.log("Creating or getting user:", { 
     clerkUserId: clerkUser.id, 
@@ -38,7 +44,7 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
   try {
     const { data: existingUser, error: initialError } = await supabase
       .from('users')
-      .select('id, clerk_user_id, email')
+      .select<'users', DbUser>('id, clerk_user_id, email')
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
@@ -51,7 +57,7 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
             clerk_user_id: clerkUser.id,
             email: clerkUser.emailAddresses[0]?.emailAddress,
           })
-          .select('id, clerk_user_id, email')
+          .select<'users', DbUser>('id, clerk_user_id, email')
           .single();
 
         if (createError) {
@@ -59,14 +65,14 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
           return null;
         }
 
-        return newUser?.id || null;
+        return newUser?.id ?? null;
       } else {
         console.error("Error fetching user:", initialError);
         return null;
       }
     }
 
-    return existingUser?.id || null;
+    return existingUser?.id ?? null;
   } catch (error) {
     console.error("Unexpected error:", error);
     return null;
