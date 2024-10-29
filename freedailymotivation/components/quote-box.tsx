@@ -69,7 +69,7 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
         <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-[#333]">
           <div className="space-y-6">
             <div>
-              <p className="text-lg font-medium text-gray-900 dark:text-white">
+              <p className="text-lg text-gray-900 dark:text-white">
                 "{currentQuote.text}"
               </p>
               <p className="text-right mt-4 text-gray-600 dark:text-gray-400">
