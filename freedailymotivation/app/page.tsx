@@ -21,7 +21,8 @@ export default function Home() {
     async function initializeQuotes() {
       try {
         await loadQuotes();
-        setQuote(getRandomQuote());
+        const initialQuote = await getRandomQuote();
+        setQuote(initialQuote);
         setCategories(getAllCategories());
       } catch (error) {
         console.error('Failed to load quotes:', error);
@@ -47,13 +48,15 @@ export default function Home() {
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
-  const handleCategorySelect = (category: string | null) => {
+  const handleCategorySelect = async (category: string | null) => {
     setSelectedCategory(category);
-    setQuote(getRandomQuote(category || undefined));
+    const newQuote = await getRandomQuote(category || undefined);
+    setQuote(newQuote);
   };
 
-  const handleNewQuote = () => {
-    setQuote(getRandomQuote(selectedCategory || undefined));
+  const handleNewQuote = async () => {
+    const newQuote = await getRandomQuote(selectedCategory || undefined);
+    setQuote(newQuote);
   };
 
   if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
