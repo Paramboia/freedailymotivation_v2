@@ -27,7 +27,54 @@ export interface Database {
           created_at?: string
         }
       }
-      // Add other tables as needed
+      favorites: {
+        Row: {
+          id: string
+          user_id: string
+          quote_id: strings
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          quote_id: string
+          created_at?: string
+        }
+        Update: {
+          user_id?: string
+          quote_id?: string
+          created_at?: string
+        }
+      }
+      authors: {
+        Row: {
+          id: string
+          name: string
+          created_at: string
+        }
+        Insert: {
+          name: string
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          created_at?: string
+        }
+      }
+      categories: {
+        Row: {
+          id: string
+          name: string
+          created_at: string
+        }
+        Insert: {
+          name: string
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
