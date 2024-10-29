@@ -28,6 +28,12 @@ export async function testSupabaseConnection() {
   }
 }
 
+interface DbUser {
+  id: string;
+  clerk_user_id: string;
+  email: string | null;
+}
+
 export async function createOrGetUser(clerkUser: UserResource): Promise<string | null> {
   console.log("Creating or getting user:", { 
     clerkUserId: clerkUser.id, 
@@ -35,16 +41,10 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
     name: `${clerkUser.firstName} ${clerkUser.lastName}`
   });
 
-  interface DbUser {
-    id: string;
-    clerk_user_id: string;
-    email: string | null;
-  }
-
   try {
     const { data: existingUser, error: initialError } = await supabase
       .from('users')
-      .select<'users', DbUser>('id, clerk_user_id, email')
+      .select('id, clerk_user_id, email')
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
@@ -57,7 +57,7 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
             clerk_user_id: clerkUser.id,
             email: clerkUser.emailAddresses[0]?.emailAddress,
           })
-          .select<'users', DbUser>('id, clerk_user_id, email')
+          .select('id, clerk_user_id, email')
           .single();
 
         if (createError) {
