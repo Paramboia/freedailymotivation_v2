@@ -1,24 +1,29 @@
 import { createClient } from '@supabase/supabase-js';
 import { UserResource } from '@clerk/types';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+let supabase: ReturnType<typeof createClient>;
 
-if (!supabaseUrl) {
-  throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
+try {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Supabase environment variables are missing');
+    throw new Error('Supabase configuration is incomplete');
+  }
+
+  supabase = createClient(supabaseUrl, supabaseKey);
+} catch (error) {
+  console.error('Failed to initialize Supabase client:', error);
+  throw error;
 }
-
-if (!supabaseKey) {
-  throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function testSupabaseConnection() {
   try {
     const { error } = await supabase.from('users').select('count').single();
     return { success: !error, error };
   } catch (error) {
+    console.error('Supabase connection test failed:', error);
     return { success: false, error };
   }
 }
