@@ -15,7 +15,7 @@ export default function SavePagePopup({ onClose }: SavePagePopupProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-2 top-2"
+          className="absolute right-2 top-2 dark:hover:bg-[#444]"
           onClick={onClose}
         >
           <X className="h-4 w-4" />
@@ -31,15 +31,9 @@ export default function SavePagePopup({ onClose }: SavePagePopupProps) {
         
         <div className="flex justify-end">
           <Button
-            variant="ghost"
+            variant="secondary"
             onClick={onClose}
-            className="dark:text-gray-300 dark:hover:bg-[#444]"
-          >
-            Maybe Later
-          </Button>
-          <Button
-            className="ml-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
-            onClick={onClose}
+            className="dark:bg-[#444] dark:text-white dark:hover:bg-[#555]"
           >
             Got It!
           </Button>
