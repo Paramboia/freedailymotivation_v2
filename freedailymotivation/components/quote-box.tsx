@@ -4,7 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RefreshCw, Copy, Share2, ThumbsUp } from "lucide-react";
+import { RefreshCw, Copy, ThumbsUp } from "lucide-react";
 import { Quote } from '@/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -31,11 +31,9 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
 
   useEffect(() => {
     async function fetchData() {
-      // Always fetch like count
       const count = await getLikeCount(quote.id);
       setLikeCount(count);
 
-      // Only fetch like status if user is authenticated
       if (supabaseUserId && quote.id) {
         const likeStatus = await getLikeStatus(supabaseUserId, quote.id);
         setIsLiked(likeStatus);
@@ -46,57 +44,21 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
 
   const copyQuote = () => {
     navigator.clipboard.writeText(`"${currentQuote.text}" - ${currentQuote.author}`);
-    // You might want to add a toast notification here
   };
 
   const handleLike = async () => {
     if (!supabaseUserId) {
       console.error('No user ID available');
-      // You might want to show a login prompt here
       return;
     }
     try {
       const newLikeStatus = await toggleLike(supabaseUserId, currentQuote.id);
       setIsLiked(newLikeStatus);
       
-      // Update the like count
       const newLikeCount = await getLikeCount(currentQuote.id);
       setLikeCount(newLikeCount);
     } catch (error) {
       console.error('Error toggling like:', error);
-    }
-  };
-
-  const handleNewQuote = () => {
-    if (onNewQuote) {
-      onNewQuote();
-    }
-  };
-
-  const handleShareQuote = async () => {
-    const quote = `"${currentQuote.text}" - ${currentQuote.author}`;
-    const extraLine = "Visit www.freedailymotivation.com for more inspirational quotes!";
-    const message = `${quote}\n\n${extraLine} ✨`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Free Daily Motivation',
-          text: message,
-          url: 'https://www.FreeDailyMotivation.com',
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-        fallbackShare();
-      }
-    } else {
-      fallbackShare();
-    }
-
-    function fallbackShare() {
-      const encodedMessage = encodeURIComponent(message);
-      const shareUrl = `https://twitter.com/intent/tweet?text=${encodedMessage}`;
-      window.open(shareUrl, '_blank');
     }
   };
 
