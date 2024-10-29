@@ -6,7 +6,6 @@ import { getRandomQuote, loadQuotes, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
 import QuoteBox from "@/components/quote-box";
 import CategoryButtons from "@/components/category-buttons";
-import BookmarkReminder from "@/components/bookmark-reminder";
 import SavePagePopup from "@/components/SavePagePopup";
 import ThemeWrapper from "@/components/ThemeWrapper";
 
@@ -78,7 +77,6 @@ export default function Home() {
             />
           </div>
         </main>
-        <BookmarkReminder />
         <footer className="p-4 text-sm text-white text-center">
           © 2024 Free Daily Motivation. All rights reserved.
         </footer>
