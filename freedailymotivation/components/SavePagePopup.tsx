@@ -22,11 +22,11 @@ export default function SavePagePopup({ onClose }: SavePagePopupProps) {
         </Button>
         
         <h2 className="text-xl font-semibold mb-4 dark:text-white">
-          Save for Daily Inspiration
+          Enjoying what you see? ⭐
         </h2>
         
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Want easy access to daily motivation? Save this page to your bookmarks!
+          Save this page to your bookmarks for easy motivation!
         </p>
         
         <div className="flex justify-end">
