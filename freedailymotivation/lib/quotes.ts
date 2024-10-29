@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database.types';
+import type { Quote } from '@/types';
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,11 +26,14 @@ export async function getRandomQuote(category?: string) {
         quote_text,
         authors!inner (
           name
+        ),
+        categories!inner (
+          category_name
         )
       `);
 
     if (category) {
-      query = query.eq('category', category);
+      query = query.eq('categories.category_name', category);
     }
 
     const { data, error } = await query;
@@ -49,9 +53,9 @@ export async function getRandomQuote(category?: string) {
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: randomQuote.authors.name,
+      author: randomQuote.authors?.name || 'Unknown Author',
+      category: randomQuote.categories?.category_name || '',
       likes: 0,
-      category: category || '',
       dislikes: 0
     };
   } catch (error) {
