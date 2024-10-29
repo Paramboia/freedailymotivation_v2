@@ -127,7 +127,23 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => {
+                        const shareText = `"${currentQuote.text}" - ${currentQuote.author}\n\nVisit www.freedailymotivation.com for more inspirational quotes! ✨`;
+                        
+                        if (navigator.share) {
+                          navigator.share({
+                            text: shareText,
+                          }).catch((error) => console.error('Error sharing:', error));
+                        } else {
+                          navigator.clipboard.writeText(shareText)
+                            .then(() => alert('Quote copied to clipboard!'))
+                            .catch((error) => console.error('Error copying to clipboard:', error));
+                        }
+                      }}
+                    >
                       <Send className="h-5 w-5" />
                     </Button>
                   </TooltipTrigger>
