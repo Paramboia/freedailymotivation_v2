@@ -53,8 +53,8 @@ export async function getRandomQuote(category?: string) {
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: randomQuote.authors?.name || 'Unknown Author',
-      category: randomQuote.categories?.category_name || '',
+      author: randomQuote.authors[0]?.name || 'Unknown Author',
+      category: randomQuote.categories[0]?.category_name || '',
       likes: 0,
       dislikes: 0
     };
