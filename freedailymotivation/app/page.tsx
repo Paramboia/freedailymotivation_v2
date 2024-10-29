@@ -19,10 +19,10 @@ export default function Home() {
   useEffect(() => {
     async function initializeQuotes() {
       try {
-        await loadQuotes();
+        const fetchedCategories = await getAllCategories();
+        setCategories(fetchedCategories);
         const initialQuote = await getRandomQuote();
         setQuote(initialQuote);
-        setCategories(getAllCategories());
       } catch (error) {
         console.error('Failed to load quotes:', error);
       } finally {

@@ -26,11 +26,14 @@ export async function getRandomQuote(category?: string) {
         quote_text,
         authors!inner (
           name
+        ),
+        categories!inner (
+          category_name
         )
       `);
 
     if (category) {
-      query = query.eq('category', category);
+      query = query.eq('categories.category_name', category);
     }
 
     const { data, error } = await query;
@@ -51,7 +54,7 @@ export async function getRandomQuote(category?: string) {
       id: randomQuote.id,
       text: randomQuote.quote_text,
       author: randomQuote.authors[0]?.name || 'Unknown Author',
-      category: '',
+      category: randomQuote.categories[0]?.category_name || '',
       likes: 0,
       dislikes: 0
     };
@@ -69,9 +72,23 @@ export function getAllAuthors(): string[] {
   return Array.from(new Set(quotes.map(quote => quote.author)));
 }
 
-export function getAllCategories(): string[] {
-  const categories = new Set(quotes.map(quote => quote.category));
-  return Array.from(categories);
+export async function getAllCategories() {
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('category_name')
+      .order('category_name');
+
+    if (error) {
+      console.error('Error fetching categories:', error);
+      return [];
+    }
+
+    return data.map(category => category.category_name);
+  } catch (error) {
+    console.error('Error in getAllCategories:', error);
+    return [];
+  }
 }
 
 export function likeQuote(id: string): Quote {
