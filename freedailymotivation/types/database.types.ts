@@ -90,10 +90,14 @@ export interface Database {
   }
 }
 
-export type Tables<T extends keyof Database['public']['Tables']> = 
-  Database['public']['Tables'][T]['Row']
-export type Insertable<T extends keyof Database['public']['Tables']> = 
-  Database['public']['Tables'][T]['Insert']
-export type Updateable<T extends keyof Database['public']['Tables']> = 
-  Database['public']['Tables'][T]['Update'] 
-  Database['public']['Tables'][T]['Update'] 
+// Type helpers for accessing the database types
+export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
+export type InsertableTable<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
+export type UpdateableTable<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
+
+// Specific table types
+export type User = Tables<'users'>
+export type Favorite = Tables<'favorites'>
+export type Quote = Tables<'quotes'>
+export type Author = Tables<'authors'>
+export type Category = Tables<'categories'>
