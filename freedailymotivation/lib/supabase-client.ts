@@ -28,12 +28,6 @@ export async function testSupabaseConnection() {
   }
 }
 
-interface DbUser {
-  id: string;
-  clerk_user_id: string;
-  email: string | null;
-}
-
 export async function createOrGetUser(clerkUser: UserResource): Promise<string | null> {
   console.log("Creating or getting user:", { 
     clerkUserId: clerkUser.id, 
