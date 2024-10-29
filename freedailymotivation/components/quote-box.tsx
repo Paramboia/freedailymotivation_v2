@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, Copy, Share, ThumbsUp } from "lucide-react";
 import { Quote } from '@/types';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/supabase-client';
