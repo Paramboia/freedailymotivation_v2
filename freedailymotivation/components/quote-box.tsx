@@ -30,15 +30,18 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
   }, [quote]);
 
   useEffect(() => {
-    async function fetchLikeStatus() {
+    async function fetchData() {
+      // Always fetch like count
+      const count = await getLikeCount(quote.id);
+      setLikeCount(count);
+
+      // Only fetch like status if user is authenticated
       if (supabaseUserId && quote.id) {
         const likeStatus = await getLikeStatus(supabaseUserId, quote.id);
         setIsLiked(likeStatus);
-        const count = await getLikeCount(quote.id);
-        setLikeCount(count);
       }
     }
-    fetchLikeStatus();
+    fetchData();
   }, [supabaseUserId, quote.id]);
 
   const copyQuote = () => {
@@ -53,9 +56,7 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
       return;
     }
     try {
-      console.log('Toggling like for user:', supabaseUserId, 'quote:', currentQuote.id);
       const newLikeStatus = await toggleLike(supabaseUserId, currentQuote.id);
-      console.log('New like status:', newLikeStatus);
       setIsLiked(newLikeStatus);
       
       // Update the like count
@@ -101,65 +102,36 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
 
   return (
     <TooltipProvider>
-      <Card className="w-full max-w-2xl p-6 mb-8 bg-white dark:bg-[#333] shadow-lg dark:shadow-[0px_6px_15px_rgba(0,0,0,0.3)]">
-        <p className="text-xl mb-2 dark:text-white">"{currentQuote.text}"</p>
+      <Card className="p-6">
+        <blockquote className="text-xl mb-4">"{currentQuote.text}"</blockquote>
         <p className="text-right text-gray-600 dark:text-gray-400 mb-4">- {currentQuote.author}</p>
         <div className="flex justify-between items-center">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={onNewQuote}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              New Quote
+            </Button>
+            <Button variant="outline" size="sm" onClick={copyQuote}>
+              <Copy className="h-4 w-4 mr-2" />
+              Copy
+            </Button>
+          </div>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={handleLike}
-                className={cn(
-                  "transition-colors font-bold",
-                  isLiked 
-                    ? "bg-gradient-to-r from-pink-500 to-purple-500 text-white border-transparent hover:from-pink-600 hover:to-purple-600"
-                    : "bg-white text-black hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]"
-                )}
+                disabled={!supabaseUserId}
               >
                 <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
-                Like ({likeCount})
+                {likeCount} likes
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{isLiked ? "Unlike this quote" : "Like this quote"}</p>
+              <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
             </TooltipContent>
           </Tooltip>
-          <div className="flex space-x-2">
-            {onNewQuote && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleNewQuote} className="bg-white hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Get a new quote</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={copyQuote} className="bg-white hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Copy quote to clipboard</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={handleShareQuote} className="bg-white hover:bg-gray-100 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]">
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Share this quote</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
         </div>
       </Card>
     </TooltipProvider>
