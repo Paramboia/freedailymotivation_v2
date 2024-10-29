@@ -15,9 +15,10 @@ import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 interface QuoteBoxProps {
   quote: Quote;
   onNewQuote?: () => void;
+  isAuthorPage?: boolean;
 }
 
-export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
+export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
@@ -64,36 +65,45 @@ export default function QuoteBox({ quote, onNewQuote }: QuoteBoxProps) {
 
   return (
     <TooltipProvider>
-      <Card className="p-6">
-        <blockquote className="text-xl mb-4">"{currentQuote.text}"</blockquote>
-        <p className="text-right text-gray-600 dark:text-gray-400 mb-4">- {currentQuote.author}</p>
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={onNewQuote}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              New Quote
-            </Button>
-            <Button variant="outline" size="sm" onClick={copyQuote}>
-              <Copy className="h-4 w-4 mr-2" />
-              Copy
-            </Button>
+      <Card className={cn(
+        "p-6 w-full",
+        isAuthorPage ? "min-h-[200px] max-w-2xl mx-auto mb-4" : "min-h-[200px] max-w-2xl"
+      )}>
+        <div className="flex flex-col h-full justify-between">
+          <div>
+            <blockquote className="text-xl mb-4">"{currentQuote.text}"</blockquote>
+            <p className="text-right text-gray-600 dark:text-gray-400 mb-4">- {currentQuote.author}</p>
           </div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleLike}
-                disabled={!supabaseUserId}
-              >
-                <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
-                {likeCount} likes
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              {!isAuthorPage && onNewQuote && (
+                <Button variant="outline" size="sm" onClick={onNewQuote}>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  New Quote
+                </Button>
+              )}
+              <Button variant="outline" size="sm" onClick={copyQuote}>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy
               </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
-            </TooltipContent>
-          </Tooltip>
+            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleLike}
+                  disabled={!supabaseUserId}
+                >
+                  <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
+                  {likeCount} likes
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
       </Card>
     </TooltipProvider>
