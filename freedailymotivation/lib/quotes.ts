@@ -7,16 +7,6 @@ const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-let quotes: Quote[] = [];
-
-export async function loadQuotes() {
-  const response = await fetch('/api/quotes');
-  if (!response.ok) {
-    throw new Error('Failed to load quotes');
-  }
-  quotes = await response.json();
-}
-
 export async function getRandomQuote(category?: string) {
   try {
     let query = supabase
@@ -64,14 +54,6 @@ export async function getRandomQuote(category?: string) {
   }
 }
 
-export function getQuotesByAuthor(author: string): Quote[] {
-  return quotes.filter(quote => quote.author.toLowerCase() === author.toLowerCase());
-}
-
-export function getAllAuthors(): string[] {
-  return Array.from(new Set(quotes.map(quote => quote.author)));
-}
-
 export async function getAllCategories() {
   try {
     const { data, error } = await supabase
@@ -89,33 +71,4 @@ export async function getAllCategories() {
     console.error('Error in getAllCategories:', error);
     return [];
   }
-}
-
-export function likeQuote(id: string): Quote {
-  const quote = quotes.find(q => q.id === id);
-  if (quote) {
-    quote.likes += 1;
-  }
-  return quote!;
-}
-
-export function getMostLikedQuotes(limit: number = 10): Quote[] {
-  return [...quotes].sort((a, b) => b.likes - a.likes).slice(0, limit);
-}
-
-export function getMostDislikedQuotes(limit: number = 10): Quote[] {
-  return [...quotes].sort((a, b) => b.dislikes - a.dislikes).slice(0, limit);
-}
-
-export function toggleLikeQuote(id: string): Quote {
-  const quote = quotes.find(q => q.id === id);
-  if (quote) {
-    quote.likes = quote.likes ? 0 : 1; // Toggle between 0 and 1
-  }
-  return quote!;
-}
-
-export function isQuoteLiked(id: string): boolean {
-  const quote = quotes.find(q => q.id === id);
-  return quote ? quote.likes > 0 : false;
 }

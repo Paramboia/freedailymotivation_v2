@@ -2,7 +2,7 @@
 
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import { getRandomQuote, loadQuotes, getAllCategories } from '@/lib/quotes';
+import { getRandomQuote, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
 import QuoteBox from "@/components/quote-box";
 import CategoryButtons from "@/components/category-buttons";
