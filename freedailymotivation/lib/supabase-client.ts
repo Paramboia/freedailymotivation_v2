@@ -44,7 +44,7 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
   try {
     const { data: existingUser, error: initialError } = await supabase
       .from('users')
-      .select<'users', DbUser>('id, clerk_user_id, email')
+      .select('id, clerk_user_id, email')
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
@@ -57,7 +57,7 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
             clerk_user_id: clerkUser.id,
             email: clerkUser.emailAddresses[0]?.emailAddress,
           })
-          .select<'users', DbUser>('id, clerk_user_id, email')
+          .select('id, clerk_user_id, email')
           .single();
 
         if (createError) {
