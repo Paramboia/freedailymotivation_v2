@@ -1,4 +1,10 @@
-import { Quote } from '@/types';
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '@/types/database.types';
+
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 let quotes: Quote[] = [];
 
@@ -10,15 +16,48 @@ export async function loadQuotes() {
   quotes = await response.json();
 }
 
-export function getRandomQuote(category?: string): Quote | null {
-  const filteredQuotes = category
-    ? quotes.filter(quote => quote.category.toLowerCase() === category.toLowerCase())
-    : quotes;
+export async function getRandomQuote(category?: string) {
+  try {
+    let query = supabase
+      .from('quotes')
+      .select(`
+        id,
+        quote_text,
+        authors!inner (
+          name
+        )
+      `);
 
-  if (filteredQuotes.length === 0) return null;
+    if (category) {
+      query = query.eq('category', category);
+    }
 
-  const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
-  return filteredQuotes[randomIndex];
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('Error fetching quote:', error);
+      return null;
+    }
+
+    if (!data || data.length === 0) {
+      return null;
+    }
+
+    const randomIndex = Math.floor(Math.random() * data.length);
+    const randomQuote = data[randomIndex];
+
+    return {
+      id: randomQuote.id,
+      text: randomQuote.quote_text,
+      author: randomQuote.authors.name,
+      likes: 0,
+      category: category || '',
+      dislikes: 0
+    };
+  } catch (error) {
+    console.error('Error in getRandomQuote:', error);
+    return null;
+  }
 }
 
 export function getQuotesByAuthor(author: string): Quote[] {
