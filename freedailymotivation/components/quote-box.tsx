@@ -67,14 +67,16 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
     <TooltipProvider>
       <Card className={cn(
         "p-6 w-full",
-        isAuthorPage ? "min-h-[200px] max-w-2xl mx-auto mb-4" : "min-h-[200px] max-w-2xl"
+        isAuthorPage 
+          ? "min-h-[250px] max-w-2xl mx-auto mb-8" 
+          : "min-h-[200px] max-w-2xl"
       )}>
-        <div className="flex flex-col h-full justify-between">
-          <div>
-            <blockquote className="text-xl mb-4">"{currentQuote.text}"</blockquote>
-            <p className="text-right text-gray-600 dark:text-gray-400 mb-4">- {currentQuote.author}</p>
+        <div className="flex flex-col h-full">
+          <div className="flex-grow">
+            <blockquote className="text-xl mb-6">"{currentQuote.text}"</blockquote>
+            <p className="text-right text-gray-600 dark:text-gray-400">- {currentQuote.author}</p>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pt-6 mt-auto">
             <div className="flex gap-2">
               {!isAuthorPage && onNewQuote && (
                 <Button variant="outline" size="sm" onClick={onNewQuote}>
