@@ -66,45 +66,47 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
   return (
     <TooltipProvider>
       <Card className={cn(
-        "p-6 w-full",
+        "p-6 w-full relative",
         isAuthorPage 
-          ? "min-h-[250px] max-w-2xl mx-auto mb-8" 
-          : "min-h-[200px] max-w-2xl"
+          ? "h-[300px] max-w-2xl mx-auto mb-8" 
+          : "h-[300px] max-w-2xl"
       )}>
         <div className="flex flex-col h-full">
-          <div className="flex-grow">
-            <blockquote className="text-xl mb-6">"{currentQuote.text}"</blockquote>
-            <p className="text-right text-gray-600 dark:text-gray-400">- {currentQuote.author}</p>
+          <div className="flex-grow overflow-y-auto">
+            <blockquote className="text-xl">"{currentQuote.text}"</blockquote>
+            <p className="text-right text-gray-600 dark:text-gray-400 mt-4">- {currentQuote.author}</p>
           </div>
-          <div className="flex justify-between items-center pt-6 mt-auto">
-            <div className="flex gap-2">
-              {!isAuthorPage && onNewQuote && (
-                <Button variant="outline" size="sm" onClick={onNewQuote}>
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  New Quote
+          <div className="pt-6 mt-auto border-t">
+            <div className="flex justify-between items-center">
+              <div className="flex gap-2">
+                {!isAuthorPage && onNewQuote && (
+                  <Button variant="outline" size="sm" onClick={onNewQuote}>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    New Quote
+                  </Button>
+                )}
+                <Button variant="outline" size="sm" onClick={copyQuote}>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy
                 </Button>
-              )}
-              <Button variant="outline" size="sm" onClick={copyQuote}>
-                <Copy className="h-4 w-4 mr-2" />
-                Copy
-              </Button>
+              </div>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleLike}
+                    disabled={!supabaseUserId}
+                  >
+                    <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
+                    {likeCount} likes
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleLike}
-                  disabled={!supabaseUserId}
-                >
-                  <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
-                  {likeCount} likes
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
-              </TooltipContent>
-            </Tooltip>
           </div>
         </div>
       </Card>
