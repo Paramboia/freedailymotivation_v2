@@ -4,7 +4,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RefreshCw, Copy, ThumbsUp } from "lucide-react";
+import { RefreshCw, Copy, Share, ThumbsUp } from "lucide-react";
 import { Quote } from '@/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -64,52 +64,44 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
   };
 
   return (
-    <TooltipProvider>
-      <Card className={cn(
-        "p-6 w-full relative",
-        isAuthorPage 
-          ? "h-[300px] max-w-2xl mx-auto mb-8" 
-          : "h-[300px] max-w-2xl"
-      )}>
-        <div className="flex flex-col h-full">
-          <div className="flex-grow overflow-y-auto">
-            <blockquote className="text-xl">"{currentQuote.text}"</blockquote>
-            <p className="text-right text-gray-600 dark:text-gray-400 mt-4">- {currentQuote.author}</p>
-          </div>
-          <div className="pt-6 mt-auto border-t">
-            <div className="flex justify-between items-center">
-              <div className="flex gap-2">
-                {!isAuthorPage && onNewQuote && (
-                  <Button variant="outline" size="sm" onClick={onNewQuote}>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    New Quote
-                  </Button>
-                )}
-                <Button variant="outline" size="sm" onClick={copyQuote}>
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy
-                </Button>
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleLike}
-                    disabled={!supabaseUserId}
-                  >
-                    <ThumbsUp className={cn("h-4 w-4 mr-2", isLiked ? "fill-current" : "")} />
-                    {likeCount} likes
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+    <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-gray-800">
+      <div className="space-y-6">
+        <div>
+          <p className="text-2xl font-medium text-gray-900 dark:text-gray-100">
+            "{currentQuote.text}"
+          </p>
+          <p className="text-right mt-4 text-gray-600 dark:text-gray-400">
+            - {currentQuote.author}
+          </p>
+        </div>
+        
+        <div className="flex justify-between items-center pt-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLike}
+            disabled={!supabaseUserId}
+            className="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <ThumbsUp className={cn("h-5 w-5", isLiked ? "fill-current text-blue-500" : "")} />
+            <span>{likeCount > 0 ? `(${likeCount})` : '(0)'}</span>
+          </Button>
+
+          <div className="flex gap-2">
+            {!isAuthorPage && (
+              <Button variant="ghost" size="sm" onClick={onNewQuote}>
+                <RefreshCw className="h-5 w-5" />
+              </Button>
+            )}
+            <Button variant="ghost" size="sm" onClick={copyQuote}>
+              <Copy className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Share className="h-5 w-5" />
+            </Button>
           </div>
         </div>
-      </Card>
-    </TooltipProvider>
+      </div>
+    </Card>
   );
 }
