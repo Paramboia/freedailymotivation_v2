@@ -16,6 +16,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
 
   useEffect(() => {
     async function initializeQuotes() {
@@ -31,8 +32,18 @@ export default function Home() {
     }
     initializeQuotes();
 
+    const hasSeenPopup = localStorage.getItem('hasSeenSavePagePopup');
+    if (hasSeenPopup) return;
+
     const handleClick = () => {
-      setShowPopup(true);
+      setClickCount(prev => {
+        const newCount = prev + 1;
+        if (newCount === 3) {
+          setShowPopup(true);
+          localStorage.setItem('hasSeenSavePagePopup', 'true');
+        }
+        return newCount;
+      });
     };
 
     document.addEventListener('click', handleClick);
