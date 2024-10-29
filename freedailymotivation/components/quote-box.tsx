@@ -66,10 +66,10 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
   return (
     <div className={cn("w-full flex justify-center mb-8")}>
       <TooltipProvider>
-        <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-gray-800">
+        <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-[#333]">
           <div className="space-y-6">
             <div>
-              <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
+              <p className="text-lg font-medium text-gray-900 dark:text-white">
                 "{currentQuote.text}"
               </p>
               <p className="text-right mt-4 text-gray-600 dark:text-gray-400">
@@ -85,9 +85,12 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
                     size="sm"
                     onClick={handleLike}
                     disabled={!supabaseUserId}
-                    className="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-[#444]"
                   >
-                    <ThumbsUp className={cn("h-5 w-5", isLiked ? "fill-current text-blue-500" : "")} />
+                    <ThumbsUp className={cn(
+                      "h-5 w-5",
+                      isLiked ? "fill-current text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" : ""
+                    )} />
                     <span>{likeCount > 0 ? `(${likeCount})` : '(0)'}</span>
                   </Button>
                 </TooltipTrigger>
