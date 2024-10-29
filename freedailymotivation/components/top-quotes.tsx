@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getMostLikedQuotes, getMostDislikedQuotes, loadQuotes } from '@/lib/quotes';
+import { getMostLikedQuotes, getMostDislikedQuotes } from '@/lib/quotes';
 import { Quote } from '@/types';
 import { Card } from "@/components/ui/card";
 
@@ -11,9 +11,12 @@ export default function TopQuotes() {
 
   useEffect(() => {
     async function fetchTopQuotes() {
-      await loadQuotes();
-      setMostLiked(getMostLikedQuotes(5));
-      setMostDisliked(getMostDislikedQuotes(5));
+      const [likedQuotes, dislikedQuotes] = await Promise.all([
+        getMostLikedQuotes(5),
+        getMostDislikedQuotes(5)
+      ]);
+      setMostLiked(likedQuotes);
+      setMostDisliked(dislikedQuotes);
     }
     fetchTopQuotes();
   }, []);

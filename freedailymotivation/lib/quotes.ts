@@ -72,3 +72,71 @@ export async function getAllCategories() {
     return [];
   }
 }
+
+export async function getMostLikedQuotes(limit: number = 5): Promise<Quote[]> {
+  try {
+    const { data, error } = await supabase
+      .from('quotes')
+      .select(`
+        id,
+        quote_text,
+        likes,
+        authors!inner (
+          name
+        )
+      `)
+      .order('likes', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching most liked quotes:', error);
+      return [];
+    }
+
+    return data.map(quote => ({
+      id: quote.id,
+      text: quote.quote_text,
+      author: quote.authors[0]?.name || 'Unknown Author',
+      likes: quote.likes || 0,
+      dislikes: 0,
+      category: ''
+    }));
+  } catch (error) {
+    console.error('Error in getMostLikedQuotes:', error);
+    return [];
+  }
+}
+
+export async function getMostDislikedQuotes(limit: number = 5): Promise<Quote[]> {
+  try {
+    const { data, error } = await supabase
+      .from('quotes')
+      .select(`
+        id,
+        quote_text,
+        dislikes,
+        authors!inner (
+          name
+        )
+      `)
+      .order('dislikes', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching most disliked quotes:', error);
+      return [];
+    }
+
+    return data.map(quote => ({
+      id: quote.id,
+      text: quote.quote_text,
+      author: quote.authors[0]?.name || 'Unknown Author',
+      likes: 0,
+      dislikes: quote.dislikes || 0,
+      category: ''
+    }));
+  } catch (error) {
+    console.error('Error in getMostDislikedQuotes:', error);
+    return [];
+  }
+}
