@@ -28,7 +28,7 @@ export async function testSupabaseConnection() {
   }
 }
 
-export async function createOrGetUser(clerkUser: UserResource) {
+export async function createOrGetUser(clerkUser: UserResource): Promise<string | null> {
   console.log("Creating or getting user:", { 
     clerkUserId: clerkUser.id, 
     email: clerkUser.emailAddresses[0]?.emailAddress,
@@ -59,14 +59,14 @@ export async function createOrGetUser(clerkUser: UserResource) {
           return null;
         }
 
-        return newUser?.id;
+        return newUser?.id ?? null;
       } else {
         console.error("Error fetching user:", initialError);
         return null;
       }
     }
 
-    return existingUser?.id;
+    return existingUser?.id ?? null;
   } catch (error) {
     console.error("Unexpected error:", error);
     return null;
