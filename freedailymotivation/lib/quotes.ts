@@ -7,7 +7,7 @@ const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export async function getRandomQuote(category?: string) {
+export async function getRandomQuote(category?: string): Promise<Quote | null> {
   try {
     let query = supabase
       .from('quotes')
