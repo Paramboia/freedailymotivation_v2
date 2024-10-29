@@ -26,7 +26,7 @@ export default function SavePagePopup({ onClose }: SavePagePopupProps) {
         </h2>
         
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Save this page to your bookmarks for easy motivation!
+          Save this page to your bookmarks for easy daily motivation!
         </p>
         
         <div className="flex justify-end">
