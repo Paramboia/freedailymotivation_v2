@@ -26,14 +26,11 @@ export async function getRandomQuote(category?: string) {
         quote_text,
         authors!inner (
           name
-        ),
-        categories!inner (
-          category_name
         )
       `);
 
     if (category) {
-      query = query.eq('categories.category_name', category);
+      query = query.eq('category', category);
     }
 
     const { data, error } = await query;
@@ -54,7 +51,7 @@ export async function getRandomQuote(category?: string) {
       id: randomQuote.id,
       text: randomQuote.quote_text,
       author: randomQuote.authors[0]?.name || 'Unknown Author',
-      category: randomQuote.categories[0]?.category_name || '',
+      category: '',
       likes: 0,
       dislikes: 0
     };
