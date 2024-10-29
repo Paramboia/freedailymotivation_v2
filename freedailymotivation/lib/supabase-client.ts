@@ -1,22 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { UserResource } from '@clerk/types';
+import type { Database, DbUser } from '@/types/database';
 
-let supabase: ReturnType<typeof createClient>;
-
-try {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    console.error('Supabase environment variables are missing');
-    throw new Error('Supabase configuration is incomplete');
-  }
-
-  supabase = createClient(supabaseUrl, supabaseKey);
-} catch (error) {
-  console.error('Failed to initialize Supabase client:', error);
-  throw error;
-}
+let supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export async function testSupabaseConnection() {
   try {
@@ -28,36 +17,23 @@ export async function testSupabaseConnection() {
   }
 }
 
-interface DbUser {
-  id: string;
-  clerk_user_id: string;
-  email: string | null;
-}
-
 export async function createOrGetUser(clerkUser: UserResource): Promise<string | null> {
-  console.log("Creating or getting user:", { 
-    clerkUserId: clerkUser.id, 
-    email: clerkUser.emailAddresses[0]?.emailAddress,
-    name: `${clerkUser.firstName} ${clerkUser.lastName}`
-  });
-
   try {
     const { data: existingUser, error: initialError } = await supabase
       .from('users')
-      .select('id, clerk_user_id, email')
+      .select()
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
     if (initialError) {
       if (initialError.code === 'PGRST116') {
-        console.log("User not found, creating new user");
         const { data: newUser, error: createError } = await supabase
           .from('users')
           .insert({
             clerk_user_id: clerkUser.id,
-            email: clerkUser.emailAddresses[0]?.emailAddress,
+            email: clerkUser.emailAddresses[0]?.emailAddress ?? null,
           })
-          .select('id, clerk_user_id, email')
+          .select()
           .single();
 
         if (createError) {
@@ -66,10 +42,9 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
         }
 
         return newUser?.id ?? null;
-      } else {
-        console.error("Error fetching user:", initialError);
-        return null;
       }
+      console.error("Error fetching user:", initialError);
+      return null;
     }
 
     return existingUser?.id ?? null;
