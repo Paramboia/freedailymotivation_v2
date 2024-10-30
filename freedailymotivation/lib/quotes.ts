@@ -16,6 +16,9 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
         quote_text,
         authors (
           author_name
+        ),
+        categories (
+          category_name
         )
       `);
 
