@@ -143,7 +143,7 @@ export async function getMostDislikedQuotes(limit: number = 5): Promise<Quote[]>
 
 export async function getAuthorQuotes(authorName: string) {
   const supabase = createServerComponentClient({ cookies });
-  const { data, error } = await supabase
+  const { data, _error } = await supabase
     .from('quotes')
     .select(`
       id,
@@ -153,6 +153,7 @@ export async function getAuthorQuotes(authorName: string) {
       )
     `)
     .eq('authors.author_name', authorName);
+
   return data.map(item => ({
     id: item.id,
     text: item.quote_text,
