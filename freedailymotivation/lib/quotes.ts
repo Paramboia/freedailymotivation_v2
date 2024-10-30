@@ -14,7 +14,7 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        authors (
+        authors!inner (
           author_name
         ),
         categories (
@@ -81,7 +81,7 @@ export async function getMostLikedQuotes(limit: number = 5): Promise<Quote[]> {
         id,
         quote_text,
         likes,
-        authors (
+        authors!inner (
           author_name
         )
       `)
@@ -115,7 +115,7 @@ export async function getMostDislikedQuotes(limit: number = 5): Promise<Quote[]>
         id,
         quote_text,
         dislikes,
-        authors (
+        authors!inner (
           author_name
         )
       `)
