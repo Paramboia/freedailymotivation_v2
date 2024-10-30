@@ -22,8 +22,8 @@ export default async function InspirationalQuotesFamous() {
 
   const { data: authors, error } = await supabase
     .from('authors')
-    .select('*')
-    .order('name');
+    .select('id, author_name')
+    .order('author_name');
 
   if (error) {
     console.error('Error fetching authors:', error);
@@ -49,7 +49,7 @@ export default async function InspirationalQuotesFamous() {
           {authors?.map((author) => (
             <Link 
               key={author.id} 
-              href={`/inspirational-quotes-famous/${nameToSlug(author.name)}`}
+              href={`/inspirational-quotes-famous/${nameToSlug(author.author_name)}`}
               className={cn(
                 "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                 "h-10 px-4 py-2",
@@ -57,7 +57,7 @@ export default async function InspirationalQuotesFamous() {
                 "dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
               )}
             >
-              {author.name}
+              {author.author_name}
             </Link>
           ))}
         </div>
