@@ -13,11 +13,10 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Cle
 7. Gradient Backgrounds and Styling: Visual elements, such as gradient backgrounds and fixed-width quote boxes, enhance the modern aesthetic of the site.
 8. Bookmark Encouragement Feature: A mechanic to encourage users to bookmark the website for daily visits.
 9. Like and Dislike Feature: Users can like and dislike quotes, and the website will show the most liked and disliked quotes.
-10. JSON Data Management: Quotes and author data are stored and fetched from JSON files, enabling efficient and scalable content updates.
-11. SEO Optimized Author Pages: Programmatically generated pages for famous authors using SEO techniques to improve discoverability on search engines.
-12. Dynamic Author Pages: Automatically generated pages for individual authors, displaying their quotes, biography, and relevant links for easy exploration.
-13. Custom URL Structures: Author pages are dynamically linked with URLs (e.g., “/inspirational-quotes-famous?author=bill-gates”) for consistency and easy SEO management.
-14. Authentication: Users can sign up, log in, and log out using Clerk.
+10. SEO Optimized Author Pages: Programmatically generated pages for famous authors using SEO techniques to improve discoverability on search engines.
+11. Dynamic Author Pages: Automatically generated pages for individual authors, displaying their quotes, biography, and relevant links for easy exploration.
+12. Custom URL Structures: Author pages are dynamically linked with URLs (e.g., “/inspirational-quotes-famous?author=bill-gates”) for consistency and easy SEO management.
+13. Authentication: Users can sign up, log in, and log out using Clerk.
 
 # Relevant Docs:
 - Clerk: https://clerk.com/docs/components/overview
@@ -111,7 +110,7 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Cle
     -- Create Authors table
     CREATE TABLE Authors (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-        name TEXT NOT NULL,
+        author_name TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
     );
 

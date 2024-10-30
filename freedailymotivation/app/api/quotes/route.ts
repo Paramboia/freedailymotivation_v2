@@ -6,7 +6,7 @@ interface DatabaseQuote {
   id: string;
   quote_text: string;
   authors: {
-    name: string;
+    author_name: string;
   }[];
   categories: {
     category_name: string;
@@ -17,7 +17,7 @@ export async function GET(_request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
   const { data, error } = await supabase
     .from('quotes')
-    .select('id, quote_text, authors!inner(name), categories!inner(category_name)')
+    .select('id, quote_text, authors!inner(author_name), categories!inner(category_name)')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -28,7 +28,7 @@ export async function GET(_request: Request) {
   const quotes = (data as DatabaseQuote[]).map(item => ({
     id: item.id,
     text: item.quote_text,
-    author: item.authors[0]?.name || 'Unknown Author',
+    author: item.authors[0]?.author_name || 'Unknown Author',
     category: item.categories[0]?.category_name || 'Uncategorized',
     likes: 0,
     dislikes: 0

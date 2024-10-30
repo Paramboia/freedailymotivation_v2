@@ -19,8 +19,8 @@ async function getAuthorQuotes(authorName: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from('quotes')
-    .select('id, quote_text, authors!inner(name)')
-    .eq('authors.name', authorName);
+    .select('id, quote_text, authors!inner(author_name)')
+    .eq('authors.author_name', authorName);
 
   if (error) {
     console.error('Error fetching quotes:', error);
