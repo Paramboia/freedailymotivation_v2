@@ -14,7 +14,8 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        author:authors!quotes_author_id_fkey (
+        authors!quotes_author_id_fkey (
+          id,
           name
         ),
         categories!inner (
@@ -43,10 +44,10 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: randomQuote.author?.name || 'Unknown Author',
+      author: randomQuote.authors[0]?.name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
-      category: randomQuote.categories?.category_name || ''
+      category: randomQuote.categories[0]?.category_name || ''
     };
   } catch (error) {
     console.error('Error in getRandomQuote:', error);
