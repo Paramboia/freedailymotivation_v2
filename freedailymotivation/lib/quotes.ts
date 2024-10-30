@@ -14,13 +14,13 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        authors!inner (
+        author_id,
+        authors (
+          id,
           author_name
-        ),
-        categories (
-          category_name
         )
-      `);
+      `)
+      .eq('quotes.author_id', 'authors.id');
 
     if (category) {
       query = query.eq('categories.category_name', category);
@@ -139,4 +139,26 @@ export async function getMostDislikedQuotes(limit: number = 5): Promise<Quote[]>
     console.error('Error in getMostDislikedQuotes:', error);
     return [];
   }
+}
+
+export async function getAuthorQuotes(authorName: string) {
+  const supabase = createServerComponentClient({ cookies });
+  const { data, error } = await supabase
+    .from('quotes')
+    .select(`
+      id,
+      quote_text,
+      authors!inner (
+        author_name
+      )
+    `)
+    .eq('authors.author_name', authorName);
+  return data.map(item => ({
+    id: item.id,
+    text: item.quote_text,
+    author: item.authors[0]?.author_name || 'Unknown Author',
+    likes: 0,
+    category: '',
+    dislikes: 0
+  }));
 }
