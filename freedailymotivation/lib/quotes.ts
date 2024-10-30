@@ -82,7 +82,7 @@ export async function getMostLikedQuotes(limit: number = 5): Promise<Quote[]> {
         quote_text,
         likes,
         authors!inner (
-          name
+          author_name
         )
       `)
       .order('likes', { ascending: false })
@@ -96,7 +96,7 @@ export async function getMostLikedQuotes(limit: number = 5): Promise<Quote[]> {
     return data.map(quote => ({
       id: quote.id,
       text: quote.quote_text,
-      author: quote.authors[0]?.name || 'Unknown Author',
+      author: quote.authors[0]?.author_name || 'Unknown Author',
       likes: quote.likes || 0,
       dislikes: 0,
       category: ''
@@ -116,7 +116,7 @@ export async function getMostDislikedQuotes(limit: number = 5): Promise<Quote[]>
         quote_text,
         dislikes,
         authors!inner (
-          name
+          author_name
         )
       `)
       .order('dislikes', { ascending: false })
@@ -130,7 +130,7 @@ export async function getMostDislikedQuotes(limit: number = 5): Promise<Quote[]>
     return data.map(quote => ({
       id: quote.id,
       text: quote.quote_text,
-      author: quote.authors[0]?.name || 'Unknown Author',
+      author: quote.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       dislikes: quote.dislikes || 0,
       category: ''
