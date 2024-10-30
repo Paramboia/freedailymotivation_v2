@@ -4,7 +4,11 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { getRandomQuote, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
-import QuoteBox from "@/components/quote-box";
+import dynamic from 'next/dynamic';
+const QuoteBox = dynamic(() => import("@/components/quote-box"), { 
+  ssr: false,
+  loading: () => <div className="flex justify-center items-center">Loading quote...</div>
+});
 import CategoryButtons from "@/components/category-buttons";
 import SavePagePopup from "@/components/SavePagePopup";
 import ThemeWrapper from "@/components/ThemeWrapper";

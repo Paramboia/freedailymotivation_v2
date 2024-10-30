@@ -14,16 +14,13 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        author_id,
-        authors (
-          id,
+        authors!inner (
           author_name
         ),
         categories (
           category_name
         )
-      `)
-      .eq('quotes.author_id', 'authors.id');
+      `);
 
     if (category) {
       query = query.eq('categories.category_name', category);
