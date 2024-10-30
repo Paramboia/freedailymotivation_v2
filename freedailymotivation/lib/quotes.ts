@@ -18,6 +18,9 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
         authors (
           id,
           author_name
+        ),
+        categories (
+          category_name
         )
       `)
       .eq('quotes.author_id', 'authors.id');
