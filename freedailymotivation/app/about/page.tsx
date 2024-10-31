@@ -16,7 +16,7 @@ export default function AboutUs() {
             <h1 className="text-4xl font-bold mb-8 dark:text-white">About Us</h1>
             <div className="max-w-2xl text-center">
               <p className="mb-4 dark:text-gray-300">
-                Welcome to Free Daily Motivation! Our mission is to be the first to offer an easy and intuitive way to generate multiple inspirational quotes from a wide range of categories, including "business," "sport," "science," and "life."
+                Welcome to <Link href="/" className="text-blue-600 hover:underline"> Free Daily Motivation </Link>! Our mission is to be the first to offer an easy and intuitive way to generate multiple inspirational quotes from a wide range of categories, including "business," "sport," "science," and "life."
               </p>
               <p className="mb-4 dark:text-gray-300">
                 Whether you're looking to enhance your work presentation or boost your social media content, our website provides a rich resource for finding the perfect quote to inspire and engage your audience.
