@@ -14,8 +14,7 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        authors (
-          id,
+        authors!inner (
           author_name
         ),
         categories (
@@ -41,17 +40,10 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
     const randomIndex = Math.floor(Math.random() * data.length);
     const randomQuote = data[randomIndex];
 
-    // Get the exact author name from the authors table
-    const { data: authorData } = await supabase
-      .from('authors')
-      .select('author_name')
-      .eq('id', randomQuote.authors[0]?.id)
-      .single();
-
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: authorData?.author_name || 'Unknown Author',
+      author: randomQuote.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
       category: randomQuote.categories?.[0]?.category_name || ''
