@@ -22,8 +22,7 @@ async function getAuthorQuotes(authorName: string) {
     .select(`
       id,
       quote_text,
-      author_id,
-      authors!quotes_author_id_fkey (
+      authors!inner (
         author_name
       )
     `)
