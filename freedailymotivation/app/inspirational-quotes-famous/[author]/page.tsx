@@ -17,6 +17,22 @@ function capitalizeWords(str: string) {
 
 async function getAuthorQuotes(authorName: string) {
   const supabase = createServerComponentClient({ cookies });
+  
+  // First, get the exact author name from the authors table
+  const { data: authorData } = await supabase
+    .from('authors')
+    .select('author_name')
+    .ilike('author_name', authorName)
+    .single();
+
+  if (!authorData) {
+    console.error('Author not found:', authorName);
+    return [];
+  }
+
+  const exactAuthorName = authorData.author_name;
+
+  // Then use the exact author name to get quotes
   const { data, error } = await supabase
     .from('quotes')
     .select(`
@@ -26,7 +42,7 @@ async function getAuthorQuotes(authorName: string) {
         author_name
       )
     `)
-    .eq('authors.author_name', authorName);
+    .eq('authors.author_name', exactAuthorName);
 
   if (error) {
     console.error('Error fetching quotes:', error);
@@ -36,7 +52,7 @@ async function getAuthorQuotes(authorName: string) {
   return data.map(item => ({
     id: item.id,
     text: item.quote_text,
-    author: item.authors[0]?.author_name || 'Unknown Author',
+    author: exactAuthorName,
     likes: 0,
     category: '',
     dislikes: 0
