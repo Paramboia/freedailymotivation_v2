@@ -14,15 +14,11 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        author_id,
-        authors!quotes_author_id_fkey (
-          id,
+        authors (
           author_name
-        ),
-        categories (
-          category_name
         )
-      `);
+      `)
+      .select('*', { count: 'exact' });
 
     if (category) {
       query = query.eq('categories.category_name', category);
@@ -149,7 +145,8 @@ export async function getAuthorQuotes(authorName: string) {
     .select(`
       id,
       quote_text,
-      authors!inner (
+      author_id,
+      authors!quotes_author_id_fkey (
         author_name
       )
     `)
@@ -163,7 +160,7 @@ export async function getAuthorQuotes(authorName: string) {
   return data.map(item => ({
     id: item.id,
     text: item.quote_text,
-    author: item.authors[0]?.author_name || 'Unknown Author',
+    author: item.authors?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
