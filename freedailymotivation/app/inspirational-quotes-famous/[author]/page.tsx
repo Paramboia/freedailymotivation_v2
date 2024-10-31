@@ -37,7 +37,7 @@ async function getAuthorQuotes(authorName: string) {
   return data.map(item => ({
     id: item.id,
     text: item.quote_text,
-    author: item.authors?.author_name || 'Unknown Author',
+    author: item.authors[0]?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
