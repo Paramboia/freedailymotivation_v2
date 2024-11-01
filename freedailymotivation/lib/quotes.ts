@@ -26,24 +26,29 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       query = query.eq('categories.category_name', category);
     }
 
-    const { data, error } = await query;
+    const { data: quotesData, error } = await query;
 
     if (error) {
       console.error('Error fetching quote:', error);
       return null;
     }
 
-    if (!data || data.length === 0) {
+    if (!quotesData || quotesData.length === 0) {
       return null;
     }
 
-    const randomIndex = Math.floor(Math.random() * data.length);
-    const randomQuote = data[randomIndex];
+    const randomIndex = Math.floor(Math.random() * quotesData.length);
+    const randomQuote = quotesData[randomIndex] as unknown as {
+      id: string;
+      quote_text: string;
+      authors: { author_name: string }[];
+      categories: { category_name: string }[];
+    };
 
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: randomQuote.authors[0]?.author_name || 'Unknown Author',
+      author: randomQuote.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
       category: randomQuote.categories?.[0]?.category_name || ''
