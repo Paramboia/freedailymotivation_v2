@@ -11,9 +11,7 @@ const Header = () => {
         alt="Free Daily Motivation Logo"
         width={20}
         height={20}
-        className="mr-2"
       />
-      Free Daily Motivation
     </Link>
   );
 };
