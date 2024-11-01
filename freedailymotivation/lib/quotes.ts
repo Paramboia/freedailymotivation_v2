@@ -42,13 +42,26 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
 
     console.log('Quote data structure:', JSON.stringify(randomQuote, null, 2));
 
+    type QuoteResponse = {
+      id: string;
+      quote_text: string;
+      authors: {
+        author_name: string;
+      };
+      categories: {
+        category_name: string;
+      }[];
+    };
+
+    const typedQuote = randomQuote as QuoteResponse;
+
     return {
-      id: randomQuote.id,
-      text: randomQuote.quote_text,
-      author: randomQuote.authors[0]?.author_name || 'Unknown Author',
+      id: typedQuote.id,
+      text: typedQuote.quote_text,
+      author: typedQuote.authors.author_name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
-      category: randomQuote.categories?.[0]?.category_name || ''
+      category: typedQuote.categories?.[0]?.category_name || ''
     };
   } catch (error) {
     console.error('Error in getRandomQuote:', error);
