@@ -42,12 +42,14 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
 
     console.log('Quote data structure:', JSON.stringify(randomQuote, null, 2));
 
+    const authors = Array.isArray(randomQuote.authors) 
+      ? randomQuote.authors 
+      : [randomQuote.authors];
+
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: Array.isArray(randomQuote.authors) 
-        ? randomQuote.authors[0]?.author_name || 'Unknown Author'
-        : randomQuote.authors?.author_name || 'Unknown Author',
+      author: authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
       category: randomQuote.categories?.[0]?.category_name || ''
