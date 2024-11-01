@@ -5,6 +5,13 @@ import { useState, useEffect } from 'react';
 import { getRandomQuote, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
 import dynamic from 'next/dynamic';
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({
+  weight: '700',
+  subsets: ['latin'],
+});
+
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { 
   ssr: false,
   loading: () => <div className="flex justify-center items-center">Loading quote...</div>
@@ -73,6 +80,9 @@ export default function Home() {
       <ThemeWrapper>
         <main className="flex-grow flex flex-col items-center justify-center p-8">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
+            <h1 className={`${poppins.className} text-[32px] font-bold mb-8 dark:text-white`}>
+              Free Daily Motivation
+            </h1>
             {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
             <CategoryButtons 
               categories={categories} 
