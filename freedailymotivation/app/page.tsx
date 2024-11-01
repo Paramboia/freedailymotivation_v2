@@ -80,7 +80,7 @@ export default function Home() {
       <ThemeWrapper>
         <main className="flex-grow flex flex-col items-center justify-center p-8">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
-            <h1 className={`${poppins.className} text-[24px] md:text-[42px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap`}>
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap`}>
               Free Daily Motivation
             </h1>
             {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
