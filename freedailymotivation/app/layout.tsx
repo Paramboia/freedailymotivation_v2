@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/contexts/theme-context";
 import { ClerkProvider } from '@clerk/nextjs';
 import SiteHeader from "@/components/SiteHeader";
 import dynamic from 'next/dynamic';
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
