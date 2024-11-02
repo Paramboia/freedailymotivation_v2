@@ -8,14 +8,14 @@ export default function Document() {
         {/* Google Tag Manager */}
         <Script
           strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_ID"
+          src="https://www.googletagmanager.com/gtag/js?id=GTM-PQ8LSCWN"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'YOUR_GA_ID');
+            gtag('config', 'GTM-PQ8LSCWN');
           `}
         </Script>
         {/* End Google Tag Manager */}
