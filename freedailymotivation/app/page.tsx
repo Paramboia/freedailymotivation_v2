@@ -18,13 +18,11 @@ export default function Home() {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     async function initializeQuotes() {
       try {
-        setIsLoading(true);
         const [fetchedCategories, initialQuote] = await Promise.all([
           getAllCategories(),
           getRandomQuote()
@@ -37,8 +35,6 @@ export default function Home() {
         setQuote(initialQuote);
       } catch (error) {
         console.error('Failed to initialize:', error);
-      } finally {
-        setIsLoading(false);
       }
     }
     initializeQuotes();
