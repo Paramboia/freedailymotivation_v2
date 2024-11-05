@@ -6,7 +6,6 @@ import { getRandomQuote, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
 import dynamic from 'next/dynamic';
 import { Poppins } from 'next/font/google';
-import SearchBar from "@/components/SearchBar";
 
 const poppins = Poppins({
   weight: '700',

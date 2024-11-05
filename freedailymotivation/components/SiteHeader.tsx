@@ -6,6 +6,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import { User, Info, Quote } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import SearchBar from "@/components/SearchBar";
 
 const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) => (
   <Button
@@ -21,7 +22,10 @@ const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.
 const SiteHeader = () => {
   return (
     <header className="py-2 px-4 flex justify-between items-center bg-transparent dark:bg-black dark:shadow-dark">
-      <Header />
+      <div className="flex items-center gap-4">
+        <Header />
+        <SearchBar />
+      </div>
       <div className="flex items-center space-x-2">
         <Link href="/inspirational-quotes-famous">
           <HeaderIconButton>
