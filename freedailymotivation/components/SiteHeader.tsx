@@ -26,28 +26,32 @@ const SiteHeader = () => {
         <Header />
         <SearchBar />
       </div>
-      <div className="flex items-center gap-1">
-        <Link href="/inspirational-quotes-famous">
-          <HeaderIconButton>
-            <Quote className="h-4 w-4" />
-          </HeaderIconButton>
-        </Link>
-        <Link href="/about">
-          <HeaderIconButton>
-            <Info className="h-4 w-4" />
-          </HeaderIconButton>
-        </Link>
-        <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
-        <SignedOut>
-          <SignInButton>
+      <div className="flex items-center">
+        <div className="flex items-center gap-0.5">
+          <Link href="/inspirational-quotes-famous">
             <HeaderIconButton>
-              <User className="h-4 w-4" />
+              <Quote className="h-4 w-4" />
             </HeaderIconButton>
-          </SignInButton>
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
+          </Link>
+          <Link href="/about">
+            <HeaderIconButton>
+              <Info className="h-4 w-4" />
+            </HeaderIconButton>
+          </Link>
+          <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
+        </div>
+        <div className="ml-0.5">
+          <SignedOut>
+            <SignInButton>
+              <HeaderIconButton>
+                <User className="h-4 w-4" />
+              </HeaderIconButton>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </div>
     </header>
   );
