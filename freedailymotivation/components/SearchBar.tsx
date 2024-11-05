@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
+interface Author {
+  author_name: string;
+}
+
 export default function SearchBar() {
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -11,11 +15,11 @@ export default function SearchBar() {
       const fetchAuthors = async () => {
         try {
           const response = await fetch('/api/authors');
-          const data = await response.json();
-          const filteredAuthors = data.filter(author =>
+          const data: Author[] = await response.json();
+          const filteredAuthors = data.filter((author: Author) =>
             author.author_name.toLowerCase().includes(query.toLowerCase())
           );
-          setSuggestions(filteredAuthors.map(author => author.author_name));
+          setSuggestions(filteredAuthors.map((author: Author) => author.author_name));
         } catch (error) {
           console.error('Error fetching authors:', error);
         }
@@ -27,7 +31,7 @@ export default function SearchBar() {
     }
   }, [query]);
 
-  const handleSelect = (authorName) => {
+  const handleSelect = (authorName: string) => {
     const slug = authorName.toLowerCase().replace(/\s+/g, '-');
     router.push(`/inspirational-quotes-famous/${slug}`);
   };
