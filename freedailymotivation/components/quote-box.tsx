@@ -14,12 +14,12 @@ import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 
 interface QuoteBoxProps {
   quote: Quote;
-  onNewQuote?: () => void;
+  onNewQuote: () => void;
   isAuthorPage?: boolean;
   selectedCategory?: string | null;
 }
 
-export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: QuoteBoxProps) {
+export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false, selectedCategory }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
@@ -64,6 +64,11 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
     }
   };
 
+  const handleNewQuote = () => {
+    console.log('Generating new quote for category:', selectedCategory);
+    onNewQuote();
+  };
+
   return (
     <div className={cn("w-full flex justify-center mb-8")}>
       <TooltipProvider>
@@ -104,18 +109,20 @@ export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: Qu
               </Tooltip>
 
               <div className="flex gap-2">
-                {!isAuthorPage && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="sm" onClick={onNewQuote}>
-                        <RefreshCw className="h-5 w-5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Get new quote</p>
-                    </TooltipContent>
-                  </Tooltip>
-                )}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleNewQuote}
+                    >
+                      <RefreshCw className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Get new quote</p>
+                  </TooltipContent>
+                </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="sm" onClick={copyQuote}>

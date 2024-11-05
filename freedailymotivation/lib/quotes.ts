@@ -17,17 +17,19 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
         authors:authors!inner (
           author_name
         ),
-        categories (
+        categories!inner (
           category_name
         )
       `);
 
     if (category) {
+      console.log('Filtering by category:', category);
       query = query.eq('categories.category_name', category);
     }
 
     const { data: quotesData, error } = await query;
 
+    console.log('Quotes found:', quotesData?.length);
     if (error) {
       console.error('Error fetching quote:', error);
       return null;
