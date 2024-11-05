@@ -4,9 +4,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RefreshCw, Copy, Send, ThumbsUp } from "lucide-react";
+import { RefreshCw, ThumbsUp } from "lucide-react";
 import { Quote } from '@/types';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/supabase-client';
@@ -19,7 +18,7 @@ interface QuoteBoxProps {
   selectedCategory?: string | null;
 }
 
-export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, selectedCategory }: QuoteBoxProps) {
+export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, _selectedCategory = null }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
