@@ -40,7 +40,7 @@ const SiteHeader = () => {
           </Link>
           <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
         </div>
-        <div className="ml-0.5">
+        <div className="ml-0.2">
           <SignedOut>
             <SignInButton>
               <HeaderIconButton>
