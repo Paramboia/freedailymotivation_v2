@@ -75,7 +75,7 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
           </div>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
             {quotes.map((quote: Quote) => (
-              <QuoteBox key={quote.id} quote={quote} isAuthorPage={true} />
+              <QuoteBox key={quote.id} quote={quote} _isAuthorPage={true} />
             ))}
           </div>
           <Link href="/inspirational-quotes-famous" className="mt-8">
