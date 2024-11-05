@@ -83,7 +83,7 @@ export default function Home() {
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap`}>
               Free Daily Motivation
             </h1>
-            {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} />}
+            {quote && <QuoteBox quote={quote} onNewQuote={handleNewQuote} selectedCategory={selectedCategory} />}
             <CategoryButtons 
               categories={categories} 
               onCategorySelect={handleCategorySelect}
