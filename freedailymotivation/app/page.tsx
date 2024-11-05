@@ -8,10 +8,17 @@ import dynamic from 'next/dynamic';
 import CategoryButtons from "@/components/category-buttons";
 import SavePagePopup from "@/components/SavePagePopup";
 import ThemeWrapper from "@/components/ThemeWrapper";
+import { Poppins } from "next/font/google";
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { 
   ssr: false,
   loading: () => <div className="flex justify-center items-center">Loading quote...</div>
+});
+
+const poppins = Poppins({
+  weight: ['700'],
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export default function Home() {
@@ -52,7 +59,7 @@ export default function Home() {
       <div className="min-h-screen flex flex-col">
         <main className="container mx-auto px-4 py-8 flex-grow">
           <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+            <h1 className={`${poppins.className} text-2xl md:text-3xl font-bold text-center text-[#333333] dark:text-white whitespace-nowrap overflow-hidden text-ellipsis`}>
               Free Daily Motivation
             </h1>
           </div>
