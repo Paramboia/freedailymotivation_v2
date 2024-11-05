@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Search } from 'lucide-react';
 
 interface Author {
   author_name: string;
@@ -40,13 +41,16 @@ export default function SearchBar() {
 
   return (
     <div className="relative w-full max-w-md mb-6">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search authors..."
-        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-[#333] text-gray-900 dark:text-white border-0 hover:bg-gray-100 dark:hover:bg-[#444] focus:outline-none transition-colors placeholder-gray-500 dark:placeholder-gray-400"
-      />
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search authors..."
+          className="w-full pl-10 pr-4 py-2 rounded-lg bg-white dark:bg-[#333] text-gray-900 dark:text-white border-0 hover:bg-gray-100 dark:hover:bg-[#444] focus:outline-none transition-colors placeholder-gray-500 dark:placeholder-gray-400"
+        />
+      </div>
       {suggestions.length > 0 && (
         <ul className="absolute w-full bg-white dark:bg-[#333] border border-gray-200 dark:border-gray-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-lg z-50">
           {suggestions.map((author) => (
