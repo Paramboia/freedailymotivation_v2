@@ -14,7 +14,7 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       .select(`
         id,
         quote_text,
-        authors!inner (
+        authors:authors!inner (
           author_name
         ),
         categories!inner (
@@ -41,10 +41,17 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
     const randomIndex = Math.floor(Math.random() * quotesData.length);
     const randomQuote = quotesData[randomIndex];
 
+    console.log('Quote data structure:', JSON.stringify(randomQuote, null, 2));
+
+    // Ensure we're treating authors as an array to match DatabaseQuote interface
+    const authors = Array.isArray(randomQuote.authors) 
+      ? randomQuote.authors 
+      : [randomQuote.authors];
+
     return {
       id: randomQuote.id,
       text: randomQuote.quote_text,
-      author: randomQuote.authors[0]?.author_name || 'Unknown Author',
+      author: authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: randomQuote.categories[0]?.category_name || '',
       dislikes: 0
