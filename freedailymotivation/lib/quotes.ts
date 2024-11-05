@@ -17,32 +17,35 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
         authors:authors!inner (
           author_name
         ),
-        categories:quotes_categories!inner (
-          categories (
-            category_name
-          )
+        categories:categories!inner (
+          id,
+          category_name
         )
       `);
 
     if (category) {
-      console.log('Filtering by category:', category);
-      query = query.eq('categories.categories.category_name', category);
+      query = query.eq('categories.category_name', category);
     }
 
     const { data: quotesData, error } = await query;
 
-    console.log('Quotes found:', quotesData?.length);
     if (error) {
       console.error('Error fetching quote:', error);
-      return null;
+      throw error;
     }
 
     if (!quotesData || quotesData.length === 0) {
+      console.error('No quotes found');
       return null;
     }
 
     const randomIndex = Math.floor(Math.random() * quotesData.length);
     const randomQuote = quotesData[randomIndex];
+
+    if (!randomQuote) {
+      console.error('Failed to get random quote');
+      return null;
+    }
 
     return {
       id: randomQuote.id,
@@ -50,7 +53,7 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       author: randomQuote.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
-      category: randomQuote.categories[0]?.categories[0]?.category_name || ''
+      category: randomQuote.categories?.category_name || ''
     };
   } catch (error) {
     console.error('Error in getRandomQuote:', error);
