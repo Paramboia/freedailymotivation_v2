@@ -6,6 +6,9 @@ import { getRandomQuote, getAllCategories } from '@/lib/quotes';
 import { Quote } from '@/types';
 import dynamic from 'next/dynamic';
 import { Poppins } from 'next/font/google';
+import CategoryButtons from "@/components/category-buttons";
+import SavePagePopup from "@/components/SavePagePopup";
+import ThemeWrapper from "@/components/ThemeWrapper";
 
 const poppins = Poppins({
   weight: '700',
@@ -16,9 +19,6 @@ const QuoteBox = dynamic(() => import("@/components/quote-box"), {
   ssr: false,
   loading: () => <div className="flex justify-center items-center">Loading quote...</div>
 });
-import CategoryButtons from "@/components/category-buttons";
-import SavePagePopup from "@/components/SavePagePopup";
-import ThemeWrapper from "@/components/ThemeWrapper";
 
 export default function Home() {
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -31,8 +31,10 @@ export default function Home() {
     async function initializeQuotes() {
       try {
         const fetchedCategories = await getAllCategories();
+        console.log('Fetched categories:', fetchedCategories);
         setCategories(fetchedCategories);
         const initialQuote = await getRandomQuote();
+        console.log('Initial quote:', initialQuote);
         setQuote(initialQuote);
       } catch (error) {
         console.error('Failed to load quotes:', error);
@@ -88,6 +90,7 @@ export default function Home() {
               quote={quote} 
               onNewQuote={handleNewQuote}
               selectedCategory={selectedCategory}
+              _isAuthorPage={false}
             />}
             <CategoryButtons 
               categories={categories} 
