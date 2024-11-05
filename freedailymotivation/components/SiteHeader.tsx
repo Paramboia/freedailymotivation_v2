@@ -27,7 +27,7 @@ const SiteHeader = () => {
         <SearchBar />
       </div>
       <div className="flex items-center">
-        <div className="flex items-center gap-0.2">
+        <div className="flex items-center gap-0.1">
           <Link href="/inspirational-quotes-famous">
             <HeaderIconButton>
               <Quote className="h-4 w-4" />
