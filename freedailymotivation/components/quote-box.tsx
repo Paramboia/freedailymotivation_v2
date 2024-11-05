@@ -15,11 +15,11 @@ import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 interface QuoteBoxProps {
   quote: Quote;
   onNewQuote: () => void;
-  isAuthorPage?: boolean;
+  _isAuthorPage?: boolean;
   selectedCategory?: string | null;
 }
 
-export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false, selectedCategory }: QuoteBoxProps) {
+export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, selectedCategory }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
