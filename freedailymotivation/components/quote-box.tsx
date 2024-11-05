@@ -66,7 +66,9 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
 
   const handleNewQuote = () => {
     console.log('Generating new quote for category:', selectedCategory);
-    onNewQuote();
+    if (onNewQuote) {
+      onNewQuote();
+    }
   };
 
   return (
