@@ -27,10 +27,6 @@ export default function Home() {
           getAllCategories(),
           getRandomQuote()
         ]);
-        
-        console.log('Fetched categories:', fetchedCategories);
-        console.log('Initial quote:', initialQuote);
-        
         setCategories(fetchedCategories);
         setQuote(initialQuote);
       } catch (error) {
@@ -51,19 +47,16 @@ export default function Home() {
     }
   };
 
-  const handleCategorySelect = (category: string | undefined) => {
-    setSelectedCategory(category);
-  };
-
   return (
     <ThemeWrapper>
       <div className="min-h-screen">
         <main className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold text-center mb-8">Free Daily Motivation</h1>
           {categories.length > 0 && (
             <CategoryButtons 
               categories={categories}
               selectedCategory={selectedCategory}
-              onCategorySelect={handleCategorySelect}
+              onCategorySelect={setSelectedCategory}
             />
           )}
           {quote && (
@@ -72,6 +65,11 @@ export default function Home() {
               onNewQuote={handleNewQuote}
               selectedCategory={selectedCategory}
             />
+          )}
+          {!quote && (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-lg">Loading quote...</p>
+            </div>
           )}
         </main>
       </div>
