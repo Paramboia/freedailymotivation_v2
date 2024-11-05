@@ -40,7 +40,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative w-64">
+    <div className="relative w-64 md:w-64 max-w-[160px] md:max-w-none">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
         <input
@@ -48,7 +48,7 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search authors..."
-          className="w-full pl-10 pr-4 py-1.5 text-sm rounded-lg bg-white/10 text-white border-0 hover:bg-white/20 focus:bg-white/20 focus:outline-none transition-colors placeholder-gray-400"
+          className="w-full pl-10 pr-4 py-1.5 text-sm rounded-lg bg-white/20 dark:bg-white/10 text-gray-900 dark:text-white border-0 hover:bg-white/30 dark:hover:bg-white/20 focus:bg-white/30 dark:focus:bg-white/20 focus:outline-none transition-colors placeholder-gray-600 dark:placeholder-gray-400"
         />
       </div>
       {suggestions.length > 0 && (
