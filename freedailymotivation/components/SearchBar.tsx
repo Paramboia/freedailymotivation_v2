@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface Author {
   author_name: string;
@@ -11,24 +11,26 @@ export default function SearchBar() {
   const router = useRouter();
 
   useEffect(() => {
-    if (query.length > 2) {
-      const fetchAuthors = async () => {
-        try {
-          const response = await fetch('/api/authors');
-          const data: Author[] = await response.json();
-          const filteredAuthors = data.filter((author: Author) =>
-            author.author_name.toLowerCase().includes(query.toLowerCase())
-          );
-          setSuggestions(filteredAuthors.map((author: Author) => author.author_name));
-        } catch (error) {
-          console.error('Error fetching authors:', error);
-        }
-      };
+    const fetchAuthors = async () => {
+      if (query.length < 3) {
+        setSuggestions([]);
+        return;
+      }
 
-      fetchAuthors();
-    } else {
-      setSuggestions([]);
-    }
+      try {
+        const response = await fetch('/api/authors');
+        const data: Author[] = await response.json();
+        const filteredAuthors = data.filter((author: Author) =>
+          author.author_name.toLowerCase().includes(query.toLowerCase())
+        );
+        setSuggestions(filteredAuthors.map((author: Author) => author.author_name));
+      } catch (error) {
+        console.error('Error fetching authors:', error);
+      }
+    };
+
+    const debounceTimeout = setTimeout(fetchAuthors, 300);
+    return () => clearTimeout(debounceTimeout);
   }, [query]);
 
   const handleSelect = (authorName: string) => {
@@ -37,21 +39,21 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-md mb-6">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search authors..."
-        className="border p-2 rounded"
+        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white dark:border-gray-600"
       />
       {suggestions.length > 0 && (
-        <ul className="absolute bg-white border rounded mt-1">
+        <ul className="absolute w-full bg-white dark:bg-gray-800 border rounded-lg mt-1 max-h-60 overflow-y-auto shadow-lg z-50">
           {suggestions.map((author) => (
             <li
               key={author}
               onClick={() => handleSelect(author)}
-              className="p-2 cursor-pointer hover:bg-gray-200"
+              className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
             >
               {author}
             </li>
