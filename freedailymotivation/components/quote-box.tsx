@@ -16,6 +16,7 @@ interface QuoteBoxProps {
   quote: Quote;
   onNewQuote?: () => void;
   isAuthorPage?: boolean;
+  selectedCategory?: string | null;
 }
 
 export default function QuoteBox({ quote, onNewQuote, isAuthorPage = false }: QuoteBoxProps) {
