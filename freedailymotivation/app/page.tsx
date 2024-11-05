@@ -49,8 +49,8 @@ export default function Home() {
 
   return (
     <ThemeWrapper>
-      <div className="min-h-screen">
-        <main className="container mx-auto px-4 py-8">
+      <div className="min-h-screen flex flex-col">
+        <main className="container mx-auto px-4 py-8 flex-grow">
           <div className="mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
               Free Daily Motivation
@@ -78,6 +78,9 @@ export default function Home() {
             </div>
           )}
         </main>
+        <footer className="p-4 text-sm text-center text-white dark:text-gray-300">
+          © 2024 Free Daily Motivation. All rights reserved.
+        </footer>
       </div>
       {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
     </ThemeWrapper>
