@@ -27,7 +27,7 @@ const SiteHeader = () => {
         <SearchBar />
       </div>
       <div className="flex items-center">
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.2">
           <Link href="/inspirational-quotes-famous">
             <HeaderIconButton>
               <Quote className="h-4 w-4" />
@@ -40,7 +40,7 @@ const SiteHeader = () => {
           </Link>
           <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
         </div>
-        <div className="ml-0.2">
+        <div className="ml-0.5">
           <SignedOut>
             <SignInButton>
               <HeaderIconButton>
