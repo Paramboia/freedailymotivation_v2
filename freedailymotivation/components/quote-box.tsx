@@ -14,7 +14,7 @@ import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 
 interface QuoteBoxProps {
   quote: Quote;
-  onNewQuote: () => void;
+  onNewQuote?: () => void;
   _isAuthorPage?: boolean;
   selectedCategory?: string | null;
 }
@@ -109,20 +109,22 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
               </Tooltip>
 
               <div className="flex gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={handleNewQuote}
-                    >
-                      <RefreshCw className="h-5 w-5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Get new quote</p>
-                  </TooltipContent>
-                </Tooltip>
+                {!_isAuthorPage && onNewQuote && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={handleNewQuote}
+                      >
+                        <RefreshCw className="h-5 w-5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Get new quote</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="sm" onClick={copyQuote}>
