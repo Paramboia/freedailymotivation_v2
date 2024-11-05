@@ -59,7 +59,7 @@ export default function Home() {
       <div className="min-h-screen flex flex-col">
         <main className="container mx-auto px-4 py-8 flex-grow">
           <div className="mb-12">
-            <h1 className={`${poppins.className} text-2xl md:text-3xl font-bold text-center text-[#333333] dark:text-white whitespace-nowrap overflow-hidden text-ellipsis`}>
+            <h1 className={`text-4xl md:text-5xl font-bold text-center text-[#333333] dark:text-white whitespace-nowrap overflow-hidden text-ellipsis`}>
               Free Daily Motivation
             </h1>
           </div>

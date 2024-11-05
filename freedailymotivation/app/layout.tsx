@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ClerkProvider } from '@clerk/nextjs';
@@ -19,12 +18,6 @@ const ErrorBoundary = dynamic(
   () => import('@/components/ErrorBoundary'),
   { ssr: false }
 );
-
-const poppins = Poppins({
-  weight: ['700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: "Free Daily Motivation",
