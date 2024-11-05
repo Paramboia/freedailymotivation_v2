@@ -51,6 +51,10 @@ export default function Home() {
     }
   };
 
+  const handleCategorySelect = (category: string | undefined) => {
+    setSelectedCategory(category);
+  };
+
   return (
     <ThemeWrapper>
       <div className="min-h-screen">
@@ -59,7 +63,7 @@ export default function Home() {
             <CategoryButtons 
               categories={categories}
               selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
+              onCategorySelect={handleCategorySelect}
             />
           )}
           {quote && (

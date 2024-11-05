@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 
 interface CategoryButtonsProps {
   categories: string[];
-  onCategorySelect: (category: string | null) => void;
-  selectedCategory: string | null;
+  onCategorySelect: (category: string | undefined) => void;
+  selectedCategory: string | undefined;
 }
 
 export default function CategoryButtons({ categories, onCategorySelect, selectedCategory }: CategoryButtonsProps) {
   const handleCategoryClick = (category: string) => {
     if (selectedCategory === category) {
-      onCategorySelect(null);
+      onCategorySelect(undefined);
     } else {
       onCategorySelect(category);
     }
