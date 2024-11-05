@@ -51,14 +51,11 @@ export default function Home() {
     <ThemeWrapper>
       <div className="min-h-screen">
         <main className="container mx-auto px-4 py-8">
-          <h1 className="text-4xl font-bold text-center mb-8">Free Daily Motivation</h1>
-          {categories.length > 0 && (
-            <CategoryButtons 
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategorySelect={setSelectedCategory}
-            />
-          )}
+          <div className="mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+              Free Daily Motivation
+            </h1>
+          </div>
           {quote && (
             <QuoteBox 
               quote={quote}
@@ -69,6 +66,15 @@ export default function Home() {
           {!quote && (
             <div className="flex justify-center items-center h-64">
               <p className="text-lg">Loading quote...</p>
+            </div>
+          )}
+          {categories.length > 0 && (
+            <div className="mt-8">
+              <CategoryButtons 
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategorySelect={setSelectedCategory}
+              />
             </div>
           )}
         </main>
