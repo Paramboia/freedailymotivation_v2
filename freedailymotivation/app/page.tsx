@@ -86,7 +86,8 @@ export default function Home() {
             {quote && <QuoteBox 
               key={quote.id} 
               quote={quote} 
-              _isAuthorPage={true} 
+              onNewQuote={handleNewQuote}
+              selectedCategory={selectedCategory}
             />}
             <CategoryButtons 
               categories={categories} 
