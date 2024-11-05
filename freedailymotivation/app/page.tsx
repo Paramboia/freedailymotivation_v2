@@ -33,8 +33,16 @@ export default function Home() {
         const fetchedCategories = await getAllCategories();
         console.log('Fetched categories:', fetchedCategories);
         setCategories(fetchedCategories);
+        
+        console.log('Fetching initial quote...');
         const initialQuote = await getRandomQuote();
-        console.log('Initial quote:', initialQuote);
+        console.log('Initial quote response:', initialQuote);
+        
+        if (!initialQuote) {
+          console.error('Failed to fetch initial quote - response was null');
+          return;
+        }
+        
         setQuote(initialQuote);
       } catch (error) {
         console.error('Failed to load quotes:', error);
@@ -85,13 +93,17 @@ export default function Home() {
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap`}>
               Free Daily Motivation
             </h1>
-            {quote && <QuoteBox 
-              key={quote.id} 
-              quote={quote} 
-              onNewQuote={handleNewQuote}
-              selectedCategory={selectedCategory}
-              _isAuthorPage={false}
-            />}
+            {quote ? (
+              <QuoteBox 
+                key={quote.id} 
+                quote={quote} 
+                onNewQuote={handleNewQuote}
+                selectedCategory={selectedCategory}
+                _isAuthorPage={false}
+              />
+            ) : (
+              <div>No quote available</div>
+            )}
             <CategoryButtons 
               categories={categories} 
               onCategorySelect={handleCategorySelect}
