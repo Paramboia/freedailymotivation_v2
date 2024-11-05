@@ -17,6 +17,8 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Cle
 11. Dynamic Author Pages: Automatically generated pages for individual authors, displaying their quotes, biography, and relevant links for easy exploration.
 12. Custom URL Structures: Author pages are dynamically linked with URLs (e.g., “/inspirational-quotes-famous?author=bill-gates”) for consistency and easy SEO management.
 13. Authentication: Users can sign up, log in, and log out using Clerk.
+14. Google Tag Manager: Implement Google Tag Manager for tracking and analytics.
+15. Search Functionality: Implement a search bar to allow users to search for quotes by keyword or phrase.
 
 # Relevant Docs:
 - Clerk: https://clerk.com/docs/components/overview
