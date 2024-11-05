@@ -9,8 +9,9 @@ const Header = () => {
       <Image
         src="/logo.webp"
         alt="Free Daily Motivation Logo"
-        width={20}
-        height={20}
+        width={32}
+        height={32}
+        className="mr-2"
       />
     </Link>
   );
