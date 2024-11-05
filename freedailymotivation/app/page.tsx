@@ -17,7 +17,7 @@ const QuoteBox = dynamic(() => import("@/components/quote-box"), {
 export default function Home() {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
