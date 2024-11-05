@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
@@ -11,14 +9,15 @@ export default function SearchBar() {
   useEffect(() => {
     if (query.length > 2) {
       const fetchAuthors = async () => {
-        const supabase = createServerComponentClient({ cookies });
-        const { data, error } = await supabase
-          .from('authors')
-          .select('author_name')
-          .ilike('author_name', `%${query}%`);
-
-        if (!error) {
-          setSuggestions(data.map(author => author.author_name));
+        try {
+          const response = await fetch('/api/authors');
+          const data = await response.json();
+          const filteredAuthors = data.filter(author =>
+            author.author_name.toLowerCase().includes(query.toLowerCase())
+          );
+          setSuggestions(filteredAuthors.map(author => author.author_name));
+        } catch (error) {
+          console.error('Error fetching authors:', error);
         }
       };
 
