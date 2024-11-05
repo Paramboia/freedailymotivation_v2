@@ -26,7 +26,7 @@ const SiteHeader = () => {
         <Header />
         <SearchBar />
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-1">
         <Link href="/inspirational-quotes-famous">
           <HeaderIconButton>
             <Quote className="h-4 w-4" />
