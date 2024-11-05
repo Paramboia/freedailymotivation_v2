@@ -45,7 +45,7 @@ export default function SearchBar() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search authors..."
-        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-[#333] text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-[#444] focus:outline-none transition-colors"
+        className="w-full px-4 py-2 rounded-lg bg-white dark:bg-[#333] text-gray-900 dark:text-white border-0 hover:bg-gray-100 dark:hover:bg-[#444] focus:outline-none transition-colors"
       />
       {suggestions.length > 0 && (
         <ul className="absolute w-full bg-white dark:bg-[#333] border border-gray-200 dark:border-gray-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-lg z-50">
