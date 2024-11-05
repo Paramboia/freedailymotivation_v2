@@ -47,7 +47,7 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       text: randomQuote.quote_text,
       author: randomQuote.authors[0]?.author_name || 'Unknown Author',
       likes: randomQuote.likes || 0,
-      category: randomQuote.categories?.category_name || '',
+      category: randomQuote.categories[0]?.category_name || '',
       dislikes: 0
     };
   } catch (error) {
