@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Head from 'next/head';
+import { Facebook } from 'lucide-react';
 
 export default function AboutUs() {
   return (
@@ -31,6 +32,12 @@ export default function AboutUs() {
           </main>
           <footer className="p-4 text-sm text-white text-center dark:text-gray-300">
             © 2024 Free Daily Motivation. All rights reserved.
+            <div className="flex items-center justify-center mt-2">
+              <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
+                <Facebook className="h-5 w-5 mr-1" />
+                Join the Community
+              </Link>
+            </div>
           </footer>
         </div>
       </ThemeWrapper>
