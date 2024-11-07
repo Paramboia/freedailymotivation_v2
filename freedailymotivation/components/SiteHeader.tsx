@@ -28,14 +28,16 @@ const SiteHeader = () => {
       </div>
       <div className="flex items-center">
         <div className="flex items-center gap-0.1">
-          <Link href="/inspirational-quotes-famous">
+          <Link href="/inspirational-quotes-famous" className="flex items-center">
             <HeaderIconButton>
               <Quote className="h-4 w-4" />
+              <span className="hidden md:inline ml-2">Famous Quotes</span>
             </HeaderIconButton>
           </Link>
-          <Link href="/about">
+          <Link href="/about" className="flex items-center">
             <HeaderIconButton>
               <Info className="h-4 w-4" />
+              <span className="hidden md:inline ml-2">About Us</span>
             </HeaderIconButton>
           </Link>
           <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
@@ -45,6 +47,7 @@ const SiteHeader = () => {
             <SignInButton>
               <HeaderIconButton>
                 <User className="h-4 w-4" />
+                <span className="hidden md:inline ml-2">Sign In</span>
               </HeaderIconButton>
             </SignInButton>
           </SignedOut>
