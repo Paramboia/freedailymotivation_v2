@@ -9,6 +9,8 @@ import CategoryButtons from "@/components/category-buttons";
 import SavePagePopup from "@/components/SavePagePopup";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import { Poppins } from "next/font/google";
+import Link from 'next/link';
+import { Facebook } from 'lucide-react';
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { 
   ssr: false,
@@ -85,8 +87,14 @@ export default function Home() {
             </div>
           )}
         </main>
-        <footer className="p-4 text-sm text-center text-white dark:text-gray-300">
-          © 2024 Free Daily Motivation. All rights reserved.
+        <footer className="flex justify-between items-center p-4 text-sm text-white dark:text-gray-300">
+          <span className="flex-grow text-center">© 2024 Free Daily Motivation. All rights reserved.</span>
+          <div className="flex items-center">
+            <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
+              <Facebook className="h-5 w-5 mr-1" />
+              Join the Community
+            </Link>
+          </div>
         </footer>
       </div>
       {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}

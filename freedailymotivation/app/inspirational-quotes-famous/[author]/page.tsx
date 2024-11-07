@@ -6,6 +6,7 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import dynamic from 'next/dynamic';
 import { Quote } from '@/types';
 import { Metadata } from 'next';
+import { Facebook } from 'lucide-react';
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -85,7 +86,12 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
           </Link>
         </main>
         <footer className="p-4 text-sm text-center text-white dark:text-gray-300">
-          © 2024 Free Daily Motivation. All rights reserved.
+          <div className="flex justify-center items-center">
+            <span>© 2024 Free Daily Motivation. All rights reserved.</span>
+            <Link href="https://www.facebook.com/FreeDailyMotivation" target="_blank" rel="noopener noreferrer">
+              <Facebook className="ml-2" size={16} />
+            </Link>
+          </div>
         </footer>
       </div>
     </ThemeWrapper>

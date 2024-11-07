@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
+import { Facebook } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,8 +63,14 @@ export default async function InspirationalQuotesFamous() {
           ))}
         </div>
       </div>
-      <footer className="p-4 text-sm text-center text-white dark:text-gray-300">
-        © 2024 Free Daily Motivation. All rights reserved.
+      <footer className="flex justify-between items-center p-4 text-sm text-white dark:text-gray-300">
+        <span className="flex-grow text-center">© 2024 Free Daily Motivation. All rights reserved.</span>
+        <div className="flex items-center">
+          <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
+            <Facebook className="h-5 w-5 mr-1" />
+            Join the Community
+          </Link>
+        </div>
       </footer>
     </div>
   );
