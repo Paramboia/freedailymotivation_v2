@@ -31,14 +31,16 @@ export default function AboutUs() {
             </Link>
           </main>
           <footer className="flex justify-between items-center p-4 text-sm text-white dark:text-gray-300">
-            <span className="text-center">© 2024 Free Daily Motivation. All rights reserved.</span>
-            <div className="flex items-center">
-              <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
-                <Facebook className="h-5 w-5 mr-1" />
-                Join the Community
-              </Link>
-            </div>
-          </footer>
+          <div className="flex-1 flex justify-center">
+            <span>© 2024 Free Daily Motivation. All rights reserved.</span>
+          </div>
+          <div className="flex items-center">
+            <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
+              <Facebook className="h-5 w-5 mr-1" />
+              Join the Community
+            </Link>
+          </div>
+        </footer>
         </div>
       </ThemeWrapper>
     </>
