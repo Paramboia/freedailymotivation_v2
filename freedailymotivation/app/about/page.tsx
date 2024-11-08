@@ -2,7 +2,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Head from 'next/head';
+import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer";
+
+const poppins = Poppins({
+  weight: ['700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export default function AboutUs() {
   return (
@@ -14,7 +21,7 @@ export default function AboutUs() {
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
           <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <h1 className="text-4xl font-bold mb-8 dark:text-white">About Us</h1>
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap overflow-hidden text-ellipsis`}>About Us</h1>
             <div className="max-w-2xl text-center">
               <p className="mb-4 dark:text-gray-300">
                 Welcome to <Link href="/" className="text-blue-600 hover:underline"> Free Daily Motivation </Link>! Our mission is to be the first to offer an easy and intuitive way to generate multiple inspirational quotes from a wide range of categories, including "business," "sport," "science," and "life."

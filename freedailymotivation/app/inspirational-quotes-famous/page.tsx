@@ -4,7 +4,14 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
+import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
+
+const poppins = Poppins({
+  weight: ['700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +41,7 @@ export default async function InspirationalQuotesFamous() {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="container mx-auto px-4 py-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-6 text-center">Famous Inspirational Quotes</h1>
+        <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap overflow-hidden text-ellipsis`}>Famous Inspirational Quotes</h1>
         <p className="text-lg mb-8 text-center">
           Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? 
           <Link href="/" className="text-blue-600 hover:underline"> Free Daily Motivation </Link> 
