@@ -30,7 +30,7 @@ const SiteHeader = () => {
         <div className="flex items-center gap-0.1">
           <Link href="/find-quotes" className="flex items-center">
             <HeaderIconButton>
-              <Lightbulb className="h-4 w-4 md:hidden" />
+              <Lightbulb className="h-4 w-4" />
               <span className="hidden md:inline ml-2">Find Quotes</span>
             </HeaderIconButton>
           </Link>
