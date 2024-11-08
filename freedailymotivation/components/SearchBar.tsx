@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 interface Author {
   author_name: string;
@@ -39,6 +39,11 @@ export default function SearchBar() {
     router.push(`/inspirational-quotes-famous/${slug}`);
   };
 
+  const clearInput = () => {
+    setQuery('');
+    setSuggestions([]);
+  };
+
   return (
     <div className="relative w-64 md:w-64 max-w-[160px] md:max-w-none">
       <div className="relative">
@@ -48,8 +53,17 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search authors..."
-          className="w-full pl-10 pr-4 py-1.5 text-sm rounded-lg bg-white/20 dark:bg-white/10 text-gray-900 dark:text-white border-0 hover:bg-white/30 dark:hover:bg-white/20 focus:bg-white/30 dark:focus:bg-white/20 focus:outline-none transition-colors placeholder-gray-600 dark:placeholder-gray-400"
+          className="w-full pl-10 pr-10 py-1.5 text-sm rounded-lg bg-white/20 dark:bg-white/10 text-gray-900 dark:text-white border-0 hover:bg-white/30 dark:hover:bg-white/20 focus:bg-white/30 dark:focus:bg-white/20 focus:outline-none transition-colors placeholder-gray-600 dark:placeholder-gray-400"
         />
+        {query && (
+          <button
+            onClick={clearInput}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
       {suggestions.length > 0 && (
         <ul className="absolute w-full bg-white dark:bg-[#333] border border-gray-200 dark:border-gray-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-lg z-50">
