@@ -30,12 +30,13 @@ export default function AboutUs() {
               <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">Back to Home Page</Button>
             </Link>
           </main>
-          <footer className="flex justify-between items-center p-4 text-sm text-white dark:text-gray-300">
-          <div className="flex-1 flex flex-col items-center">
+          <footer className="flex justify-center items-center p-4 text-sm text-white dark:text-gray-300 relative">
+          <div className="text-center">
             <span>© 2024 Free Daily Motivation.</span>
+            <br />
             <span>All rights reserved.</span>
           </div>
-          <div className="flex items-center">
+          <div className="absolute right-4">
             <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
               <Facebook className="h-5 w-5 mr-1" />
               Join the Community
