@@ -3,7 +3,7 @@
 import Header from "./Header";
 import { ThemeToggle } from "./theme-toggle";
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { User, Info, Quote } from 'lucide-react';
+import { User, Info, Quote, Lightbulb } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import SearchBar from "@/components/SearchBar";
@@ -28,6 +28,12 @@ const SiteHeader = () => {
       </div>
       <div className="flex items-center">
         <div className="flex items-center gap-0.1">
+          <Link href="/find-quotes" className="flex items-center">
+            <HeaderIconButton>
+              <Lightbulb className="h-4 w-4 md:hidden" />
+              <span className="hidden md:inline ml-2">Find Quotes</span>
+            </HeaderIconButton>
+          </Link>
           <Link href="/inspirational-quotes-famous" className="flex items-center">
             <HeaderIconButton>
               <Quote className="h-4 w-4" />
