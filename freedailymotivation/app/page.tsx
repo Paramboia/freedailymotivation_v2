@@ -10,7 +10,6 @@ import SavePagePopup from "@/components/SavePagePopup";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import { Poppins } from "next/font/google";
 import Link from 'next/link';
-import { Facebook } from 'lucide-react';
 import Footer from "@/components/Footer"; // Import the Footer component
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { 

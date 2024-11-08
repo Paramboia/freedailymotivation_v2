@@ -6,7 +6,6 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import dynamic from 'next/dynamic';
 import { Quote } from '@/types';
 import { Metadata } from 'next';
-import { Facebook } from 'lucide-react';
 import Footer from "@/components/Footer"; // Import the Footer component
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });

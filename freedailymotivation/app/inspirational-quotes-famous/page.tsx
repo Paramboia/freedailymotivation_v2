@@ -4,7 +4,6 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
-import { Facebook } from 'lucide-react';
 import Footer from "@/components/Footer"; // Import the Footer component
 
 export const dynamic = 'force-dynamic';
