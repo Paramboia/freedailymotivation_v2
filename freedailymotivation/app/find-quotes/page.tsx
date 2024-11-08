@@ -61,7 +61,7 @@ export default function FindQuotes() {
         <main className="container mx-auto px-4 py-12 md:py-8 flex-grow">
           <div className="mb-16 md:mb-12">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center whitespace-nowrap overflow-hidden text-ellipsis`}>
-              Free Daily Motivation
+              Find Inspirational Quotes
             </h1>
           </div>
           {quote && (
