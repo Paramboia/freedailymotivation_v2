@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
 import { Facebook } from 'lucide-react';
+import Footer from "@/components/Footer"; // Import the Footer component
 
 export const dynamic = 'force-dynamic';
 
@@ -63,19 +64,7 @@ export default async function InspirationalQuotesFamous() {
           ))}
         </div>
       </div>
-      <footer className="flex justify-center items-center p-4 text-sm text-white dark:text-gray-300 relative">
-          <div className="text-center">
-            <span>© 2024 Free Daily Motivation.</span>
-            <br />
-            <span>All rights reserved.</span>
-          </div>
-          <div className="absolute right-4">
-            <Link href="https://www.facebook.com/people/Free-Daily-Motivation/61566119962164/" className="flex items-center text-blue-600 hover:underline">
-              <Facebook className="h-5 w-5 mr-1" />
-              Join the Community
-            </Link>
-          </div>
-        </footer>
+      <Footer /> {/* Use the Footer component */}
     </div>
   );
 }
