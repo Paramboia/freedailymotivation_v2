@@ -65,7 +65,7 @@ export default function SearchBar() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={isMobile ? "Search authors..." : "Authors..."}
+          placeholder={isMobile ? "Authors..." : "Search authors..."}
           className="w-full pl-10 pr-10 py-1.5 text-sm rounded-lg bg-white/20 dark:bg-white/10 text-gray-900 dark:text-white border-0 hover:bg-white/30 dark:hover:bg-white/20 focus:bg-white/30 dark:focus:bg-white/20 focus:outline-none transition-colors placeholder-gray-600 dark:placeholder-gray-400"
         />
         {query && (
