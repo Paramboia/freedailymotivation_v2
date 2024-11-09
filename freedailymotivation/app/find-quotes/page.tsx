@@ -81,6 +81,11 @@ export default function FindQuotes() {
     }
   };
 
+  const handleCategorySelect = (category: string | undefined) => {
+    setSelectedCategory(category);
+    handleNewQuote(); // Fetch a new quote when category is selected
+  };
+
   return (
     <ThemeWrapper>
       <div className="min-h-screen flex flex-col">
@@ -108,7 +113,7 @@ export default function FindQuotes() {
               <CategoryButtons 
                 categories={categories}
                 selectedCategory={selectedCategory}
-                onCategorySelect={setSelectedCategory}
+                onCategorySelect={handleCategorySelect}
               />
             </div>
           )}
