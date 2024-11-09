@@ -52,7 +52,7 @@ export default function SearchBar() {
 
   const handleSelect = (authorName: string) => {
     setQuery(authorName);
-    setSuggestions([]);
+    setSuggestions([]); // Clear suggestions after selection
     const slug = authorName.toLowerCase().replace(/\s+/g, '-');
     router.push(`/inspirational-quotes-famous/${slug}`);
   };
