@@ -46,7 +46,7 @@ export default function SearchBar() {
   }, [query]);
 
   const handleSelect = (authorName: string) => {
-    setQuery(authorName);
+    setQuery('');
     setSuggestions([]);
     const slug = authorName.toLowerCase().replace(/\s+/g, '-');
     router.push(`/inspirational-quotes-famous/${slug}`);
