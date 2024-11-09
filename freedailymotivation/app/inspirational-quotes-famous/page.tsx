@@ -42,7 +42,7 @@ export default async function InspirationalQuotesFamous() {
     <div className="min-h-screen flex flex-col">
       <div className="container mx-auto px-4 py-8 flex-grow">
         <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>Famous Inspirational Quotes</h1>
-        <p className="text-lg mb-8 text-center">
+        <p className="mb-4 dark:text-gray-300 text-center">
           Looking for the perfect quote to inspire your next big move or connect with like-minded thinkers? 
           <Link href="/" className="text-blue-600 hover:underline"> Free Daily Motivation </Link> 
           has you covered! With thousands of famous quotes at your fingertips, you'll discover insights from legends like 
