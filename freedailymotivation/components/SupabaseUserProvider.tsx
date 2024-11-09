@@ -6,11 +6,10 @@ import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 export function SupabaseUserProvider({ children }: { children: React.ReactNode }) {
   const { isSupabaseConnected, supabaseUserId: _supabaseUserId } = useSupabaseUser();
 
-  // You can add loading or error states here if needed
   if (!isSupabaseConnected) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center -mt-16"> {/* Adjust the margin-top here */}
           <div className="loader"></div>
           <div>Finding the best motivational quotes for you...</div>
         </div>
