@@ -18,12 +18,14 @@ export function SupabaseUserProvider({ children }: { children: React.ReactNode }
         {/* Add the loader styles */}
         <style jsx>{`
           .loader {
-            border: 8px solid #f3f3f3; /* Light grey */
-            border-top: 8px solid #3498db; /* Blue */
+            border: 8px solid transparent;
+            border-top: 8px solid;
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
+            border-image: linear-gradient(to right, #ff007f, #3498db);
+            border-image-slice: 1;
           }
 
           @keyframes spin {
