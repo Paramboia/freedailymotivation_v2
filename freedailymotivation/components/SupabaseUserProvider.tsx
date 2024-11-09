@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
+import { Loader2 } from 'lucide-react'; // Import the loader icon
 
 export function SupabaseUserProvider({ children }: { children: React.ReactNode }) {
   const { isSupabaseConnected, supabaseUserId: _supabaseUserId } = useSupabaseUser();
@@ -11,21 +12,17 @@ export function SupabaseUserProvider({ children }: { children: React.ReactNode }
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center">
-          <div className="loader"></div>
+          <Loader2 className="loader" />
           <div>Finding the best motivational quotes for you...</div>
         </div>
-
-        {/* Add the loader styles */}
         <style jsx>{`
           .loader {
-            border: 8px solid transparent;
-            border-top: 8px solid;
-            border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
-            border-image: linear-gradient(to right, #ff007f, #3498db);
-            border-image-slice: 1;
+            background: linear-gradient(to right, #ff007f, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
           }
 
           @keyframes spin {
