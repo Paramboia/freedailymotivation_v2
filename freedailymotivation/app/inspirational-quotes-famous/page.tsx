@@ -51,7 +51,7 @@ export default async function InspirationalQuotesFamous() {
           Explore categories like business, sport, and life, and let Free Daily Motivation fuel your journey to success.
         </p>
         
-        <h2 className="text-3xl font-semibold mb-6 text-center">Check out the top inspirational quotes from famous people!</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-[rgb(51,51,51)] dark:text-white text-center">Check out the top inspirational quotes from famous people!</h2>
         
         <div className="flex flex-wrap justify-center gap-2 mt-4">
           {authors?.map((author) => (
