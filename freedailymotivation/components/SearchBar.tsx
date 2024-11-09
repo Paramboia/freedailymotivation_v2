@@ -10,6 +10,7 @@ export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,13 +42,13 @@ export default function SearchBar() {
       }
     };
 
-    if (query) {
+    if (isFocused && query) {
       const debounceTimeout = setTimeout(fetchAuthors, 300);
       return () => clearTimeout(debounceTimeout);
     } else {
-      setSuggestions([]); // Clear suggestions if the query is empty
+      setSuggestions([]); // Clear suggestions if the query is empty or not focused
     }
-  }, [query]);
+  }, [query, isFocused]);
 
   const handleSelect = (authorName: string) => {
     setQuery(authorName);
@@ -69,6 +70,8 @@ export default function SearchBar() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder={isMobile ? "Authors..." : "Search authors..."}
           className="w-full pl-10 pr-10 py-1.5 text-sm rounded-lg bg-white/20 dark:bg-white/10 text-gray-900 dark:text-white border-0 hover:bg-white/30 dark:hover:bg-white/20 focus:bg-white/30 dark:focus:bg-white/20 focus:outline-none transition-colors placeholder-gray-600 dark:placeholder-gray-400"
         />
@@ -82,7 +85,7 @@ export default function SearchBar() {
           </button>
         )}
       </div>
-      {suggestions.length > 0 && (
+      {isFocused && suggestions.length > 0 && (
         <ul className="absolute w-full bg-white dark:bg-[#333] border border-gray-200 dark:border-gray-600 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-lg z-50">
           {suggestions.map((author) => (
             <li
