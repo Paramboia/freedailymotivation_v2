@@ -41,8 +41,12 @@ export default function SearchBar() {
       }
     };
 
-    const debounceTimeout = setTimeout(fetchAuthors, 300);
-    return () => clearTimeout(debounceTimeout);
+    if (query) {
+      const debounceTimeout = setTimeout(fetchAuthors, 300);
+      return () => clearTimeout(debounceTimeout);
+    } else {
+      setSuggestions([]); // Clear suggestions if the query is empty
+    }
   }, [query]);
 
   const handleSelect = (authorName: string) => {
