@@ -40,12 +40,6 @@ const SiteHeader = () => {
               <span className="hidden md:inline ml-2">Famous Quotes</span>
             </HeaderIconButton>
           </Link>
-          <Link href="/about" className="flex items-center">
-            <HeaderIconButton>
-              <Info className="h-4 w-4" />
-              <span className="hidden md:inline ml-2">About Us</span>
-            </HeaderIconButton>
-          </Link>
           <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
         </div>
         <div className="ml-0.5">
