@@ -3,7 +3,7 @@
 import Header from "./Header";
 import { ThemeToggle } from "./theme-toggle";
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { User, Quote, Lightbulb } from 'lucide-react';
+import { User, Quote, Lightbulb, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import SearchBar from "@/components/SearchBar";
@@ -38,6 +38,12 @@ const SiteHeader = () => {
             <HeaderIconButton>
               <Quote className="h-4 w-4" />
               <span className="hidden md:inline ml-2">Famous Quotes</span>
+            </HeaderIconButton>
+          </Link>
+          <Link href="/favorite-quotes" className="flex items-center">
+            <HeaderIconButton>
+              <Star className="h-4 w-4" />
+              <span className="hidden md:inline ml-2">Favorite Quotes</span>
             </HeaderIconButton>
           </Link>
           <ThemeToggle className="text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-white" />
