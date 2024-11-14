@@ -29,8 +29,8 @@ async function getFavoriteQuotes(userId: string) {
 
   return data.map(item => ({
     id: item.quote_id,
-    text: item.quotes.quote_text,
-    author: item.quotes.authors[0]?.author_name || 'Unknown Author',
+    text: item.quotes[0]?.quote_text || 'Unknown Quote',
+    author: item.quotes[0]?.authors[0]?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
