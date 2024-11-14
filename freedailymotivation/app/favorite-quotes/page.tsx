@@ -31,40 +31,42 @@ async function getUserId(clerkUserId: string) {
 }
 
 async function getFavoriteQuotes(userId: string) {
-  const supabase = createServerComponentClient({ cookies });
-  const { data, error } = await supabase
-    .from('favorites')
-    .select(`
-      quote_id,
-      quotes!inner (
-        id,
-        quote_text,
-        authors!inner (
-          author_name
+    const supabase = createServerComponentClient({ cookies });
+    const { data, error } = await supabase
+      .from('favorites')
+      .select(`
+        quote_id,
+        quotes!inner (
+          id,
+          quote_text,
+          authors!inner (
+            author_name
+          )
         )
-      )
-    `)
-    .eq('user_id', userId);
-
-  if (error) {
-    console.error('Error fetching favorite quotes:', error);
-    return [];
+      `)
+      .eq('user_id', userId);
+  
+    if (error) {
+      console.error('Error fetching favorite quotes:', error);
+      return [];
+    }
+  
+    console.log('Favorite quotes data:', data); // Log fetched data for debugging
+  
+    return data.map((item) => {
+      const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
+      const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
+      
+      return {
+        id: quote?.id || item.quote_id,
+        text: quote?.quote_text || 'Unknown Quote',
+        author: author?.author_name || 'Unknown Author',
+        likes: 0,
+        category: '',
+        dislikes: 0,
+      };
+    });
   }
-
-  return data.map((item) => {
-    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
-    const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
-    
-    return {
-      id: quote?.id || item.quote_id,
-      text: quote?.quote_text || 'Unknown Quote',
-      author: author?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0,
-    };
-  });
-}
 
 export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
