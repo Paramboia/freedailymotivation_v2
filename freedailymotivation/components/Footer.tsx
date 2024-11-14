@@ -19,13 +19,13 @@ const Footer = () => {
       </div>
       <div className="absolute left-4 flex items-center">
         <Link href="/about" className="flex items-center">
-          <span className="hidden sm:inline text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-whit">About Us</span>
-          <Info className="h-5 w-5 mr-1 text-white-600 hover:underline sm:hidden" />
+          <span className="hidden sm:inline text-white-600 hover:underline">About Us</span>
+          <Info className="h-5 w-5 mr-1 text-blue-600 hover:underline sm:hidden" />
         </Link>
       </div>
       <div className="absolute left-20 flex items-center">
         <Link href="/info" className="flex items-center">
-          <Info className="h-5 w-5 mr-1 text-white hover:text-white/80 focus:text-white/80 bg-transparent hover:bg-transparent focus:bg-transparent dark:text-gray-300 dark:hover:text-white dark:focus:text-whit" />
+          <Info className="h-5 w-5 mr-1 text-blue-600 hover:underline" />
           <span className="hidden sm:inline">Info</span>
         </Link>
       </div>
