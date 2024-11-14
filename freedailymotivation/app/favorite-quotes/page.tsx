@@ -1,13 +1,22 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { auth } from '@clerk/nextjs';
+import { getAuth } from '@clerk/nextjs';
 
 export default async function FavoriteQuotes() {
   console.log('FavoriteQuotes component rendered'); // Log to check if component renders
 
-  // Fetch Clerk JWT token
-  const { getToken } = auth();
-  const token = await getToken();
+  // Fetch Clerk JWT token using getAuth
+  const { sessionId, getToken } = getAuth();
+  if (!sessionId) {
+    console.log('No Clerk session found');
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Error: Clerk session missing
+      </div>
+    );
+  }
+
+  const token = await getToken({ template: 'supabase' });
 
   if (!token) {
     console.log('No Clerk token found');
