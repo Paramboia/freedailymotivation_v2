@@ -41,8 +41,20 @@ export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
   const { data: user } = await supabase.auth.getUser();
 
-  if (!user) {
-    return <div>Please sign in to view your favorite quotes.</div>;
+  if (!user || !user.id) {
+    return (
+      <ThemeWrapper>
+        <div className="min-h-screen flex flex-col">
+          <main className="flex-grow flex flex-col items-center justify-center p-8">
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>My Favorite Quotes</h1>
+            <p className="dark:text-gray-300 text-center">
+              Here you will find the quotes from famous people that inspire you every day. Do not forget to log in and like quotes, to then see the quotes appear on this page.
+            </p>
+          </main>
+          <Footer /> {/* Use the Footer component */}
+        </div>
+      </ThemeWrapper>
+    );
   }
 
   const quotes = await getFavoriteQuotes(user.id);
@@ -51,7 +63,7 @@ export default async function FavoriteQuotes() {
     <ThemeWrapper>
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow flex flex-col items-center justify-center p-8">
-          <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>Your Favorite Quotes</h1>
+          <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>My Favorite Quotes</h1>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
             {quotes.length > 0 ? (
               quotes.map((quote: Quote) => (
