@@ -77,9 +77,11 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  // Create a Supabase client instance and set the auth token
-  const supabase = createServerComponentClient({ cookies });
-  supabase.auth.setAuth(token);
+  // Create a Supabase client instance with the auth token
+  const supabase = createServerComponentClient({
+    cookies,
+    headers: { Authorization: `Bearer ${token}` }
+  });
 
   // Fetch the user from Supabase
   const { data: { user }, error } = await supabase.auth.getUser();
