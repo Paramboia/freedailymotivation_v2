@@ -14,9 +14,24 @@ const poppins = Poppins({
   display: 'swap',
 });
 
+async function getUserId(clerkUserId: string) {
+  const supabase = createServerComponentClient({ cookies });
+  const { data, error } = await supabase
+    .from('users')
+    .select('id')
+    .eq('clerk_user_id', clerkUserId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching user ID:', error);
+    return null;
+  }
+
+  return data?.id;
+}
+
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
-
   const { data, error } = await supabase
     .from('favorites')
     .select('quote_id, quotes(quote_text, authors!inner(author_name))')
@@ -26,8 +41,6 @@ async function getFavoriteQuotes(userId: string) {
     console.error('Error fetching favorite quotes:', error);
     return [];
   }
-
-  console.log('Fetched favorite quotes:', data); // Log the fetched data
 
   return data.map(item => ({
     id: item.quote_id,
@@ -64,8 +77,12 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  console.log('User ID:', user.user.id); // Log the user ID
-  const quotes = await getFavoriteQuotes(user.user.id);
+  const userId = await getUserId(user.user.id);
+  if (!userId) {
+    return <div>Error: User not found.</div>;
+  }
+
+  const quotes = await getFavoriteQuotes(userId);
 
   return (
     <ThemeWrapper>
