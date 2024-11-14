@@ -1,12 +1,27 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import { auth } from '@clerk/nextjs';
 
 export default async function FavoriteQuotes() {
   console.log('FavoriteQuotes component rendered'); // Log to check if component renders
 
-  // Create a Supabase client instance
+  // Fetch Clerk JWT token
+  const { getToken } = auth();
+  const token = await getToken();
+
+  if (!token) {
+    console.log('No Clerk token found');
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Error: Clerk token missing
+      </div>
+    );
+  }
+
+  // Create a Supabase client instance and set the auth token
   const supabase = createServerComponentClient({ cookies });
-  
+  supabase.auth.setAuth(token);
+
   // Attempt to retrieve the user
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
