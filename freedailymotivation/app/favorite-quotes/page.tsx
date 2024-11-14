@@ -146,4 +146,9 @@ export default async function FavoriteQuotes() {
   );
 }
 
-export async function gen
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Favorite Quotes | Free Daily Motivation',
+    description: 'View your favorite quotes that inspire and motivate you.',
+  };
+}
