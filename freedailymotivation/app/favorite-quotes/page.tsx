@@ -1,6 +1,5 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
@@ -35,7 +34,16 @@ async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from('favorites')
-    .select('quote_id, quotes(quote_text, authors!inner(author_name))')
+    .select(`
+      quote_id,
+      quotes!inner (
+        id,
+        quote_text,
+        authors!inner (
+          author_name
+        )
+      )
+    `)
     .eq('user_id', userId);
 
   if (error) {
@@ -43,63 +51,53 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  return data.map(item => ({
-    id: item.quote_id,
-    text: item.quotes[0]?.quote_text || 'Unknown Quote',
-    author: item.quotes[0]?.authors[0]?.author_name || 'Unknown Author',
-    likes: 0,
-    category: '',
-    dislikes: 0
-  }));
+  return data.map((item) => {
+    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
+    const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
+    
+    return {
+      id: quote?.id || item.quote_id,
+      text: quote?.quote_text || 'Unknown Quote',
+      author: author?.author_name || 'Unknown Author',
+      likes: 0,
+      category: '',
+      dislikes: 0,
+    };
+  });
 }
 
 export default async function FavoriteQuotes() {
-  // Retrieve Clerk session token
-  const { sessionId, getToken } = await auth();
-  if (!sessionId) {
-    return (
-      <ThemeWrapper>
-        <div className="min-h-screen flex items-center justify-center">
-          <p>Error: Auth session missing. Please log in.</p>
-        </div>
-      </ThemeWrapper>
-    );
-  }
+  const supabase = createServerComponentClient({ cookies });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const token = await getToken({ template: 'supabase' });
-  if (!token) {
-    return (
-      <ThemeWrapper>
-        <div className="min-h-screen flex items-center justify-center">
-          <p>Error: Clerk token missing.</p>
-        </div>
-      </ThemeWrapper>
-    );
-  }
-
-  // Create a Supabase client instance with the auth token
-  const supabase = createServerComponentClient({
-    cookies,
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  // Fetch the user from Supabase
-  const { data: { user }, error } = await supabase.auth.getUser();
-
-  if (error || !user) {
+  if (!user?.id) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
           <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
+            <h1
+              className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
+            >
               My Favorite Quotes
             </h1>
             <div className="max-w-2xl text-center">
               <p className="mb-4 dark:text-gray-300">
-                Welcome to your personal collection of favorite quotes from <Link href="/" className="text-blue-600 hover:underline">Free Daily Motivation</Link>! Here, you’ll find inspiring words from renowned figures that resonate with you the most.
+                Welcome to your personal collection of favorite quotes from{' '}
+                <Link href="/" className="text-blue-600 hover:underline">
+                  Free Daily Motivation
+                </Link>
+                ! Here, you’ll find inspiring words from renowned figures that
+                resonate with you the most.
               </p>
               <p className="mb-4 dark:text-gray-300">
-                Remember to log in and like your favorite <Link href="/find-quotes" className="text-blue-600 hover:underline">quotes</Link> to build a unique selection of motivational insights you can revisit anytime.
+                Remember to log in and like your favorite{' '}
+                <Link href="/find-quotes" className="text-blue-600 hover:underline">
+                  quotes
+                </Link>{' '}
+                to build a unique selection of motivational insights you can
+                revisit anytime.
               </p>
             </div>
           </main>
@@ -120,22 +118,31 @@ export default async function FavoriteQuotes() {
     <ThemeWrapper>
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow flex flex-col items-center justify-center p-8">
-          <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
+          <h1
+            className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
+          >
             My Favorite Quotes
           </h1>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
             {quotes.length > 0 ? (
               quotes.map((quote: Quote) => (
                 <div key={quote.id} className="mb-4">
-                  <p className="text-lg dark:text-gray-300">"{quote.text}" - {quote.author}</p>
+                  <p className="text-lg dark:text-gray-300">
+                    "{quote.text}" - {quote.author}
+                  </p>
                 </div>
               ))
             ) : (
-              <p className="dark:text-gray-300">You have no favorite quotes yet.</p>
+              <p className="dark:text-gray-300">
+                You have no favorite quotes yet.
+              </p>
             )}
           </div>
           <Link href="/" className="mt-8">
-            <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">
+            <Button
+              variant="secondary"
+              className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
+            >
               Back to Home
             </Button>
           </Link>
