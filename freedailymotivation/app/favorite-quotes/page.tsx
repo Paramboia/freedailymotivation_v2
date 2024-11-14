@@ -50,12 +50,12 @@ export default async function FavoriteQuotes() {
           <main className="flex-grow flex flex-col items-center justify-center p-8">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>My Favorite Quotes</h1>
             <div className="max-w-2xl text-center">
-            <p className="mb-4 dark:text-gray-300">
+              <p className="mb-4 dark:text-gray-300">
                 Welcome to your personal collection of favorite quotes from <Link href="/" className="text-blue-600 hover:underline"> Free Daily Motivation </Link>! Here, you’ll find inspiring words from renowned figures that resonate with you the most.
-            </p>
-            <p className="mb-4 dark:text-gray-300">
-              Remember to log in and like your favorite <Link href="/find-quotes" className="text-blue-600 hover:underline">quotes</Link> to build a unique selection of motivational insights you can revisit anytime.
-            </p>
+              </p>
+              <p className="mb-4 dark:text-gray-300">
+                Remember to log in and like your favorite <Link href="/find-quotes" className="text-blue-600 hover:underline">quotes</Link> to build a unique selection of motivational insights you can revisit anytime.
+              </p>
             </div>
           </main>
           <Footer /> {/* Use the Footer component */}
@@ -64,6 +64,7 @@ export default async function FavoriteQuotes() {
     );
   }
 
+  console.log('User ID:', user.user.id); // Log the user ID
   const quotes = await getFavoriteQuotes(user.user.id);
 
   return (
