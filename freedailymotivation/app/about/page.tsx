@@ -29,8 +29,11 @@ export default function AboutUs() {
               <p className="mb-4 dark:text-gray-300">
                 Whether you're looking to enhance your work presentation or boost your social media content, our website provides a rich resource for finding the perfect quote to inspire and engage your audience.
               </p>
-              <p className="mb-8 dark:text-gray-300">
+              <p className="mb-4 dark:text-gray-300">
                 At Free Daily Motivation, we&apos;re committed to providing you with the best motivational content to help you achieve your goals and dreams.
+              </p>
+              <p className="mb-4 dark:text-gray-300">
+              A site by <Link href="https://www.linkedin.com/in/miguel-macedo-parente/" className="text-blue-600 hover:underline"> Miguel Macedo Parente</Link>.
               </p>
             </div>
             <Link href="/">
