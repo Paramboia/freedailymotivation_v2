@@ -33,7 +33,7 @@ export default function AboutUs() {
                 At Free Daily Motivation, we&apos;re committed to providing you with the best motivational content to help you achieve your goals and dreams.
               </p>
               <p className="mb-4 dark:text-gray-300">
-              A site by <Link href="https://www.linkedin.com/in/miguel-macedo-parente/" className="text-blue-600 hover:underline"> Miguel Macedo Parente</Link>.
+                A site by <Link href="https://www.linkedin.com/in/miguel-macedo-parente/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer"> Miguel Macedo Parente</Link>.
               </p>
             </div>
             <Link href="/">
