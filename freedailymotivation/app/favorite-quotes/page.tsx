@@ -64,8 +64,7 @@ export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser(); // Removed 'authError' variable
 
   if (!user?.id) {
     return (
