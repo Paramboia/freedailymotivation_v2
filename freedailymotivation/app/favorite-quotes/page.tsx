@@ -31,42 +31,45 @@ async function getUserId(clerkUserId: string) {
 }
 
 async function getFavoriteQuotes(userId: string) {
-    const supabase = createServerComponentClient({ cookies });
-    const { data, error } = await supabase
-      .from('favorites')
-      .select(`
-        quote_id,
-        quotes!inner (
-          id,
-          quote_text,
-          authors!inner (
-            author_name
-          )
-        )
-      `)
-      .eq('user_id', userId);
-  
-    if (error) {
-      console.error('Error fetching favorite quotes:', error);
-      return [];
-    }
-  
-    console.log('Favorite quotes data:', data); // Log fetched data for debugging
-  
-    return data.map((item) => {
-      const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
-      const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
-      
-      return {
-        id: quote?.id || item.quote_id,
-        text: quote?.quote_text || 'Unknown Quote',
-        author: author?.author_name || 'Unknown Author',
-        likes: 0,
-        category: '',
-        dislikes: 0,
-      };
-    });
+  const supabase = createServerComponentClient({ cookies });
+
+  console.log('Fetching favorites for user:', userId); // Log user ID for verification
+
+  const { data, error } = await supabase
+    .from('favorites')
+    .select(`
+      quote_id,
+      quotes!inner (
+        id,
+        quote_text
+      )
+    `)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching favorite quotes:', error);
+    return [];
   }
+
+  console.log('Fetched favorite quotes data:', data); // Log the raw data from Supabase
+
+  return data.map((item) => {
+    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
+
+    const mappedQuote = {
+      id: quote?.id || item.quote_id,
+      text: quote?.quote_text || 'Unknown Quote',
+      author: 'Unknown Author', // Temporarily set to check display
+      likes: 0,
+      category: '',
+      dislikes: 0,
+    };
+
+    console.log('Mapped quote data:', mappedQuote); // Log the mapped data for display purposes
+
+    return mappedQuote;
+  });
+}
 
 export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
