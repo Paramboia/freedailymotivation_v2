@@ -1,6 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { auth } from '@clerk/nextjs/server'; // Correct import path for server-side auth
+import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
@@ -55,7 +55,7 @@ async function getFavoriteQuotes(userId: string) {
 
 export default async function FavoriteQuotes() {
   // Retrieve Clerk session token
-  const { sessionId, getToken } = auth();
+  const { sessionId, getToken } = await auth();
   if (!sessionId) {
     return (
       <ThemeWrapper>
