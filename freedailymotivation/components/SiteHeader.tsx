@@ -3,7 +3,7 @@
 import Header from "./Header";
 import { ThemeToggle } from "./theme-toggle";
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { User, Info, Quote, Lightbulb } from 'lucide-react';
+import { User, Quote, Lightbulb } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import SearchBar from "@/components/SearchBar";
