@@ -41,7 +41,7 @@ export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
   const { data: user } = await supabase.auth.getUser();
 
-  if (!user || !user.id) {
+  if (!user || !user.user?.id) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -57,7 +57,7 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  const quotes = await getFavoriteQuotes(user.id);
+  const quotes = await getFavoriteQuotes(user.user.id);
 
   return (
     <ThemeWrapper>
