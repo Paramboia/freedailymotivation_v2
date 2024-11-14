@@ -36,9 +36,10 @@ async function getFavoriteQuotes(userId: string) {
     .from('favorites')
     .select(`
       quote_id,
-      quote:quotes (
+      quotes!inner (
+        id,
         quote_text,
-        authors (
+        authors!inner (
           author_name
         )
       )
@@ -51,13 +52,11 @@ async function getFavoriteQuotes(userId: string) {
   }
 
   return data.map((item) => {
-    // Safely access the first item of the quote array
-    const quote = Array.isArray(item.quote) ? item.quote[0] : null;
-    // Safely access the first item of the authors array
-    const author = quote && Array.isArray(quote.authors) ? quote.authors[0] : null;
-
+    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
+    const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
+    
     return {
-      id: item.quote_id,
+      id: quote?.id || item.quote_id,
       text: quote?.quote_text || 'Unknown Quote',
       author: author?.author_name || 'Unknown Author',
       likes: 0,
@@ -71,7 +70,7 @@ export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
   const {
     data: { user },
-  } = await supabase.auth.getUser(); // Removed 'authError' variable
+  } = await supabase.auth.getUser();
 
   if (!user?.id) {
     return (
