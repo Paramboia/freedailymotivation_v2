@@ -50,14 +50,21 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  return data.map((item) => ({
-    id: item.quote_id,
-    text: item.quote?.quote_text || 'Unknown Quote',
-    author: item.quote?.authors?.author_name || 'Unknown Author',
-    likes: 0,
-    category: '',
-    dislikes: 0
-  }));
+  return data.map((item) => {
+    // Safely access the first item of the quote array
+    const quote = Array.isArray(item.quote) ? item.quote[0] : null;
+    // Safely access the first item of the authors array
+    const author = quote && Array.isArray(quote.authors) ? quote.authors[0] : null;
+
+    return {
+      id: item.quote_id,
+      text: quote?.quote_text || 'Unknown Quote',
+      author: author?.author_name || 'Unknown Author',
+      likes: 0,
+      category: '',
+      dislikes: 0,
+    };
+  });
 }
 
 export default async function FavoriteQuotes() {
