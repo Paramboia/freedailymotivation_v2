@@ -27,14 +27,30 @@ async function getUserId(clerkUserId: string) {
     return null;
   }
 
+  console.log('User ID fetched from Supabase:', data?.id); // Log the user ID fetched
+
   return data?.id;
 }
 
 async function getFavoriteQuotes(userId: string) {
+  console.log('getFavoriteQuotes function called with userId:', userId); // Log to check if the function is called
+
+  // Directly return dummy data to test display independently of Supabase
+  return [
+    {
+      id: 'dummy-id',
+      text: 'This is a test quote.',
+      author: 'Test Author',
+      likes: 0,
+      category: '',
+      dislikes: 0,
+    },
+  ];
+
+  // Uncomment the following code to test with actual Supabase data once display logic is confirmed working with dummy data
+
+  /*
   const supabase = createServerComponentClient({ cookies });
-
-  console.log('Fetching favorites for user:', userId); // Log user ID for verification
-
   const { data, error } = await supabase
     .from('favorites')
     .select(`
@@ -69,6 +85,7 @@ async function getFavoriteQuotes(userId: string) {
 
     return mappedQuote;
   });
+  */
 }
 
 export default async function FavoriteQuotes() {
@@ -113,11 +130,14 @@ export default async function FavoriteQuotes() {
   }
 
   const userId = await getUserId(user.id);
+  console.log('User ID from getUserId function:', userId); // Log the user ID obtained
+
   if (!userId) {
     return <div>Error: User not found.</div>;
   }
 
   const quotes = await getFavoriteQuotes(userId);
+  console.log('Quotes retrieved:', quotes); // Log the quotes array obtained
 
   return (
     <ThemeWrapper>
