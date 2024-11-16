@@ -33,7 +33,7 @@ export default function SavePagePopup({ onClose }: SavePagePopupProps) {
           <Button
             variant="secondary"
             onClick={onClose}
-            className="dark:bg-[#444] dark:text-white dark:hover:bg-[#555]"
+            className="bg-white text-black hover:bg-gray-200 dark:bg-[#444] dark:text-white dark:hover:bg-[#555]"
           >
             Got It!
           </Button>
