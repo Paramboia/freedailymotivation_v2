@@ -1,10 +1,11 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Footer from "@/components/Footer"; // Import the Footer component
 import { Poppins } from "next/font/google";
+import SavePagePopup from "@/components/SavePagePopup"; // Import the SavePagePopup component
 
 const poppins = Poppins({
   weight: ['700'],
@@ -13,9 +14,27 @@ const poppins = Poppins({
 });
 
 export default function Home() {
+  const [clickCount, setClickCount] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleClick = () => {
+    setClickCount(prevCount => {
+      const newCount = prevCount + 1;
+      if (newCount === 3) {
+        setShowPopup(true);
+      }
+      return newCount;
+    });
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setClickCount(0); // Reset click count when popup is closed
+  };
+
   return (
     <ThemeWrapper>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col" onClick={handleClick}>
         <main className="container mx-auto px-4 py-12 md:py-8 flex-grow flex items-center justify-center flex-col">
           <div className="mb-16 md:mb-12 text-center">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white`}>
@@ -32,6 +51,7 @@ export default function Home() {
           </div>
         </main>
         <Footer /> {/* Use the Footer component */}
+        {showPopup && <SavePagePopup onClose={handleClosePopup} />}
       </div>
     </ThemeWrapper>
   );
