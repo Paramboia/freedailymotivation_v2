@@ -14,14 +14,18 @@ const poppins = Poppins({
 });
 
 export default function Home() {
-  const [_clickCount, setClickCount] = useState(0); // Prefix with underscore
-  const [showPopup, setShowPopup] = useState(false);
+  const [clickCount, setClickCount] = useState(0); // Track clicks
+  const [showPopup, setShowPopup] = useState(false); // Control popup visibility
+  const [popupShown, setPopupShown] = useState(false); // Track if popup has already been shown
 
   const handleClick = () => {
+    if (popupShown) return; // Do nothing if popup has already been shown
+
     setClickCount((prevCount) => {
       const newCount = prevCount + 1;
       if (newCount === 3) {
         setShowPopup(true);
+        setPopupShown(true); // Mark popup as shown
       }
       return newCount;
     });
@@ -29,7 +33,6 @@ export default function Home() {
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    setClickCount(0);
   };
 
   return (
