@@ -14,24 +14,22 @@ const poppins = Poppins({
 });
 
 export default function Home() {
-  const [clickCount, setClickCount] = useState(0); // State to track clicks
-  const [showPopup, setShowPopup] = useState(false); // State to manage popup visibility
+  const [_clickCount, setClickCount] = useState(0); // Prefix with underscore
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Handle click events
   const handleClick = () => {
     setClickCount((prevCount) => {
       const newCount = prevCount + 1;
       if (newCount === 3) {
-        setShowPopup(true); // Show popup on the third click
+        setShowPopup(true);
       }
       return newCount;
     });
   };
 
-  // Handle popup close event
   const handleClosePopup = () => {
     setShowPopup(false);
-    setClickCount(0); // Reset click count when popup is closed
+    setClickCount(0);
   };
 
   return (
