@@ -34,16 +34,7 @@ async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from('favorites')
-    .select(`
-      quote_id,
-      quotes!inner (
-        id,
-        quote_text,
-        authors!inner (
-          author_name
-        )
-      )
-    `)
+    .select(`quote_id, quotes!inner (id, quote_text, authors!inner (author_name))`)
     .eq('user_id', userId);
 
   if (error) {
@@ -68,40 +59,26 @@ async function getFavoriteQuotes(userId: string) {
 
 export default async function FavoriteQuotes() {
   const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user?.id) {
+  if (!user) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
           <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <h1
-              className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
-            >
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
               My Favorite Quotes
             </h1>
             <div className="max-w-2xl text-center">
               <p className="mb-4 dark:text-gray-300">
-                Welcome to your personal collection of favorite quotes from{' '}
-                <Link href="/" className="text-blue-600 hover:underline">
-                  Free Daily Motivation
-                </Link>
-                ! Here, you’ll find inspiring words from renowned figures that
-                resonate with you the most.
+                Please log in to view your favorite quotes.
               </p>
-              <p className="mb-4 dark:text-gray-300">
-                Remember to log in and like your favorite{' '}
-                <Link href="/find-quotes" className="text-blue-600 hover:underline">
-                  quotes
-                </Link>{' '}
-                to build a unique selection of motivational insights you can
-                revisit anytime.
-              </p>
+              <Link href="/sign-in" className="text-blue-600 hover:underline">
+                Log In
+              </Link>
             </div>
           </main>
-          <Footer /> {/* Use the Footer component */}
+          <Footer />
         </div>
       </ThemeWrapper>
     );
@@ -118,9 +95,7 @@ export default async function FavoriteQuotes() {
     <ThemeWrapper>
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow flex flex-col items-center justify-center p-8">
-          <h1
-            className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
-          >
+          <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
             My Favorite Quotes
           </h1>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
@@ -139,15 +114,12 @@ export default async function FavoriteQuotes() {
             )}
           </div>
           <Link href="/" className="mt-8">
-            <Button
-              variant="secondary"
-              className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
-            >
+            <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">
               Back to Home
             </Button>
           </Link>
         </main>
-        <Footer /> {/* Use the Footer component */}
+        <Footer />
       </div>
     </ThemeWrapper>
   );
