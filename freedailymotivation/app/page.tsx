@@ -14,25 +14,21 @@ const poppins = Poppins({
 });
 
 export default function Home() {
-  const [clickCounter, setClickCounter] = useState(0); // Track clicks
+  const [clicks, setClicks] = useState(0); // Track the number of clicks
   const [showPopup, setShowPopup] = useState(false); // Control popup visibility
-  const [popupShown, setPopupShown] = useState(false); // Track if popup has already been shown
 
   const handleClick = () => {
-    if (popupShown) return; // Do nothing if popup has already been shown
+    if (showPopup) return; // Prevent further actions if popup is already shown
 
-    setClickCounter((prevCounter) => {
-      const newCounter = prevCounter + 1;
-      if (newCounter === 3) {
-        setShowPopup(true);
-        setPopupShown(true); // Mark popup as shown
-      }
-      return newCounter;
-    });
+    const newClicks = clicks + 1;
+    if (newClicks === 3) {
+      setShowPopup(true);
+    }
+    setClicks(newClicks); // Update the number of clicks
   };
 
   const handleClosePopup = () => {
-    setShowPopup(false);
+    setShowPopup(false); // Close the popup
   };
 
   return (
