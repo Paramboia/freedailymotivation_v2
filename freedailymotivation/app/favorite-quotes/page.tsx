@@ -7,6 +7,7 @@ import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
+import { auth } from '@clerk/nextjs/server'; // Clerk's server-side auth
 
 const poppins = Poppins({
   weight: ['700'],
@@ -14,32 +15,17 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-async function getUserId(clerkUserId: string) {
-  const supabase = createServerComponentClient({ cookies });
-  const { data, error } = await supabase
-    .from('users')
-    .select('id')
-    .eq('clerk_user_id', clerkUserId)
-    .single();
-
-  if (error) {
-    console.error('Error fetching user ID:', error);
-    return null;
-  }
-
-  return data?.id;
-}
-
+// Function to fetch favorite quotes for a user
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
     .from('favorites')
     .select(`
-      quote_id,
-      quotes!inner (
+      id,
+      quotes (
         id,
         quote_text,
-        authors!inner (
+        authors (
           author_name
         )
       )
@@ -51,28 +37,17 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  return data.map((item) => {
-    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
-    const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
-    
-    return {
-      id: quote?.id || item.quote_id,
-      text: quote?.quote_text || 'Unknown Quote',
-      author: author?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0,
-    };
-  });
+  return data.map((item) => ({
+    id: item.quotes.id,
+    text: item.quotes.quote_text,
+    author: item.quotes.authors.author_name || 'Unknown Author',
+  }));
 }
 
+// Main component for Favorite Quotes page
 export default async function FavoriteQuotes() {
-  const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user?.id) {
+  const { userId } = auth(); // Get userId from Clerk
+  if (!userId) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -84,32 +59,18 @@ export default async function FavoriteQuotes() {
             </h1>
             <div className="max-w-2xl text-center">
               <p className="mb-4 dark:text-gray-300">
-                Welcome to your personal collection of favorite quotes from{' '}
+                Please log in to view your favorite quotes from{' '}
                 <Link href="/" className="text-blue-600 hover:underline">
                   Free Daily Motivation
                 </Link>
-                ! Here, you’ll find inspiring words from renowned figures that
-                resonate with you the most.
-              </p>
-              <p className="mb-4 dark:text-gray-300">
-                Remember to log in and like your favorite{' '}
-                <Link href="/find-quotes" className="text-blue-600 hover:underline">
-                  quotes
-                </Link>{' '}
-                to build a unique selection of motivational insights you can
-                revisit anytime.
+                !
               </p>
             </div>
           </main>
-          <Footer /> {/* Use the Footer component */}
+          <Footer />
         </div>
       </ThemeWrapper>
     );
-  }
-
-  const userId = await getUserId(user.id);
-  if (!userId) {
-    return <div>Error: User not found.</div>;
   }
 
   const quotes = await getFavoriteQuotes(userId);
@@ -147,12 +108,13 @@ export default async function FavoriteQuotes() {
             </Button>
           </Link>
         </main>
-        <Footer /> {/* Use the Footer component */}
+        <Footer />
       </div>
     </ThemeWrapper>
   );
 }
 
+// Metadata for the page
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Favorite Quotes | Free Daily Motivation',
