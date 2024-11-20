@@ -7,7 +7,6 @@ import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
-import { auth } from '@clerk/nextjs/server'; // Import Clerk's server-side auth
 
 const poppins = Poppins({
   weight: ['700'],
@@ -15,7 +14,6 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-// Function to get the user ID from Supabase based on the Clerk user ID
 async function getUserId(clerkUserId: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
@@ -32,7 +30,6 @@ async function getUserId(clerkUserId: string) {
   return data?.id;
 }
 
-// Function to fetch favorite quotes for a given user ID
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
@@ -54,23 +51,28 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  // Process and map the fetched data to the required structure
   return data.map((item) => {
-    const quote = item.quotes; // Access the quotes object directly
-    const author = quote?.authors?.[0]?.author_name || 'Unknown Author';
-
+    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
+    const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
+    
     return {
       id: quote?.id || item.quote_id,
       text: quote?.quote_text || 'Unknown Quote',
-      author,
+      author: author?.author_name || 'Unknown Author',
+      likes: 0,
+      category: '',
+      dislikes: 0,
     };
   });
 }
 
-// Main component for the Favorite Quotes page
 export default async function FavoriteQuotes() {
-  const { userId } = auth(); // Get the user ID from Clerk's auth
-  if (!userId) {
+  const supabase = createServerComponentClient({ cookies });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.id) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -105,14 +107,12 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  // Get the Supabase user ID
-  const supabaseUserId = await getUserId(userId);
-  if (!supabaseUserId) {
+  const userId = await getUserId(user.id);
+  if (!userId) {
     return <div>Error: User not found.</div>;
   }
 
-  // Fetch the favorite quotes
-  const quotes = await getFavoriteQuotes(supabaseUserId);
+  const quotes = await getFavoriteQuotes(userId);
 
   return (
     <ThemeWrapper>
@@ -153,7 +153,6 @@ export default async function FavoriteQuotes() {
   );
 }
 
-// Metadata for the page
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Favorite Quotes | Free Daily Motivation',
