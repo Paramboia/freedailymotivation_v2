@@ -3,10 +3,10 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
-import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
+import { currentUser } from "@clerk/nextjs"; // Import Clerk's currentUser
 
 const poppins = Poppins({
   weight: ['700'],
@@ -37,7 +37,6 @@ async function getFavoriteQuotes(userId: string) {
     .select(`
       quote_id,
       quotes!inner (
-        id,
         quote_text,
         authors!inner (
           author_name
@@ -52,66 +51,43 @@ async function getFavoriteQuotes(userId: string) {
   }
 
   return data.map((item) => {
-    const quote = Array.isArray(item.quotes) ? item.quotes[0] : item.quotes;
-    const author = quote?.authors ? quote.authors[0] : { author_name: 'Unknown Author' };
-    
+    const quote = item.quotes;
+    const author = Array.isArray(quote?.authors) ? quote.authors[0] : quote?.authors;
+
     return {
-      id: quote?.id || item.quote_id,
+      id: item.quote_id,
       text: quote?.quote_text || 'Unknown Quote',
       author: author?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0,
     };
   });
 }
 
 export default async function FavoriteQuotes() {
-  const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user?.id) {
+  // Get the current user from Clerk
+  const user = await currentUser();
+  if (!user) {
     return (
       <ThemeWrapper>
-        <div className="min-h-screen flex flex-col">
-          <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <h1
-              className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
-            >
-              My Favorite Quotes
-            </h1>
-            <div className="max-w-2xl text-center">
-              <p className="mb-4 dark:text-gray-300">
-                Welcome to your personal collection of favorite quotes from{' '}
-                <Link href="/" className="text-blue-600 hover:underline">
-                  Free Daily Motivation
-                </Link>
-                ! Here, you’ll find inspiring words from renowned figures that
-                resonate with you the most.
-              </p>
-              <p className="mb-4 dark:text-gray-300">
-                Remember to log in and like your favorite{' '}
-                <Link href="/find-quotes" className="text-blue-600 hover:underline">
-                  quotes
-                </Link>{' '}
-                to build a unique selection of motivational insights you can
-                revisit anytime.
-              </p>
-            </div>
-          </main>
-          <Footer /> {/* Use the Footer component */}
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-lg dark:text-gray-300">Please log in to view your favorite quotes.</p>
         </div>
       </ThemeWrapper>
     );
   }
 
+  // Get the user's ID from the custom "Users" table
   const userId = await getUserId(user.id);
   if (!userId) {
-    return <div>Error: User not found.</div>;
+    return (
+      <ThemeWrapper>
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-lg dark:text-gray-300">Error: User not found in the database.</p>
+        </div>
+      </ThemeWrapper>
+    );
   }
 
+  // Fetch favorite quotes
   const quotes = await getFavoriteQuotes(userId);
 
   return (
@@ -125,7 +101,7 @@ export default async function FavoriteQuotes() {
           </h1>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
             {quotes.length > 0 ? (
-              quotes.map((quote: Quote) => (
+              quotes.map((quote) => (
                 <div key={quote.id} className="mb-4">
                   <p className="text-lg dark:text-gray-300">
                     "{quote.text}" - {quote.author}
@@ -147,7 +123,7 @@ export default async function FavoriteQuotes() {
             </Button>
           </Link>
         </main>
-        <Footer /> {/* Use the Footer component */}
+        <Footer />
       </div>
     </ThemeWrapper>
   );
