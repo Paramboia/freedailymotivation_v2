@@ -6,7 +6,7 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
-import { currentUser } from "@clerk/nextjs"; // Import Clerk's currentUser
+import { auth } from '@clerk/nextjs/server'; // Use Clerk's server-side auth
 
 const poppins = Poppins({
   weight: ['700'],
@@ -50,22 +50,16 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  return data.map((item) => {
-    const quote = item.quotes;
-    const author = Array.isArray(quote?.authors) ? quote.authors[0] : quote?.authors;
-
-    return {
-      id: item.quote_id,
-      text: quote?.quote_text || 'Unknown Quote',
-      author: author?.author_name || 'Unknown Author',
-    };
-  });
+  return data.map((item) => ({
+    id: item.quote_id,
+    text: item.quotes?.quote_text || 'Unknown Quote',
+    author: item.quotes?.authors?.author_name || 'Unknown Author',
+  }));
 }
 
 export default async function FavoriteQuotes() {
-  // Get the current user from Clerk
-  const user = await currentUser();
-  if (!user) {
+  const { userId } = auth(); // Get the current user ID from Clerk
+  if (!userId) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex items-center justify-center">
@@ -76,8 +70,8 @@ export default async function FavoriteQuotes() {
   }
 
   // Get the user's ID from the custom "Users" table
-  const userId = await getUserId(user.id);
-  if (!userId) {
+  const supabaseUserId = await getUserId(userId);
+  if (!supabaseUserId) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex items-center justify-center">
@@ -88,7 +82,7 @@ export default async function FavoriteQuotes() {
   }
 
   // Fetch favorite quotes
-  const quotes = await getFavoriteQuotes(userId);
+  const quotes = await getFavoriteQuotes(supabaseUserId);
 
   return (
     <ThemeWrapper>
