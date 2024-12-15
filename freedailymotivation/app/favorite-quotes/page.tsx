@@ -32,31 +32,24 @@ async function getUserId(clerkUserId: string) {
   return data?.id;
 }
 
-interface FavoriteQuote {
-  quote: {
-    id: string;
-    quote_text: string;
-    authors: {
-      author_name: string;
-    }[];
-  };
-}
-
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
 
   const { data, error } = await supabase
-    .from('favorites')
+    .from('quotes')
     .select(`
-      quote:quotes!inner (
-        id,
-        quote_text,
-        authors!inner (
-          author_name
-        )
+      id,
+      quote_text,
+      authors!inner (
+        author_name
       )
     `)
-    .eq('user_id', userId);
+    .in('id', 
+      supabase
+        .from('favorites')
+        .select('quote_id')
+        .eq('user_id', userId)
+    );
 
   if (error) {
     console.error('Error fetching favorite quotes:', error);
@@ -65,12 +58,10 @@ async function getFavoriteQuotes(userId: string) {
 
   if (!data) return [];
 
-  const typedData = data as FavoriteQuote[];
-
-  return typedData.map(item => ({
-    id: item.quote.id,
-    text: item.quote.quote_text,
-    author: item.quote.authors[0]?.author_name || 'Unknown Author',
+  return data.map(quote => ({
+    id: quote.id,
+    text: quote.quote_text,
+    author: quote.authors[0]?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
