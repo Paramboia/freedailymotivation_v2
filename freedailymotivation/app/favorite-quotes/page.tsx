@@ -9,6 +9,7 @@ import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
 import dynamic from 'next/dynamic';
+import { headers } from 'next/headers';
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
 const poppins = Poppins({
@@ -79,7 +80,7 @@ async function getFavoriteQuotes(userId: string) {
 }
 
 export default async function FavoriteQuotes() {
-  const { userId } = getAuth();
+  const { userId } = getAuth(headers());
   
   if (!userId) {
     console.log('No user found');
