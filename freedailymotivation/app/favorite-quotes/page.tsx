@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs";
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -78,12 +79,9 @@ async function getFavoriteQuotes(userId: string) {
 }
 
 export default async function FavoriteQuotes() {
-  const supabase = createServerComponentClient({ cookies });
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user?.id) {
+  const { userId: clerkUserId } = auth();
+  
+  if (!clerkUserId) {
     console.log('No user found');
     return (
       <ThemeWrapper>
@@ -119,9 +117,9 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  const userId = await getUserId(user.id);
+  const userId = await getUserId(clerkUserId);
   if (!userId) {
-    console.log('No Supabase user ID found for Clerk user:', user.id);
+    console.log('No Supabase user ID found for Clerk user:', clerkUserId);
     return <div>Error: User not found.</div>;
   }
 
