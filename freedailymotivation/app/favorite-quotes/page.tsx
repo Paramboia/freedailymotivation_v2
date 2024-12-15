@@ -33,18 +33,18 @@ async function getUserId(clerkUserId: string) {
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   const { data, error } = await supabase
-    .from('favorites')
-    .select(`
-      quote_id,
-      quotes!inner (
-        id,
-        quote_text,
-        authors!inner (
-          author_name
-        )
+  .from('favorites')
+  .select(`
+    quote_id,
+    quotes (
+      id,
+      quote_text,
+      authors (
+        author_name
       )
-    `)
-    .eq('user_id', userId);
+    )
+  `)
+  .eq('user_id', userId);
 
   if (error) {
     console.error('Error fetching favorite quotes:', error);
