@@ -1,4 +1,4 @@
-import { getAuth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs";
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -80,7 +80,7 @@ async function getFavoriteQuotes(userId: string) {
 }
 
 export default async function FavoriteQuotes() {
-  const { userId } = getAuth(headers());
+  const { userId } = auth();
   
   if (!userId) {
     console.log('No user found');
