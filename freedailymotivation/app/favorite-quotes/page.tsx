@@ -34,14 +34,26 @@ async function getUserId(clerkUserId: string) {
 
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
+  
+  interface QuoteData {
+    quote_id: string;
+    quotes: {
+      id: string;
+      quote_text: string;
+      authors: {
+        author_name: string;
+      }[];
+    };
+  }
+
   const { data, error } = await supabase
     .from('favorites')
     .select(`
       quote_id,
-      quotes!inner (
+      quotes (
         id,
         quote_text,
-        authors!inner (
+        authors (
           author_name
         )
       )
@@ -53,10 +65,10 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  return data.map((item) => ({
-    id: item.quotes?.id,
-    text: item.quotes?.quote_text,
-    author: item.quotes?.authors?.[0]?.author_name || 'Unknown Author',
+  return (data as QuoteData[]).map((item) => ({
+    id: item.quotes.id,
+    text: item.quotes.quote_text,
+    author: item.quotes.authors[0]?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
