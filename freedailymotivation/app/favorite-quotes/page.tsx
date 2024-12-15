@@ -36,7 +36,6 @@ async function getUserId(clerkUserId: string) {
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
 
-  // First get the favorite quote IDs
   const { data: favorites, error: favError } = await supabase
     .from('favorites')
     .select('quote_id')
@@ -51,7 +50,6 @@ async function getFavoriteQuotes(userId: string) {
 
   const quoteIds = favorites.map(fav => fav.quote_id);
 
-  // Then fetch the full quote data
   const { data, error } = await supabase
     .from('quotes')
     .select(`
