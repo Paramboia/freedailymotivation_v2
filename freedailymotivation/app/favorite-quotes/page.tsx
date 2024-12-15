@@ -38,8 +38,7 @@ async function getFavoriteQuotes(userId: string) {
   const { data, error } = await supabase
     .from('favorites')
     .select(`
-      quote_id,
-      quotes!inner (
+      quotes:quotes!inner (
         id,
         quote_text,
         authors!inner (
