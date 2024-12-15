@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -7,9 +7,8 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
-import Footer from "@/components/Footer"; // Import the Footer component
+import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
-import { headers } from 'next/headers';
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
 const poppins = Poppins({
@@ -80,9 +79,9 @@ async function getFavoriteQuotes(userId: string) {
 }
 
 export default async function FavoriteQuotes() {
-  const { userId } = auth();
+  const user = await currentUser();
   
-  if (!userId) {
+  if (!user) {
     console.log('No user found');
     return (
       <ThemeWrapper>
@@ -118,9 +117,9 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  const supabaseUserId = await getUserId(userId);
+  const supabaseUserId = await getUserId(user.id);
   if (!supabaseUserId) {
-    console.log('No Supabase user ID found for Clerk user:', userId);
+    console.log('No Supabase user ID found for Clerk user:', user.id);
     return <div>Error: User not found.</div>;
   }
 
