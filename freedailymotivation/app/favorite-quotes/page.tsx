@@ -35,6 +35,24 @@ async function getUserId(clerkUserId: string) {
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
 
+  // First get the favorite quote IDs
+  const { data: favorites, error: favError } = await supabase
+    .from('favorites')
+    .select('quote_id')
+    .eq('user_id', userId);
+
+  if (favError) {
+    console.error('Error fetching favorites:', favError);
+    return [];
+  }
+
+  if (!favorites || favorites.length === 0) {
+    return [];
+  }
+
+  const quoteIds = favorites.map(fav => fav.quote_id);
+
+  // Then fetch the actual quotes
   const { data, error } = await supabase
     .from('quotes')
     .select(`
@@ -44,12 +62,7 @@ async function getFavoriteQuotes(userId: string) {
         author_name
       )
     `)
-    .in('id', 
-      supabase
-        .from('favorites')
-        .select('quote_id')
-        .eq('user_id', userId)
-    );
+    .in('id', quoteIds);
 
   if (error) {
     console.error('Error fetching favorite quotes:', error);
