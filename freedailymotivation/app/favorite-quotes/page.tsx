@@ -35,17 +35,6 @@ async function getUserId(clerkUserId: string) {
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   
-  interface QuoteData {
-    quote_id: string;
-    quotes: {
-      id: string;
-      quote_text: string;
-      authors: {
-        author_name: string;
-      }[];
-    }
-  }
-
   const { data, error } = await supabase
     .from('favorites')
     .select(`
@@ -65,10 +54,9 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  // Type assertion with unknown first
-  const typedData = (data as unknown) as QuoteData[];
-  
-  return typedData.map((item) => ({
+  if (!data) return [];
+
+  return data.map((item) => ({
     id: item.quotes.id,
     text: item.quotes.quote_text,
     author: item.quotes.authors[0]?.author_name || 'Unknown Author',
@@ -85,6 +73,7 @@ export default async function FavoriteQuotes() {
   } = await supabase.auth.getUser();
 
   if (!user?.id) {
+    console.log('No user found');
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -121,10 +110,12 @@ export default async function FavoriteQuotes() {
 
   const userId = await getUserId(user.id);
   if (!userId) {
+    console.log('No Supabase user ID found for Clerk user:', user.id);
     return <div>Error: User not found.</div>;
   }
 
   const quotes = await getFavoriteQuotes(userId);
+  console.log('Fetched favorite quotes:', quotes);
 
   return (
     <ThemeWrapper>
