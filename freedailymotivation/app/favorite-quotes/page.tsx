@@ -16,6 +16,17 @@ const poppins = Poppins({
   display: 'swap',
 });
 
+// Define types for our database structure
+type DatabaseQuote = {
+  id: string;
+  quote_text: string;
+  authors: { author_name: string }[];
+}
+
+type FavoriteWithQuote = {
+  quotes: DatabaseQuote;
+}
+
 async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
@@ -48,7 +59,7 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
     console.log('Raw favorites data:', data);
 
     // Transform the data into Quote format
-    return data.map(favorite => {
+    return (data as FavoriteWithQuote[]).map(favorite => {
       const quote = favorite.quotes;
       return {
         id: quote.id,
