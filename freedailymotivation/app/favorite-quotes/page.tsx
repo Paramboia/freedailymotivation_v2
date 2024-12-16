@@ -2,7 +2,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import { Quote } from '@/types';
 import { Metadata } from 'next';
