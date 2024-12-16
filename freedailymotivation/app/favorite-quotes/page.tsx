@@ -20,15 +20,16 @@ async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   console.log('Querying favorites for user ID:', userId);
 
-  // Get quotes that the user has favorited
+  // First get favorite quotes with their texts
   const { data, error } = await supabase
     .from('favorites')
     .select(`
-      quote_id,
       quotes (
         id,
         quote_text,
-        author_id
+        authors (
+          author_name
+        )
       )
     `)
     .eq('user_id', userId);
@@ -45,30 +46,11 @@ async function getFavoriteQuotes(userId: string) {
 
   console.log('Found favorites:', data);
 
-  // Get author names for the quotes
-  const quoteIds = data.map(fav => fav.quotes.id);
-  const { data: quotesWithAuthors, error: authorError } = await supabase
-    .from('quotes')
-    .select(`
-      id,
-      quote_text,
-      authors (
-        author_name
-      )
-    `)
-    .in('id', quoteIds);
-
-  if (authorError) {
-    console.error('Error fetching authors:', authorError);
-    return [];
-  }
-
-  console.log('Quotes with authors:', quotesWithAuthors);
-
-  return quotesWithAuthors.map(quote => ({
-    id: quote.id,
-    text: quote.quote_text,
-    author: quote.authors?.author_name || 'Unknown Author',
+  // Map the data to the expected Quote format
+  return data.map(fav => ({
+    id: fav.quotes.id,
+    text: fav.quotes.quote_text,
+    author: fav.quotes.authors?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
