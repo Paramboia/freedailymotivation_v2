@@ -38,7 +38,6 @@ async function getFavoriteQuotes(userId: string) {
   const { data, error } = await supabase
     .from('favorites')
     .select(`
-      quote_id,
       quotes!inner (
         id,
         quote_text,
@@ -53,6 +52,8 @@ async function getFavoriteQuotes(userId: string) {
     console.error('Error fetching favorite quotes:', error);
     return [];
   }
+
+  if (!data) return [];
 
   return data.map(item => ({
     id: item.quotes.id,
