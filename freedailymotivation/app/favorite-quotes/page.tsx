@@ -16,60 +16,47 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-// Define types for our database structure
-type Author = {
-  author_name: string;
-}
-
-type QuoteWithAuthor = {
-  id: string;
-  quote_text: string;
-  authors: Author[];
-}
-
-type FavoriteQuote = {
-  quote_id: string;
-  quotes: QuoteWithAuthor;
-}
-
 async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
     console.log('Fetching favorites for user:', userId);
 
-    // Use a single join query to get all the data we need
-    const { data, error } = await supabase
+    // First get the favorite quote IDs
+    const { data: favorites, error: favError } = await supabase
       .from('favorites')
-      .select(`
-        quote_id,
-        quotes:quotes!inner (
-          id,
-          quote_text,
-          authors!inner (
-            author_name
-          )
-        )
-      `)
-      .eq('user_id', userId)
-      .returns<FavoriteQuote[]>();
+      .select('quote_id')
+      .eq('user_id', userId);
 
-    if (error) {
-      console.error('Error fetching favorites:', error);
-      throw error;
+    if (favError) {
+      console.error('Error fetching favorites:', favError);
+      return [];
     }
 
-    if (!data || data.length === 0) {
+    if (!favorites || favorites.length === 0) {
       console.log('No favorites found');
       return [];
     }
 
-    console.log('Raw favorites data:', JSON.stringify(data, null, 2));
+    const quoteIds = favorites.map(fav => fav.quote_id);
+    console.log('Quote IDs:', quoteIds);
 
-    // Map the joined data to Quote format
-    return data.map(favorite => ({
-      id: favorite.quotes.id,
-      text: favorite.quotes.quote_text,
-      author: favorite.quotes.authors[0]?.author_name || 'Unknown Author',
+    // Then fetch the quotes with their authors
+    const { data: quotes, error: quotesError } = await supabase
+      .from('quotes')
+      .select('*, authors!inner(author_name)')
+      .in('id', quoteIds);
+
+    if (quotesError) {
+      console.error('Error fetching quotes:', quotesError);
+      return [];
+    }
+
+    console.log('Fetched quotes:', quotes);
+
+    return quotes.map(quote => ({
+      id: quote.id,
+      text: quote.quote_text,
+      author: quote.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
@@ -87,23 +74,26 @@ export default async function FavoriteQuotes() {
     
     if (!user) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-          <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-            Please sign in to view your favorite quotes
-          </h1>
-          <Link href="/" className="text-blue-500 hover:text-blue-700">
-            Go back home
-          </Link>
+        <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+              Please sign in to view your favorite quotes
+            </h1>
+            <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+              Go back home
+            </Link>
+          </div>
         </div>
       );
     }
 
     const quotes = await getFavoriteQuotes(user.id);
+    console.log('Final quotes:', quotes);
 
     return (
       <ThemeWrapper>
-        <div className="flex flex-col min-h-screen">
-          <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+          <div className="container mx-auto px-4 py-8">
             <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
               Your Favorite Quotes
             </h1>
@@ -113,7 +103,7 @@ export default async function FavoriteQuotes() {
                   <p className="text-gray-600 dark:text-gray-400 mb-4">
                     You haven't favorited any quotes yet.
                   </p>
-                  <Link href="/" className="text-blue-500 hover:text-blue-700">
+                  <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                     Discover quotes to favorite
                   </Link>
                 </div>
@@ -125,7 +115,7 @@ export default async function FavoriteQuotes() {
                 </div>
               )}
             </div>
-          </main>
+          </div>
           <Footer />
         </div>
       </ThemeWrapper>
@@ -133,16 +123,18 @@ export default async function FavoriteQuotes() {
   } catch (error) {
     console.error('Error in FavoriteQuotes page:', error);
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-          Something went wrong
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
-          We're having trouble loading your favorite quotes.
-        </p>
-        <Link href="/" className="text-blue-500 hover:text-blue-700">
-          Go back home
-        </Link>
+      <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+            Something went wrong
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            We're having trouble loading your favorite quotes.
+          </p>
+          <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+            Go back home
+          </Link>
+        </div>
       </div>
     );
   }
