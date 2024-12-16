@@ -18,18 +18,36 @@ const poppins = Poppins({
 
 async function getUserId(clerkUserId: string) {
   const supabase = createServerComponentClient({ cookies });
-  const { data, error } = await supabase
+  
+  // First check if user exists
+  const { data: existingUser, error: fetchError } = await supabase
     .from('users')
     .select('id')
-    .eq('clerk_user_id', clerkUserId)
+    .eq('email', clerkUserId)
     .single();
 
-  if (error) {
-    console.error('Error fetching user ID:', error);
+  if (existingUser) {
+    return existingUser.id;
+  }
+
+  // If user doesn't exist, create a new user
+  const { data: newUser, error: insertError } = await supabase
+    .from('users')
+    .insert([
+      {
+        email: clerkUserId,
+        name: 'User' // You might want to get the actual name from Clerk
+      }
+    ])
+    .select('id')
+    .single();
+
+  if (insertError) {
+    console.error('Error creating user:', insertError);
     return null;
   }
 
-  return data?.id;
+  return newUser?.id || null;
 }
 
 async function getFavoriteQuotes(userId: string) {
@@ -82,7 +100,7 @@ async function getFavoriteQuotes(userId: string) {
 export default async function FavoriteQuotes() {
   const user = await currentUser();
   
-  if (!user) {
+  if (!user || !user.emailAddresses || user.emailAddresses.length === 0) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -107,13 +125,15 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  const userId = await getUserId(user.id);
+  const primaryEmail = user.emailAddresses[0].emailAddress;
+  const userId = await getUserId(primaryEmail);
+  
   if (!userId) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
           <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <p>Error: User not found</p>
+            <p className="text-center dark:text-gray-300">Error: Unable to retrieve user information. Please try signing out and signing in again.</p>
           </main>
           <Footer />
         </div>
