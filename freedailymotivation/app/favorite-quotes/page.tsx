@@ -21,46 +21,43 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
     const supabase = createServerComponentClient({ cookies });
     console.log('Fetching favorites for user:', userId);
 
-    // First get the favorite quote IDs
-    const { data: favorites, error: favError } = await supabase
+    // Get favorites with quotes and authors in a single query
+    const { data, error } = await supabase
       .from('favorites')
-      .select('quote_id')
+      .select(`
+        quotes (
+          id,
+          quote_text,
+          authors (
+            author_name
+          )
+        )
+      `)
       .eq('user_id', userId);
 
-    if (favError) {
-      console.error('Error fetching favorites:', favError);
-      return [];
+    if (error) {
+      console.error('Error fetching favorites:', error);
+      throw error;
     }
 
-    if (!favorites || favorites.length === 0) {
+    if (!data || data.length === 0) {
       console.log('No favorites found');
       return [];
     }
 
-    const quoteIds = favorites.map(fav => fav.quote_id);
-    console.log('Quote IDs:', quoteIds);
+    console.log('Raw favorites data:', JSON.stringify(data, null, 2));
 
-    // Then fetch the quotes with their authors
-    const { data: quotes, error: quotesError } = await supabase
-      .from('quotes')
-      .select('*, authors!inner(author_name)')
-      .in('id', quoteIds);
-
-    if (quotesError) {
-      console.error('Error fetching quotes:', quotesError);
-      return [];
-    }
-
-    console.log('Fetched quotes:', quotes);
-
-    return quotes.map(quote => ({
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0
-    }));
+    // Map the joined data to Quote format
+    return data
+      .filter(favorite => favorite.quotes) // Filter out any null quotes
+      .map(favorite => ({
+        id: favorite.quotes.id,
+        text: favorite.quotes.quote_text,
+        author: favorite.quotes.authors?.[0]?.author_name || 'Unknown Author',
+        likes: 0,
+        category: '',
+        dislikes: 0
+      }));
 
   } catch (error) {
     console.error('Error in getFavoriteQuotes:', error);
@@ -74,7 +71,7 @@ export default async function FavoriteQuotes() {
     
     if (!user) {
       return (
-        <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
           <div className="flex flex-col items-center justify-center min-h-screen">
             <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
               Please sign in to view your favorite quotes
@@ -92,7 +89,7 @@ export default async function FavoriteQuotes() {
 
     return (
       <ThemeWrapper>
-        <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
           <div className="container mx-auto px-4 py-8">
             <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
               Your Favorite Quotes
@@ -123,7 +120,7 @@ export default async function FavoriteQuotes() {
   } catch (error) {
     console.error('Error in FavoriteQuotes page:', error);
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black">
+      <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
         <div className="flex flex-col items-center justify-center min-h-screen">
           <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
             Something went wrong
