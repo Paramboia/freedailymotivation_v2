@@ -16,70 +16,59 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-async function getUserId(clerkUserId: string) {
-  const supabase = createServerComponentClient({ cookies });
-  
-  // Get user by clerk_user_id
-  const { data: existingUser, error: _fetchError } = await supabase
-    .from('users')
-    .select('id')
-    .eq('clerk_user_id', clerkUserId)
-    .single();
-
-  if (_fetchError) {
-    console.error('Error fetching user:', _fetchError);
-    return null;
-  }
-
-  if (existingUser) {
-    return existingUser.id;
-  }
-
-  console.error('User not found for clerk_user_id:', clerkUserId);
-  return null;
-}
-
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
+  console.log('Querying favorites for user ID:', userId);
 
-  // First get the favorite quote IDs for the user
-  const { data: favoriteData, error: favoriteError } = await supabase
+  // Get quotes that the user has favorited
+  const { data, error } = await supabase
     .from('favorites')
-    .select('quote_id')
+    .select(`
+      quote_id,
+      quotes (
+        id,
+        quote_text,
+        author_id
+      )
+    `)
     .eq('user_id', userId);
 
-  if (favoriteError) {
-    console.error('Error fetching favorites:', favoriteError);
+  if (error) {
+    console.error('Error fetching favorites:', error);
     return [];
   }
 
-  if (!favoriteData || favoriteData.length === 0) {
+  if (!data || data.length === 0) {
+    console.log('No favorites found for user');
     return [];
   }
 
-  const quoteIds = favoriteData.map(fav => fav.quote_id);
+  console.log('Found favorites:', data);
 
-  // Then get the actual quotes with their authors
-  const { data, error } = await supabase
+  // Get author names for the quotes
+  const quoteIds = data.map(fav => fav.quotes.id);
+  const { data: quotesWithAuthors, error: authorError } = await supabase
     .from('quotes')
     .select(`
       id,
       quote_text,
-      authors!inner (
+      authors (
         author_name
       )
     `)
     .in('id', quoteIds);
 
-  if (error) {
-    console.error('Error fetching quotes:', error);
+  if (authorError) {
+    console.error('Error fetching authors:', authorError);
     return [];
   }
 
-  return data.map(quote => ({
+  console.log('Quotes with authors:', quotesWithAuthors);
+
+  return quotesWithAuthors.map(quote => ({
     id: quote.id,
     text: quote.quote_text,
-    author: quote.authors[0]?.author_name || 'Unknown Author',
+    author: quote.authors?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
@@ -114,28 +103,11 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  const userId = await getUserId(user.id);
-  console.log('Clerk user ID:', user.id);
-  console.log('Supabase user ID:', userId);
-  
-  if (!userId) {
-    return (
-      <ThemeWrapper>
-        <div className="min-h-screen flex flex-col">
-          <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <p className="text-center dark:text-gray-300">
-              Error: Unable to find your user information. This might happen if your account is not properly set up.
-              Please try signing out and signing in again.
-            </p>
-          </main>
-          <Footer />
-        </div>
-      </ThemeWrapper>
-    );
-  }
+  const userId = user.id;
+  console.log('Using Supabase user ID:', userId);
 
   const quotes = await getFavoriteQuotes(userId);
-  console.log('Fetched quotes:', quotes);
+  console.log('Final quotes array:', quotes);
 
   return (
     <ThemeWrapper>
