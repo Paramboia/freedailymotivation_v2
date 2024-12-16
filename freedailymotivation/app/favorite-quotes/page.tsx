@@ -36,40 +36,29 @@ async function getUserId(clerkUserId: string) {
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
 
-  const { data: favorites, error: favError } = await supabase
-    .from('favorites')
-    .select('quote_id')
-    .eq('user_id', userId);
-
-  if (favError) {
-    console.error('Error fetching favorites:', favError);
-    return [];
-  }
-
-  if (!favorites || favorites.length === 0) return [];
-
-  const quoteIds = favorites.map(fav => fav.quote_id);
-
   const { data, error } = await supabase
-    .from('quotes')
+    .from('favorites')
     .select(`
-      id,
-      quote_text,
-      authors!inner (
-        author_name
+      quote_id,
+      quotes!inner (
+        id,
+        quote_text,
+        authors!inner (
+          author_name
+        )
       )
     `)
-    .in('id', quoteIds);
+    .eq('user_id', userId);
 
   if (error) {
-    console.error('Error fetching quotes:', error);
+    console.error('Error fetching favorite quotes:', error);
     return [];
   }
 
-  return data.map(quote => ({
-    id: quote.id,
-    text: quote.quote_text,
-    author: quote.authors[0]?.author_name || 'Unknown Author',
+  return data.map(item => ({
+    id: item.quotes.id,
+    text: item.quotes.quote_text,
+    author: item.quotes.authors[0]?.author_name || 'Unknown Author',
     likes: 0,
     category: '',
     dislikes: 0
@@ -80,7 +69,6 @@ export default async function FavoriteQuotes() {
   const user = await currentUser();
   
   if (!user) {
-    console.log('No user found');
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -92,37 +80,34 @@ export default async function FavoriteQuotes() {
             </h1>
             <div className="max-w-2xl text-center">
               <p className="mb-4 dark:text-gray-300">
-                Welcome to your personal collection of favorite quotes from{' '}
+                Please sign in to view your favorite quotes from{' '}
                 <Link href="/" className="text-blue-600 hover:underline">
                   Free Daily Motivation
                 </Link>
-                ! Here, you’ll find inspiring words from renowned figures that
-                resonate with you the most.
-              </p>
-              <p className="mb-4 dark:text-gray-300">
-                Remember to log in and like your favorite{' '}
-                <Link href="/find-quotes" className="text-blue-600 hover:underline">
-                  quotes
-                </Link>{' '}
-                to build a unique selection of motivational insights you can
-                revisit anytime.
               </p>
             </div>
           </main>
-          <Footer /> {/* Use the Footer component */}
+          <Footer />
         </div>
       </ThemeWrapper>
     );
   }
 
-  const supabaseUserId = await getUserId(user.id);
-  if (!supabaseUserId) {
-    console.log('No Supabase user ID found for Clerk user:', user.id);
-    return <div>Error: User not found.</div>;
+  const userId = await getUserId(user.id);
+  if (!userId) {
+    return (
+      <ThemeWrapper>
+        <div className="min-h-screen flex flex-col">
+          <main className="flex-grow flex flex-col items-center justify-center p-8">
+            <p>Error: User not found</p>
+          </main>
+          <Footer />
+        </div>
+      </ThemeWrapper>
+    );
   }
 
-  const quotes = await getFavoriteQuotes(supabaseUserId);
-  console.log('Fetched favorite quotes:', quotes);
+  const quotes = await getFavoriteQuotes(userId);
 
   return (
     <ThemeWrapper>
@@ -133,31 +118,28 @@ export default async function FavoriteQuotes() {
           >
             My Favorite Quotes
           </h1>
+          <div className="max-w-2xl text-center mb-8">
+            <p className="mb-4 dark:text-gray-300">
+              Welcome to your personal collection of favorite quotes from{' '}
+              <Link href="/" className="text-blue-600 hover:underline">
+                Free Daily Motivation
+              </Link>
+              ! Here are all the inspiring quotes you've liked.
+            </p>
+          </div>
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
             {quotes.length > 0 ? (
               quotes.map((quote: Quote) => (
-                <QuoteBox
-                  key={quote.id}
-                  quote={quote}
-                  _isAuthorPage={true}
-                />
+                <QuoteBox key={quote.id} quote={quote} />
               ))
             ) : (
-              <p className="dark:text-gray-300">
-                You have no favorite quotes yet.
+              <p className="text-center dark:text-gray-300">
+                You haven't liked any quotes yet. Browse through our collection and click the heart icon to add quotes to your favorites!
               </p>
             )}
           </div>
-          <Link href="/" className="mt-8">
-            <Button
-              variant="secondary"
-              className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]"
-            >
-              Back to Home
-            </Button>
-          </Link>
         </main>
-        <Footer /> {/* Use the Footer component */}
+        <Footer />
       </div>
     </ThemeWrapper>
   );
