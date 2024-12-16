@@ -16,22 +16,6 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-// Define types for our database structure
-type Author = {
-  author_name: string;
-}
-
-type QuoteWithAuthor = {
-  id: string;
-  quote_text: string;
-  authors: Author[];
-}
-
-type FavoriteQuote = {
-  quote_id: string;
-  quotes: QuoteWithAuthor;
-}
-
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   console.log('Querying favorites for user ID:', userId);
