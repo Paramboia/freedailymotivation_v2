@@ -21,61 +21,45 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
     const supabase = createServerComponentClient({ cookies });
     console.log('Fetching favorites for user:', userId);
 
-    // First get the favorite quote IDs
-    const { data: favorites, error: favError } = await supabase
+    // Use a single join query to get all the data we need
+    const { data, error } = await supabase
       .from('favorites')
-      .select('quote_id')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .select(`
+        quote_id,
+        quotes:quotes!inner (
+          id,
+          quote_text,
+          authors!inner (
+            author_name
+          )
+        )
+      `)
+      .eq('user_id', userId);
 
-    if (favError) {
-      console.error('Error fetching favorites:', favError);
-      return [];
+    if (error) {
+      console.error('Error fetching favorites:', error);
+      throw error;
     }
 
-    if (!favorites || favorites.length === 0) {
+    if (!data || data.length === 0) {
       console.log('No favorites found');
       return [];
     }
 
-    const quoteIds = favorites.map(fav => fav.quote_id);
-    console.log('Quote IDs:', quoteIds);
+    console.log('Raw favorites data:', JSON.stringify(data, null, 2));
 
-    // Then fetch the full quote data
-    const { data: quotes, error: quotesError } = await supabase
-      .from('quotes')
-      .select(`
-        id,
-        quote_text,
-        authors (
-          author_name
-        )
-      `)
-      .in('id', quoteIds);
-
-    if (quotesError) {
-      console.error('Error fetching quotes:', quotesError);
-      return [];
-    }
-
-    if (!quotes) {
-      console.log('No quotes found');
-      return [];
-    }
-
-    console.log('Raw quotes data:', quotes);
-
-    // Transform into Quote format
-    return quotes.map(quote => ({
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
+    // Map the joined data to Quote format
+    return data.map(favorite => ({
+      id: favorite.quotes.id,
+      text: favorite.quotes.quote_text,
+      author: favorite.quotes.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
     }));
+
   } catch (error) {
-    console.error('Unexpected error in getFavoriteQuotes:', error);
+    console.error('Error in getFavoriteQuotes:', error);
     return [];
   }
 }
@@ -83,6 +67,7 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
 export default async function FavoriteQuotes() {
   try {
     const user = await currentUser();
+    
     if (!user) {
       return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -97,7 +82,6 @@ export default async function FavoriteQuotes() {
     }
 
     const quotes = await getFavoriteQuotes(user.id);
-    console.log('Processed quotes:', quotes);
 
     return (
       <ThemeWrapper>
@@ -106,20 +90,24 @@ export default async function FavoriteQuotes() {
             <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
               Your Favorite Quotes
             </h1>
-            {quotes.length === 0 ? (
-              <div className="text-center">
-                <p className="text-gray-600 dark:text-gray-400 mb-4">You haven't favorited any quotes yet.</p>
-                <Link href="/" className="text-blue-500 hover:text-blue-700">
-                  Discover quotes to favorite
-                </Link>
-              </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {quotes.map((quote) => (
-                  <QuoteBox key={quote.id} quote={quote} />
-                ))}
-              </div>
-            )}
+            <div className="max-w-6xl mx-auto">
+              {quotes.length === 0 ? (
+                <div className="text-center">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    You haven't favorited any quotes yet.
+                  </p>
+                  <Link href="/" className="text-blue-500 hover:text-blue-700">
+                    Discover quotes to favorite
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {quotes.map((quote) => (
+                    <QuoteBox key={quote.id} quote={quote} />
+                  ))}
+                </div>
+              )}
+            </div>
           </main>
           <Footer />
         </div>
@@ -132,6 +120,9 @@ export default async function FavoriteQuotes() {
         <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
           Something went wrong
         </h1>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          We're having trouble loading your favorite quotes.
+        </p>
         <Link href="/" className="text-blue-500 hover:text-blue-700">
           Go back home
         </Link>
@@ -140,9 +131,7 @@ export default async function FavoriteQuotes() {
   }
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Favorite Quotes | Free Daily Motivation',
-    description: 'View your favorite quotes that inspire and motivate you.',
-  };
-}
+export const metadata: Metadata = {
+  title: 'Your Favorite Quotes - Free Daily Motivation',
+  description: 'View your collection of favorite motivational quotes.',
+};
