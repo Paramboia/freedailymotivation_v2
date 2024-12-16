@@ -20,14 +20,15 @@ async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   console.log('Querying favorites for user ID:', userId);
 
-  // First get favorite quotes with their texts
+  // Get all favorite quotes with author information
   const { data, error } = await supabase
     .from('favorites')
     .select(`
-      quotes (
+      quote_id,
+      quotes:quotes!inner (
         id,
         quote_text,
-        authors (
+        authors:authors!inner (
           author_name
         )
       )
@@ -44,17 +45,20 @@ async function getFavoriteQuotes(userId: string) {
     return [];
   }
 
-  console.log('Found favorites:', data);
+  console.log('Raw favorites data:', data);
 
   // Map the data to the expected Quote format
-  return data.map(fav => ({
-    id: fav.quotes.id,
-    text: fav.quotes.quote_text,
-    author: fav.quotes.authors?.author_name || 'Unknown Author',
-    likes: 0,
-    category: '',
-    dislikes: 0
-  }));
+  return data.map(favorite => {
+    const quote = favorite.quotes;
+    return {
+      id: quote.id,
+      text: quote.quote_text,
+      author: quote.authors[0]?.author_name || 'Unknown Author',
+      likes: 0,
+      category: '',
+      dislikes: 0
+    };
+  });
 }
 
 export default async function FavoriteQuotes() {
