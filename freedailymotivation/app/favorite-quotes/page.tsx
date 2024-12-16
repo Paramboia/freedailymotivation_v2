@@ -16,127 +16,113 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-async function getFavoriteQuotes(userId: string) {
-  const supabase = createServerComponentClient({ cookies });
-  console.log('Querying favorites for user ID:', userId);
+async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
+  try {
+    const supabase = createServerComponentClient({ cookies });
+    console.log('Fetching favorites for user:', userId);
 
-  // First get the favorite quote IDs
-  const { data: favorites, error: favError } = await supabase
-    .from('favorites')
-    .select('quote_id')
-    .eq('user_id', userId);
+    const { data, error } = await supabase
+      .from('favorites')
+      .select(`
+        quotes (
+          id,
+          quote_text,
+          authors (
+            author_name
+          )
+        )
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
 
-  if (favError) {
-    console.error('Error fetching favorites:', favError);
+    if (error) {
+      console.error('Error fetching favorites:', error);
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      console.log('No favorites found');
+      return [];
+    }
+
+    console.log('Raw favorites data:', data);
+
+    // Transform the data into Quote format
+    return data.map(favorite => {
+      const quote = favorite.quotes;
+      return {
+        id: quote.id,
+        text: quote.quote_text,
+        author: quote.authors?.[0]?.author_name || 'Unknown Author',
+        likes: 0,
+        category: '',
+        dislikes: 0
+      };
+    });
+  } catch (error) {
+    console.error('Unexpected error in getFavoriteQuotes:', error);
     return [];
   }
-
-  if (!favorites || favorites.length === 0) {
-    console.log('No favorites found for user');
-    return [];
-  }
-
-  const quoteIds = favorites.map(fav => fav.quote_id);
-  console.log('Found favorite quote IDs:', quoteIds);
-
-  // Then get the quotes with their authors
-  const { data: quotes, error: quotesError } = await supabase
-    .from('quotes')
-    .select(`
-      id,
-      quote_text,
-      authors!inner (
-        author_name
-      )
-    `)
-    .in('id', quoteIds);
-
-  if (quotesError) {
-    console.error('Error fetching quotes:', quotesError);
-    return [];
-  }
-
-  console.log('Found quotes:', quotes);
-
-  // Map to the expected Quote format
-  return quotes.map(quote => ({
-    id: quote.id,
-    text: quote.quote_text,
-    author: quote.authors[0]?.author_name || 'Unknown Author',
-    likes: 0,
-    category: '',
-    dislikes: 0
-  }));
 }
 
 export default async function FavoriteQuotes() {
-  const user = await currentUser();
-  
-  if (!user) {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+          <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+            Please sign in to view your favorite quotes
+          </h1>
+          <Link href="/" className="text-blue-500 hover:text-blue-700">
+            Go back home
+          </Link>
+        </div>
+      );
+    }
+
+    const quotes = await getFavoriteQuotes(user.id);
+    console.log('Processed quotes:', quotes);
+
     return (
       <ThemeWrapper>
-        <div className="min-h-screen flex flex-col">
-          <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <h1
-              className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
-            >
-              My Favorite Quotes
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-grow container mx-auto px-4 py-8">
+            <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
+              Your Favorite Quotes
             </h1>
-            <div className="max-w-2xl text-center">
-              <p className="mb-4 dark:text-gray-300">
-                Please sign in to view your favorite quotes from{' '}
-                <Link href="/" className="text-blue-600 hover:underline">
-                  Free Daily Motivation
+            {quotes.length === 0 ? (
+              <div className="text-center">
+                <p className="text-gray-600 dark:text-gray-400 mb-4">You haven't favorited any quotes yet.</p>
+                <Link href="/" className="text-blue-500 hover:text-blue-700">
+                  Discover quotes to favorite
                 </Link>
-              </p>
-            </div>
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {quotes.map((quote) => (
+                  <QuoteBox key={quote.id} quote={quote} />
+                ))}
+              </div>
+            )}
           </main>
           <Footer />
         </div>
       </ThemeWrapper>
     );
-  }
-
-  const userId = user.id;
-  console.log('Using Supabase user ID:', userId);
-
-  const quotes = await getFavoriteQuotes(userId);
-  console.log('Final quotes array:', quotes);
-
-  return (
-    <ThemeWrapper>
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-grow flex flex-col items-center justify-center p-8">
-          <h1
-            className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}
-          >
-            My Favorite Quotes
-          </h1>
-          <div className="max-w-2xl text-center mb-8">
-            <p className="mb-4 dark:text-gray-300">
-              Welcome to your personal collection of favorite quotes from{' '}
-              <Link href="/" className="text-blue-600 hover:underline">
-                Free Daily Motivation
-              </Link>
-              ! Here are all the inspiring quotes you've liked.
-            </p>
-          </div>
-          <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
-            {quotes.length > 0 ? (
-              quotes.map((quote: Quote) => (
-                <QuoteBox key={quote.id} quote={quote} />
-              ))
-            ) : (
-              <p className="text-center dark:text-gray-300">
-                You haven't liked any quotes yet. Browse through our collection and click the heart icon to add quotes to your favorites!
-              </p>
-            )}
-          </div>
-        </main>
-        <Footer />
+  } catch (error) {
+    console.error('Error in FavoriteQuotes page:', error);
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+          Something went wrong
+        </h1>
+        <Link href="/" className="text-blue-500 hover:text-blue-700">
+          Go back home
+        </Link>
       </div>
-    </ThemeWrapper>
-  );
+    );
+  }
 }
 
 export async function generateMetadata(): Promise<Metadata> {
