@@ -73,16 +73,17 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
 
   } catch (error) {
     console.error('Error in getFavoriteQuotes:', error);
-    return [];
+    throw error; // Propagate the error to handle it in the component
   }
 }
 
 export default async function FavoriteQuotes() {
-  try {
-    const user = await currentUser();
-    
-    if (!user) {
-      return (
+  const user = await currentUser();
+  
+  // Handle unauthenticated users first
+  if (!user) {
+    return (
+      <ThemeWrapper>
         <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
           <div className="flex flex-col items-center justify-center min-h-screen">
             <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
@@ -92,10 +93,13 @@ export default async function FavoriteQuotes() {
               Go back home
             </Link>
           </div>
+          <Footer />
         </div>
-      );
-    }
+      </ThemeWrapper>
+    );
+  }
 
+  try {
     const quotes = await getFavoriteQuotes(user.id);
     console.log('Final quotes:', quotes);
 
@@ -132,19 +136,22 @@ export default async function FavoriteQuotes() {
   } catch (error) {
     console.error('Error in FavoriteQuotes page:', error);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-        <div className="flex flex-col items-center justify-center min-h-screen">
-          <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-            Something went wrong
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            We're having trouble loading your favorite quotes.
-          </p>
-          <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-            Go back home
-          </Link>
+      <ThemeWrapper>
+        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+              Something went wrong
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              We're having trouble loading your favorite quotes.
+            </p>
+            <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+              Go back home
+            </Link>
+          </div>
+          <Footer />
         </div>
-      </div>
+      </ThemeWrapper>
     );
   }
 }
