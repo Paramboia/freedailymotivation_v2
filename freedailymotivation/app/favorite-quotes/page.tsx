@@ -16,6 +16,22 @@ const poppins = Poppins({
   display: 'swap',
 });
 
+// Define types for our database structure
+type Author = {
+  author_name: string;
+}
+
+type QuoteWithAuthor = {
+  id: string;
+  quote_text: string;
+  authors: Author[];
+}
+
+type FavoriteQuote = {
+  quote_id: string;
+  quotes: QuoteWithAuthor;
+}
+
 async function getFavoriteQuotes(userId: string) {
   const supabase = createServerComponentClient({ cookies });
   console.log('Querying favorites for user ID:', userId);
@@ -48,17 +64,14 @@ async function getFavoriteQuotes(userId: string) {
   console.log('Raw favorites data:', data);
 
   // Map the data to the expected Quote format
-  return data.map(favorite => {
-    const quote = favorite.quotes;
-    return {
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0
-    };
-  });
+  return (data as FavoriteQuote[]).map(favorite => ({
+    id: favorite.quotes.id,
+    text: favorite.quotes.quote_text,
+    author: favorite.quotes.authors[0]?.author_name || 'Unknown Author',
+    likes: 0,
+    category: '',
+    dislikes: 0
+  }));
 }
 
 export default async function FavoriteQuotes() {
