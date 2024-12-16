@@ -16,6 +16,17 @@ const poppins = Poppins({
   display: 'swap',
 });
 
+// Define types for our database structure
+type DatabaseQuote = {
+  id: string;
+  quote_text: string;
+  authors: { author_name: string }[];
+}
+
+type FavoriteQuote = {
+  quotes: DatabaseQuote;
+}
+
 async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
@@ -33,7 +44,8 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
           )
         )
       `)
-      .eq('user_id', userId);
+      .eq('user_id', userId)
+      .returns<FavoriteQuote[]>();
 
     if (error) {
       console.error('Error fetching favorites:', error);
