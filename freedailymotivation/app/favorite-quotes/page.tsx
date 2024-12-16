@@ -1,4 +1,3 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
@@ -73,34 +72,43 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
 
   } catch (error) {
     console.error('Error in getFavoriteQuotes:', error);
-    throw error; // Propagate the error to handle it in the component
+    throw error;
   }
 }
 
 export default async function FavoriteQuotes() {
-  const user = await currentUser();
+  const supabase = createServerComponentClient({ cookies });
   
-  // Handle unauthenticated users first
-  if (!user) {
-    return (
-      <ThemeWrapper>
-        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-          <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-              Please sign in to view your favorite quotes
-            </h1>
-            <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-              Go back home
-            </Link>
-          </div>
-          <Footer />
-        </div>
-      </ThemeWrapper>
-    );
-  }
-
   try {
-    const quotes = await getFavoriteQuotes(user.id);
+    // Get the session from Supabase
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError) {
+      console.error('Session error:', sessionError);
+      throw sessionError;
+    }
+
+    // Handle unauthenticated users
+    if (!session) {
+      return (
+        <ThemeWrapper>
+          <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
+            <div className="flex flex-col items-center justify-center min-h-screen">
+              <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+                Please sign in to view your favorite quotes
+              </h1>
+              <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                Go back home
+              </Link>
+            </div>
+            <Footer />
+          </div>
+        </ThemeWrapper>
+      );
+    }
+
+    console.log('User signed in:', session.user);
+    const quotes = await getFavoriteQuotes(session.user.id);
     console.log('Final quotes:', quotes);
 
     return (
