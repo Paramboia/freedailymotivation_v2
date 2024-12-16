@@ -19,35 +19,24 @@ const poppins = Poppins({
 async function getUserId(clerkUserId: string) {
   const supabase = createServerComponentClient({ cookies });
   
-  // First check if user exists
+  // Get user by clerk_user_id
   const { data: existingUser, error: _fetchError } = await supabase
     .from('users')
     .select('id')
-    .eq('email', clerkUserId)
+    .eq('clerk_user_id', clerkUserId)
     .single();
+
+  if (_fetchError) {
+    console.error('Error fetching user:', _fetchError);
+    return null;
+  }
 
   if (existingUser) {
     return existingUser.id;
   }
 
-  // If user doesn't exist, create a new user
-  const { data: newUser, error: insertError } = await supabase
-    .from('users')
-    .insert([
-      {
-        email: clerkUserId,
-        name: 'User' // You might want to get the actual name from Clerk
-      }
-    ])
-    .select('id')
-    .single();
-
-  if (insertError) {
-    console.error('Error creating user:', insertError);
-    return null;
-  }
-
-  return newUser?.id || null;
+  console.error('User not found for clerk_user_id:', clerkUserId);
+  return null;
 }
 
 async function getFavoriteQuotes(userId: string) {
@@ -100,7 +89,7 @@ async function getFavoriteQuotes(userId: string) {
 export default async function FavoriteQuotes() {
   const user = await currentUser();
   
-  if (!user || !user.emailAddresses || user.emailAddresses.length === 0) {
+  if (!user) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
@@ -125,15 +114,19 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  const primaryEmail = user.emailAddresses[0].emailAddress;
-  const userId = await getUserId(primaryEmail);
+  const userId = await getUserId(user.id);
+  console.log('Clerk user ID:', user.id);
+  console.log('Supabase user ID:', userId);
   
   if (!userId) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen flex flex-col">
           <main className="flex-grow flex flex-col items-center justify-center p-8">
-            <p className="text-center dark:text-gray-300">Error: Unable to retrieve user information. Please try signing out and signing in again.</p>
+            <p className="text-center dark:text-gray-300">
+              Error: Unable to find your user information. This might happen if your account is not properly set up.
+              Please try signing out and signing in again.
+            </p>
           </main>
           <Footer />
         </div>
@@ -142,6 +135,7 @@ export default async function FavoriteQuotes() {
   }
 
   const quotes = await getFavoriteQuotes(userId);
+  console.log('Fetched quotes:', quotes);
 
   return (
     <ThemeWrapper>
