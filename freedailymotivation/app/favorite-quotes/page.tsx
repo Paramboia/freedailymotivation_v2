@@ -20,7 +20,7 @@ async function getUserId(clerkUserId: string) {
   const supabase = createServerComponentClient({ cookies });
   
   // First check if user exists
-  const { data: existingUser, error: fetchError } = await supabase
+  const { data: existingUser, error: _fetchError } = await supabase
     .from('users')
     .select('id')
     .eq('email', clerkUserId)
