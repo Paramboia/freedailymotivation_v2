@@ -56,7 +56,7 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
       console.log('No favorites found');
       return [];
     }
-
+ 
     const quoteIds = favorites.map(fav => fav.quote_id);
     console.log('Found favorite quote IDs:', quoteIds);
 
@@ -189,6 +189,24 @@ export default async function FavoriteQuotes() {
 }
 
 export const metadata: Metadata = {
-  title: 'Your Favorite Quotes - Free Daily Motivation',
+  title: 'Your Favorite Quotes - Free Daily Motivation',import { currentUser } from "@clerk/nextjs/server";
+  
+  export default async function FavoriteQuotes() {
+    const user = await currentUser();
+    const supabase = createServerComponentClient({ cookies });
+    
+    // Handle unauthenticated users
+    if (!user) {
+      return <SignInComponent />;
+    }
+  
+    try {
+      // Use the Clerk user ID directly
+      const quotes = await getFavoriteQuotes(user.id);
+      // ... rest of the component
+    } catch (error) {
+      // ... error handling
+    }
+  }
   description: 'View your collection of favorite motivational quotes.',
 };
