@@ -20,79 +20,42 @@ const poppins = Poppins({
 async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
-    console.log('1. Looking up user with Clerk ID:', clerkUserId);
+    console.log('Fetching favorites for Clerk user:', clerkUserId);
 
-    // Step 1: Get the Supabase user ID using the Clerk user ID
-    const { data: users, error: userError } = await supabase
+    // Single query with JOINs to get everything we need
+    const { data: favoriteQuotes, error } = await supabase
       .from('users')
-      .select('*')  // Select all columns to see full user data
+      .select(`
+        favorites!inner(
+          quotes!inner(
+            id,
+            quote_text,
+            authors!inner(
+              author_name
+            )
+          )
+        )
+      `)
       .eq('clerk_user_id', clerkUserId)
       .single();
 
-    console.log('2. Full user data:', users);
-
-    if (userError) {
-      console.error('Error finding user:', userError);
-      throw userError;
+    if (error) {
+      console.error('Error fetching favorite quotes:', error);
+      throw error;
     }
 
-    if (!users) {
-      console.log('No user found for Clerk ID:', clerkUserId);
+    console.log('Query result:', JSON.stringify(favoriteQuotes, null, 2));
+
+    if (!favoriteQuotes?.favorites?.length) {
+      console.log('No favorites found');
       return [];
     }
 
-    const supabaseUserId = users.id;
-    console.log('3. Found Supabase user ID:', supabaseUserId);
-
-    // Step 2: Get favorite quote IDs for the user
-    const { data: favoritesData, error: favoritesError } = await supabase
-      .from('favorites')
-      .select('*')
-      .eq('user_id', supabaseUserId);
-
-    console.log('4. Full favorites data:', JSON.stringify(favoritesData, null, 2));
-
-    if (favoritesError) {
-      console.error('Error fetching favorites:', favoritesError);
-      throw favoritesError;
-    }
-
-    if (!favoritesData || favoritesData.length === 0) {
-      console.log('No favorites found for user ID:', supabaseUserId);
-      return [];
-    }
-
-    const quoteIds = favoritesData.map(fav => fav.quote_id);
-    console.log('5. Found favorite quote IDs:', quoteIds);
-
-    // Step 3: Get the actual quotes and their authors
-    const { data: quotes, error: quotesError } = await supabase
-      .from('quotes')
-      .select(`
-        *,
-        authors (
-          *
-        )
-      `)
-      .in('id', quoteIds);
-
-    console.log('6. Full quotes data:', JSON.stringify(quotes, null, 2));
-
-    if (quotesError) {
-      console.error('Error fetching quotes:', quotesError);
-      throw quotesError;
-    }
-
-    if (!quotes) {
-      console.log('No quotes found');
-      return [];
-    }
-
-    // Map the data to Quote format
-    return quotes.map(quote => ({
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
+    // Transform the data into the expected Quote format
+    return favoriteQuotes.favorites.map(fav => ({
+      id: fav.quotes.id,
+      text: fav.quotes.quote_text,
+      author: fav.quotes.authors?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
