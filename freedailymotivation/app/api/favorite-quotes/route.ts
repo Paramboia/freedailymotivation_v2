@@ -24,9 +24,10 @@ export async function GET(request: NextRequest) {
 
     // First verify the database connection
     try {
-      const { data: connectionTest, error: connectionError } = await supabase
+      const { error: connectionError } = await supabase
         .from('favorites')
         .select('count')
+        .limit(1)
         .single();
 
       if (connectionError) {
@@ -36,7 +37,8 @@ export async function GET(request: NextRequest) {
           { 
             status: 500,
             headers: { 'Content-Type': 'application/json' }
-        });
+          }
+        );
       }
     } catch (connError) {
       console.error('Failed to test database connection:', connError);
