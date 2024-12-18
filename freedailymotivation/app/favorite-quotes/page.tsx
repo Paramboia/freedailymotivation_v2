@@ -20,34 +20,48 @@ const poppins = Poppins({
 async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
-    console.log('Fetching favorites for Clerk user:', clerkUserId);
+    console.log('Starting fetch for Clerk user:', clerkUserId);
 
-    // Get user's favorites with quotes and authors in a single query
-    const { data: favorites, error } = await supabase
+    // Step 1: Get the Supabase user ID
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('clerk_user_id', clerkUserId)
+      .single();
+
+    if (userError) {
+      console.error('Error finding user:', userError);
+      throw userError;
+    }
+
+    if (!userData) {
+      console.log('No user found for Clerk ID:', clerkUserId);
+      return [];
+    }
+
+    console.log('Found user:', userData);
+
+    // Step 2: Get favorites with quotes and authors
+    const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select(`
         quote_id,
-        quotes:quotes_id (
+        quote:quotes!inner (
           id,
           quote_text,
-          authors (
+          author:authors!inner (
             author_name
           )
         )
       `)
-      .eq('user_id', (
-        supabase
-          .from('users')
-          .select('id')
-          .eq('clerk_user_id', clerkUserId)
-      ));
+      .eq('user_id', userData.id);
 
-    if (error) {
-      console.error('Error fetching favorite quotes:', error);
-      throw error;
+    if (favoritesError) {
+      console.error('Error fetching favorites:', favoritesError);
+      throw favoritesError;
     }
 
-    console.log('Query result:', JSON.stringify(favorites, null, 2));
+    console.log('Raw favorites data:', JSON.stringify(favorites, null, 2));
 
     if (!favorites?.length) {
       console.log('No favorites found');
@@ -56,9 +70,9 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
     // Transform the data into the expected Quote format
     return favorites.map(fav => ({
-      id: fav.quotes.id,
-      text: fav.quotes.quote_text,
-      author: fav.quotes.authors?.[0]?.author_name || 'Unknown Author',
+      id: fav.quote.id,
+      text: fav.quote.quote_text,
+      author: fav.quote.author.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
