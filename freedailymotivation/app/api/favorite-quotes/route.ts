@@ -3,6 +3,14 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
+interface DatabaseQuote {
+  id: string;
+  quote_text: string;
+  authors: {
+    author_name: string;
+  }[];
+}
+
 export async function GET() {
   try {
     // Get the current user from Clerk
@@ -123,13 +131,7 @@ export async function GET() {
 
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select(`
-        id,
-        quote_text,
-        author:authors!inner (
-          author_name
-        )
-      `)
+      .select('id, quote_text, authors!inner(author_name)')
       .in('id', quoteIds);
 
     if (quotesError) {
@@ -149,10 +151,10 @@ export async function GET() {
     }
 
     // Transform and return the data
-    const formattedQuotes = (quotes || []).map(quote => ({
+    const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.author[0]?.author_name || 'Unknown Author',
+      author: quote.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
