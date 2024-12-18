@@ -1,14 +1,12 @@
 'use client';
 
-import Link from 'next/link';
-import ThemeWrapper from "@/components/ThemeWrapper";
-import { Quote } from '@/types';
-import { Poppins } from "next/font/google";
-import Footer from "@/components/Footer";
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import styles from './page.module.css';
+import { ThemeWrapper } from '@/components/theme-wrapper';
+import { poppins } from '@/app/fonts';
+import Link from 'next/link';
+import Footer from "@/components/Footer";
+import dynamic from 'next/dynamic';
 
 interface Quote {
   id: number;
@@ -20,12 +18,6 @@ interface Quote {
 }
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
-
-const poppins = Poppins({
-  weight: ['700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export default function FavoriteQuotes() {
   const { user, isLoaded: isUserLoaded } = useUser();
@@ -80,12 +72,9 @@ export default function FavoriteQuotes() {
     return (
       <ThemeWrapper>
         <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-          <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-              Loading...
-            </h1>
+          <div className="container mx-auto px-4 py-8">
+            <p className="text-center text-gray-600 dark:text-gray-400">Loading user information...</p>
           </div>
-          <Footer />
         </div>
       </ThemeWrapper>
     );
@@ -96,11 +85,12 @@ export default function FavoriteQuotes() {
       <ThemeWrapper>
         <div className="flex flex-col min-h-screen">
           <div className="flex-grow flex items-center justify-center">
-            <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Sign in to view favorite quotes
-              </button>
-            </Link>
+            <div className="text-center">
+              <p className="text-gray-600 dark:text-gray-400 mb-4">Please sign in to view your favorite quotes.</p>
+              <Link href="/sign-in" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                Sign In
+              </Link>
+            </div>
           </div>
           <Footer />
         </div>
@@ -113,9 +103,7 @@ export default function FavoriteQuotes() {
       <ThemeWrapper>
         <div className="flex flex-col min-h-screen">
           <div className="flex-grow flex items-center justify-center">
-            <p className="text-gray-600 dark:text-gray-400">
-              Loading your favorite quotes...
-            </p>
+            <p className="text-gray-600 dark:text-gray-400">Loading your favorite quotes...</p>
           </div>
           <Footer />
         </div>
@@ -127,10 +115,8 @@ export default function FavoriteQuotes() {
     return (
       <ThemeWrapper>
         <div className="flex flex-col min-h-screen">
-          <div className="flex-grow flex items-center justify-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">
-              {error}
-            </p>
+          <div className="flex-grow flex items-center justify-center flex-col">
+            <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
             <button 
               onClick={() => window.location.reload()}
               className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
@@ -148,10 +134,8 @@ export default function FavoriteQuotes() {
     return (
       <ThemeWrapper>
         <div className="flex flex-col min-h-screen">
-          <div className="flex-grow flex items-center justify-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              You haven't favorited any quotes yet.
-            </p>
+          <div className="flex-grow flex items-center justify-center flex-col">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">You haven't favorited any quotes yet.</p>
             <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
               Find Inspirational Quotes to Like
             </Link>
@@ -166,7 +150,7 @@ export default function FavoriteQuotes() {
     <ThemeWrapper>
       <div className="flex flex-col min-h-screen">
         <div className="flex-grow">
-          <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="container mx-auto px-4 py-8">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
               Your Favorite Quotes
             </h1>
