@@ -129,14 +129,47 @@ export async function GET() {
     const quoteIds = favorites.map(f => f.quote_id);
     console.log('Quote IDs:', quoteIds);
 
+    // First get all author names for these quotes
+    const { data: authorData, error: authorError } = await supabase
+      .from('quotes')
+      .select(`
+        id,
+        authors!inner (
+          author_name
+        )
+      `)
+      .in('id', quoteIds);
+
+    if (authorError) {
+      console.error('Error fetching authors:', authorError);
+      return new NextResponse(
+        JSON.stringify({ error: 'Failed to fetch authors', details: authorError.message }), 
+        { 
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          }
+        }
+      );
+    }
+
+    // Create a map of quote ID to author name
+    const quoteAuthors = new Map(
+      authorData?.map(quote => [
+        quote.id, 
+        quote.authors[0]?.author_name || 'Unknown Author'
+      ]) || []
+    );
+
+    // Then get the quotes with their exact author names
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
       .select(`
         id,
-        quote_text,
-        authors!inner (
-          author_name
-        )
+        quote_text
       `)
       .in('id', quoteIds);
 
@@ -157,10 +190,10 @@ export async function GET() {
     }
 
     // Transform and return the data
-    const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
+    const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
+      author: quoteAuthors.get(quote.id) || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
