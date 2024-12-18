@@ -7,11 +7,11 @@ export async function GET() {
   try {
     // Get the current user from Clerk
     const session = await auth();
-    const userId = session.userId;
+    const clerkUserId = session.userId;
     
-    console.log('Clerk User ID:', userId);
+    console.log('Clerk User ID:', clerkUserId);
     
-    if (!userId) {
+    if (!clerkUserId) {
       return new NextResponse(
         JSON.stringify({ error: 'Unauthorized' }), 
         { 
@@ -30,19 +30,62 @@ export async function GET() {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // Get favorites - using string comparison since Clerk IDs are strings
+    // First get the Supabase user ID using the Clerk ID
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('clerk_user_id', clerkUserId)
+      .single();
+
+    if (userError) {
+      console.error('Error fetching user:', userError);
+      return new NextResponse(
+        JSON.stringify({ 
+          error: 'Failed to fetch user', 
+          details: userError.message,
+          clerkUserId 
+        }), 
+        { 
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          }
+        }
+      );
+    }
+
+    if (!userData) {
+      return new NextResponse(
+        JSON.stringify({ error: 'User not found' }), 
+        { 
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          }
+        }
+      );
+    }
+
+    console.log('Found Supabase user:', userData);
+
+    // Get favorites using the Supabase user ID
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select('quote_id')
-      .eq('user_id', userId.toString());
+      .eq('user_id', userData.id);
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
       return new NextResponse(
         JSON.stringify({ 
           error: 'Failed to fetch favorites', 
-          details: favoritesError.message,
-          userId: userId 
+          details: favoritesError.message
         }), 
         { 
           status: 500,
