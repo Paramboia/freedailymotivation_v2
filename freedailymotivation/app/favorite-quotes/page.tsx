@@ -16,16 +16,36 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
+async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
-    console.log('Fetching favorites for user:', userId);
+    console.log('Looking up user with Clerk ID:', clerkUserId);
 
-    // Step 1: Get favorite quote IDs for the user
+    // Step 1: Get the Supabase user ID using the Clerk user ID
+    const { data: users, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('clerk_user_id', clerkUserId)
+      .single();
+
+    if (userError) {
+      console.error('Error finding user:', userError);
+      throw userError;
+    }
+
+    if (!users) {
+      console.log('No user found for Clerk ID:', clerkUserId);
+      return [];
+    }
+
+    const supabaseUserId = users.id;
+    console.log('Found Supabase user ID:', supabaseUserId);
+
+    // Step 2: Get favorite quote IDs for the user
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select('quote_id')
-      .eq('user_id', userId);
+      .eq('user_id', supabaseUserId);
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
@@ -40,7 +60,7 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
     const quoteIds = favorites.map(fav => fav.quote_id);
     console.log('Found favorite quote IDs:', quoteIds);
 
-    // Step 2: Get the actual quotes and their authors
+    // Step 3: Get the actual quotes and their authors
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
       .select(`
