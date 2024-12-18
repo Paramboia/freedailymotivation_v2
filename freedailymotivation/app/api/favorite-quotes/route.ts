@@ -3,14 +3,6 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
-interface DatabaseQuote {
-  id: string;
-  quote_text: string;
-  authors: {
-    author_name: string;
-  }[];
-}
-
 export async function GET() {
   try {
     // Get the current user from Clerk
