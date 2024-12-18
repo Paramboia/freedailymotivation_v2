@@ -4,6 +4,21 @@ import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { type NextRequest } from 'next/server';
 
+type Author = {
+  author_name: string;
+}
+
+type Quote = {
+  id: string;
+  quote_text: string;
+  authors: Author[];
+}
+
+type FavoriteQuote = {
+  quote_id: string;
+  quotes: Quote;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -18,7 +33,7 @@ export async function GET(request: NextRequest) {
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
     // Direct SQL query to get favorites with quotes and authors
-    const { data: quotes, error } = await supabase
+    const { data, error } = await supabase
       .from('favorites')
       .select(`
         quote_id,
@@ -33,17 +48,19 @@ export async function GET(request: NextRequest) {
       .eq('user_id', userId)
       .not('quotes', 'is', null);
 
-    console.log('Raw query result:', JSON.stringify(quotes, null, 2));
+    console.log('Raw query result:', JSON.stringify(data, null, 2));
 
     if (error) {
       console.error('Database error:', error);
       return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
-    if (!quotes?.length) {
+    if (!data?.length) {
       console.log('No quotes found for user:', userId);
       return NextResponse.json({ quotes: [] });
     }
+
+    const quotes = data as FavoriteQuote[];
 
     // Transform the data into the expected format
     const formattedQuotes = quotes.map(favorite => {
