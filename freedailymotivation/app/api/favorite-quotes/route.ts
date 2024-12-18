@@ -1,14 +1,13 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs';
 import { type NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // 1. Get and validate user ID
-    const { userId } = await getAuth(request);
-    console.log('User ID from Clerk:', userId);
+    // Get the user ID from Clerk
+    const { userId } = auth();
     
     if (!userId) {
       return new NextResponse(
@@ -25,11 +24,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 2. Initialize Supabase client
+    // Initialize Supabase client
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // 3. Get favorites
+    // Get favorites
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select('quote_id')
@@ -67,7 +66,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 4. Get quotes
+    // Get quotes
     const quoteIds = favorites.map(f => f.quote_id);
     console.log('Quote IDs:', quoteIds);
 
@@ -94,7 +93,7 @@ export async function GET(request: NextRequest) {
 
     // Transform and return the data
     const formattedQuotes = (quotes || []).map(quote => ({
-      id: quote.id,
+      id: String(quote.id),
       text: quote.quote_text,
       author: 'Unknown Author', // Simplified for now
       likes: 0,
