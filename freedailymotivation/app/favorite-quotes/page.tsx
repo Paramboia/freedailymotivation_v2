@@ -18,7 +18,7 @@ const poppins = Poppins({
 });
 
 export default function FavoriteQuotes() {
-  const { isLoaded, isSignedIn, userId } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
