@@ -1,15 +1,14 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs';
-import type { NextRequest } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get the current user from Clerk
-    const user = await currentUser();
+    const { userId } = auth();
     
-    if (!user?.id) {
+    if (!userId) {
       return new NextResponse(
         JSON.stringify({ error: 'Unauthorized' }), 
         { 
@@ -32,7 +31,7 @@ export async function GET(request: NextRequest) {
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select('quote_id')
-      .eq('user_id', user.id);
+      .eq('user_id', userId);
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
