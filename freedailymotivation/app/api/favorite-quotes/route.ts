@@ -4,15 +4,29 @@ import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { type NextRequest } from 'next/server';
 
-type QuoteWithAuthor = {
-  id: string;
-  quote_text: string;
-  authors: { author_name: string }[];
-}
-
-type FavoriteQuote = {
-  quote_id: string;
-  quotes: QuoteWithAuthor;
+interface Database {
+  public: {
+    Tables: {
+      favorites: {
+        Row: {
+          quote_id: string;
+          user_id: string;
+          created_at: string;
+        };
+      };
+      quotes: {
+        Row: {
+          id: string;
+          quote_text: string;
+        };
+      };
+      authors: {
+        Row: {
+          author_name: string;
+        };
+      };
+    };
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -24,17 +38,17 @@ export async function GET(request: NextRequest) {
     }
 
     const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });
 
     // Get the quotes with a single join query
-    const { data: quotes, error } = await supabase
+    const { data: favorites, error } = await supabase
       .from('favorites')
       .select(`
         quote_id,
-        quotes (
+        quotes:quotes (
           id,
           quote_text,
-          authors (
+          authors:authors (
             author_name
           )
         )
@@ -46,19 +60,28 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ quotes: [] });
     }
 
-    if (!quotes?.length) {
+    if (!favorites?.length) {
       return NextResponse.json({ quotes: [] });
     }
 
+    console.log('Raw favorites:', JSON.stringify(favorites, null, 2));
+
     // Transform the data into the expected Quote format
-    const formattedQuotes = (quotes as FavoriteQuote[]).map(favorite => ({
-      id: favorite.quotes.id,
-      text: favorite.quotes.quote_text,
-      author: favorite.quotes.authors?.[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0
-    }));
+    const formattedQuotes = favorites.map(favorite => {
+      const quote = favorite.quotes;
+      if (!quote) {
+        return null;
+      }
+
+      return {
+        id: quote.id,
+        text: quote.quote_text,
+        author: Array.isArray(quote.authors) && quote.authors[0] ? quote.authors[0].author_name : 'Unknown Author',
+        likes: 0,
+        category: '',
+        dislikes: 0
+      };
+    }).filter((quote): quote is NonNullable<typeof quote> => quote !== null);
 
     return NextResponse.json({ quotes: formattedQuotes });
   } catch (error) {
