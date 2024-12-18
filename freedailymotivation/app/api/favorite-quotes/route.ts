@@ -29,6 +29,17 @@ interface Database {
   };
 }
 
+type QueryResponse = {
+  quote_id: string;
+  quotes: {
+    id: string;
+    quote_text: string;
+    authors: {
+      author_name: string;
+    }[];
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -41,7 +52,7 @@ export async function GET(request: NextRequest) {
     const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });
 
     // Get the quotes with a single join query
-    const { data: favorites, error } = await supabase
+    const { data, error } = await supabase
       .from('favorites')
       .select(`
         quote_id,
@@ -60,10 +71,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ quotes: [] });
     }
 
-    if (!favorites?.length) {
+    if (!data?.length) {
       return NextResponse.json({ quotes: [] });
     }
 
+    const favorites = data as QueryResponse[];
     console.log('Raw favorites:', JSON.stringify(favorites, null, 2));
 
     // Transform the data into the expected Quote format
