@@ -30,7 +30,10 @@ interface Database {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    // 1. Get and validate user ID
+    const auth = getAuth(request);
+    const userId = auth.userId;
+    console.log('Auth object:', auth);
     console.log('User ID from Clerk:', userId);
     
     if (!userId) {
@@ -38,48 +41,79 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // 2. Initialize Supabase client
     const cookieStore = cookies();
-    const supabase = createRouteHandlerClient<Database>({ cookies: () => cookieStore });
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // Direct SQL query to get favorites with quotes and authors
-    const { data, error } = await supabase
-      .from('favorites')
-      .select('*, quotes:quotes(*, authors:authors(author_name))')
-      .eq('user_id', userId);
+    try {
+      // 3. First, get just the favorite quote IDs
+      console.log('Fetching favorites for user:', userId);
+      const { data: favorites, error: favoritesError } = await supabase
+        .from('favorites')
+        .select('quote_id')
+        .eq('user_id', userId);
 
-    console.log('Raw query result:', JSON.stringify(data, null, 2));
+      if (favoritesError) {
+        console.error('Error fetching favorites:', favoritesError);
+        return NextResponse.json(
+          { error: 'Error fetching favorites: ' + favoritesError.message },
+          { status: 500 }
+        );
+      }
 
-    if (error) {
-      console.error('Database error:', error);
-      return NextResponse.json({ error: 'Database error' }, { status: 500 });
+      if (!favorites?.length) {
+        console.log('No favorites found');
+        return NextResponse.json({ quotes: [] });
+      }
+
+      const quoteIds = favorites.map(f => f.quote_id);
+      console.log('Found quote IDs:', quoteIds);
+
+      // 4. Then get the quotes with these IDs
+      const { data: quotes, error: quotesError } = await supabase
+        .from('quotes')
+        .select('id, quote_text, authors!inner(author_name)')
+        .in('id', quoteIds);
+
+      if (quotesError) {
+        console.error('Error fetching quotes:', quotesError);
+        return NextResponse.json(
+          { error: 'Error fetching quotes: ' + quotesError.message },
+          { status: 500 }
+        );
+      }
+
+      console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
+
+      if (!quotes?.length) {
+        console.log('No quotes found');
+        return NextResponse.json({ quotes: [] });
+      }
+
+      // 5. Transform the data
+      const formattedQuotes = quotes.map(quote => ({
+        id: quote.id,
+        text: quote.quote_text,
+        author: quote.authors?.[0]?.author_name || 'Unknown Author',
+        likes: 0,
+        category: '',
+        dislikes: 0
+      }));
+
+      console.log('Formatted quotes:', JSON.stringify(formattedQuotes, null, 2));
+      return NextResponse.json({ quotes: formattedQuotes });
+    } catch (dbError) {
+      console.error('Database operation error:', dbError);
+      return NextResponse.json(
+        { error: 'Database operation failed' },
+        { status: 500 }
+      );
     }
-
-    if (!data?.length) {
-      console.log('No quotes found for user:', userId);
-      return NextResponse.json({ quotes: [] });
-    }
-
-    // Transform the data into the expected format
-    const formattedQuotes = data
-      .filter(favorite => favorite.quotes) // Filter out any null quotes
-      .map(favorite => {
-        const quote = favorite.quotes;
-        return {
-          id: quote.id,
-          text: quote.quote_text,
-          author: Array.isArray(quote.authors) && quote.authors[0] 
-            ? quote.authors[0].author_name 
-            : 'Unknown Author',
-          likes: 0,
-          category: '',
-          dislikes: 0
-        };
-      });
-
-    console.log('Formatted quotes:', JSON.stringify(formattedQuotes, null, 2));
-    return NextResponse.json({ quotes: formattedQuotes });
   } catch (error) {
-    console.error('Error in favorite quotes API:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Top level error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
