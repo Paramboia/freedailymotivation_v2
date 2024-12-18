@@ -1,64 +1,48 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs';
 
 export async function GET() {
   try {
-    const user = await currentUser();
+    const { userId } = auth();
     
-    if (!user) {
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const supabase = createRouteHandlerClient({ cookies });
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // Step 1: Get the Supabase user ID
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('id')
-      .eq('clerk_user_id', user.id)
-      .single();
-
-    if (userError || !userData) {
-      console.error('Error finding user:', userError);
-      return NextResponse.json({ quotes: [] });
-    }
-
-    // Step 2: Get the favorite quote IDs
-    const { data: favorites, error: favoritesError } = await supabase
+    // Get the quotes with a single join query
+    const { data: quotes, error } = await supabase
       .from('favorites')
-      .select('quote_id')
-      .eq('user_id', userData.id);
-
-    if (favoritesError || !favorites?.length) {
-      console.error('Error fetching favorites:', favoritesError);
-      return NextResponse.json({ quotes: [] });
-    }
-
-    const quoteIds = favorites.map(f => f.quote_id);
-
-    // Step 3: Get the quotes with authors
-    const { data: quotes, error: quotesError } = await supabase
-      .from('quotes')
       .select(`
-        id,
-        quote_text,
-        authors (
-          author_name
+        quote_id,
+        quotes (
+          id,
+          quote_text,
+          authors (
+            author_name
+          )
         )
       `)
-      .in('id', quoteIds);
+      .eq('user_id', userId);
 
-    if (quotesError || !quotes?.length) {
-      console.error('Error fetching quotes:', quotesError);
+    if (error) {
+      console.error('Error fetching quotes:', error);
       return NextResponse.json({ quotes: [] });
     }
 
-    const formattedQuotes = quotes.map(quote => ({
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
+    if (!quotes?.length) {
+      return NextResponse.json({ quotes: [] });
+    }
+
+    // Transform the data into the expected Quote format
+    const formattedQuotes = quotes.map(favorite => ({
+      id: favorite.quotes.id,
+      text: favorite.quotes.quote_text,
+      author: favorite.quotes.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
