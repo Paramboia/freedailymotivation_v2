@@ -103,7 +103,6 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
 export default async function FavoriteQuotes() {
   const user = await currentUser();
-  const supabase = createServerComponentClient({ cookies });
   
   // Handle unauthenticated users
   if (!user) {
