@@ -4,30 +4,6 @@ import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { type NextRequest } from 'next/server';
 
-interface Database {
-  public: {
-    Tables: {
-      favorites: {
-        Row: {
-          user_id: string;
-          quote_id: string;
-        };
-      };
-      quotes: {
-        Row: {
-          id: string;
-          quote_text: string;
-        };
-      };
-      authors: {
-        Row: {
-          author_name: string;
-        };
-      };
-    };
-  };
-}
-
 export async function GET(request: NextRequest) {
   try {
     // 1. Get and validate user ID
