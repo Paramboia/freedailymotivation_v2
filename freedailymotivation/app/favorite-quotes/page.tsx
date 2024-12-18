@@ -1,14 +1,13 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+'use client';
+
 import Link from 'next/link';
 import ThemeWrapper from "@/components/ThemeWrapper";
 import { Quote } from '@/types';
-import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
-import { currentUser } from "@clerk/nextjs/server";
-import { cache } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@clerk/nextjs';
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -18,95 +17,52 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-// Create a cached version of getFavoriteQuotes
-const getFavoriteQuotes = cache(async (clerkUserId: string): Promise<Quote[]> => {
-  try {
-    const cookieStore = cookies();
-    const supabase = createServerComponentClient({ cookies: () => cookieStore });
-    console.log('Starting fetch for Clerk user:', clerkUserId);
+export default function FavoriteQuotes() {
+  const { isLoaded, isSignedIn } = useAuth();
+  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    // Step 1: Get the Supabase user ID
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('id')
-      .eq('clerk_user_id', clerkUserId)
-      .single();
-
-    if (userError) {
-      console.error('Error finding user:', userError);
-      return [];
+  useEffect(() => {
+    async function fetchQuotes() {
+      try {
+        const response = await fetch('/api/favorite-quotes');
+        if (!response.ok) {
+          throw new Error('Failed to fetch quotes');
+        }
+        const data = await response.json();
+        setQuotes(data.quotes);
+      } catch (err) {
+        console.error('Error fetching quotes:', err);
+        setError('Failed to load your favorite quotes');
+      } finally {
+        setIsLoading(false);
+      }
     }
 
-    if (!userData) {
-      console.log('No user found for Clerk ID:', clerkUserId);
-      return [];
+    if (isLoaded && isSignedIn) {
+      fetchQuotes();
+    } else if (isLoaded && !isSignedIn) {
+      setIsLoading(false);
     }
+  }, [isLoaded, isSignedIn]);
 
-    console.log('Found user:', userData);
-
-    // Step 2: Get the favorite quote IDs
-    const { data: favorites, error: favoritesError } = await supabase
-      .from('favorites')
-      .select('quote_id')
-      .eq('user_id', userData.id);
-
-    if (favoritesError) {
-      console.error('Error fetching favorites:', favoritesError);
-      return [];
-    }
-
-    if (!favorites?.length) {
-      console.log('No favorites found');
-      return [];
-    }
-
-    const quoteIds = favorites.map(f => f.quote_id);
-    console.log('Found quote IDs:', quoteIds);
-
-    // Step 3: Get the quotes with authors
-    const { data: quotes, error: quotesError } = await supabase
-      .from('quotes')
-      .select(`
-        id,
-        quote_text,
-        authors (
-          author_name
-        )
-      `)
-      .in('id', quoteIds);
-
-    if (quotesError) {
-      console.error('Error fetching quotes:', quotesError);
-      return [];
-    }
-
-    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
-
-    if (!quotes?.length) {
-      console.log('No quotes found');
-      return [];
-    }
-
-    // Transform the data into the expected Quote format
-    return quotes.map(quote => ({
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0
-    }));
-
-  } catch (error) {
-    console.error('Error in getFavoriteQuotes:', error);
-    return [];
+  if (!isLoaded) {
+    return (
+      <ThemeWrapper>
+        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+              Loading...
+            </h1>
+          </div>
+          <Footer />
+        </div>
+      </ThemeWrapper>
+    );
   }
-});
 
-export default async function FavoriteQuotes() {
-  const user = await currentUser();
-  
-  if (!user) {
+  if (!isSignedIn) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
@@ -124,41 +80,7 @@ export default async function FavoriteQuotes() {
     );
   }
 
-  try {
-    const quotes = await getFavoriteQuotes(user.id);
-
-    return (
-      <ThemeWrapper>
-        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-          <div className="container mx-auto px-4 py-8">
-            <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
-              Your Favorite Quotes
-            </h1>
-            <div className="max-w-6xl mx-auto">
-              {quotes.length === 0 ? (
-                <div className="text-center">
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    You haven't favorited any quotes yet.
-                  </p>
-                  <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                    Discover quotes to favorite
-                  </Link>
-                </div>
-              ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {quotes.map((quote) => (
-                    <QuoteBox key={quote.id} quote={quote} />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </ThemeWrapper>
-    );
-  } catch (error) {
-    console.error('Error in FavoriteQuotes page:', error);
+  if (error) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
@@ -167,7 +89,7 @@ export default async function FavoriteQuotes() {
               Something went wrong
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              We're having trouble loading your favorite quotes.
+              {error}
             </p>
             <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
               Go back home
@@ -178,6 +100,43 @@ export default async function FavoriteQuotes() {
       </ThemeWrapper>
     );
   }
+
+  return (
+    <ThemeWrapper>
+      <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
+        <div className="container mx-auto px-4 py-8">
+          <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
+            Your Favorite Quotes
+          </h1>
+          <div className="max-w-6xl mx-auto">
+            {isLoading ? (
+              <div className="text-center">
+                <p className="text-gray-600 dark:text-gray-400">
+                  Loading your favorite quotes...
+                </p>
+              </div>
+            ) : quotes.length === 0 ? (
+              <div className="text-center">
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  You haven't favorited any quotes yet.
+                </p>
+                <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                  Discover quotes to favorite
+                </Link>
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {quotes.map((quote) => (
+                  <QuoteBox key={quote.id} quote={quote} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <Footer />
+      </div>
+    </ThemeWrapper>
+  );
 }
 
 export const metadata: Metadata = {
