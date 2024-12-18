@@ -84,24 +84,6 @@ export default function FavoriteQuotes() {
     );
   }
 
-  if (!user) {
-    return (
-      <ThemeWrapper>
-        <div className="flex flex-col min-h-screen">
-          <div className="flex-grow flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Please sign in to view your favorite quotes.</p>
-              <Link href="/sign-in" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                Sign In
-              </Link>
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </ThemeWrapper>
-    );
-  }
-
   if (isLoading) {
     return (
       <ThemeWrapper>
@@ -134,7 +116,7 @@ export default function FavoriteQuotes() {
     );
   }
 
-  if (quotes.length === 0) {
+  if (quotes.length === 0 && user) {
     return (
       <ThemeWrapper>
         <div className="flex flex-col min-h-screen">
@@ -152,19 +134,19 @@ export default function FavoriteQuotes() {
 
   return (
     <ThemeWrapper>
-      <div className="flex flex-col min-h-screen">
+      <main className="flex-1 bg-gradient-to-br from-purple-300 to-pink-300 dark:from-purple-900 dark:to-pink-900 min-h-screen">
         <div className="flex-grow">
           <div className="container mx-auto px-4 py-8">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
-                My Favorite Quotes
+              My Favorite Quotes
             </h1>
-            <div className="max-w-2xl text-center">
+            <div className="max-w-2xl mx-auto text-center mb-8">
               <p className="mb-4 dark:text-gray-300">
                 Welcome to your personal collection of favorite quotes from{' '}
                 <Link href="/" className="text-blue-600 hover:underline">
                   Free Daily Motivation
                 </Link>
-                ! Here, you’ll find inspiring words from renowned figures that
+                ! Here, you'll find inspiring words from renowned figures that
                 resonate with you the most.
               </p>
               <p className="mb-4 dark:text-gray-300">
@@ -176,15 +158,27 @@ export default function FavoriteQuotes() {
                 revisit anytime.
               </p>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {quotes.map((quote) => (
-                <QuoteBox key={quote.id} quote={quote} />
-              ))}
-            </div>
+            {!user ? (
+              <div className="text-center mt-12">
+                <p className="text-lg mb-6 dark:text-gray-300">Please sign in to view your favorite quotes.</p>
+                <Link
+                  href="/sign-in"
+                  className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 md:py-4 md:text-lg md:px-10 transform transition duration-200 hover:scale-105"
+                >
+                  Sign In
+                </Link>
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {quotes.map((quote) => (
+                  <QuoteBox key={quote.id} quote={quote} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-        <Footer />
-      </div>
+      </main>
+      <Footer />
     </ThemeWrapper>
   );
 }
