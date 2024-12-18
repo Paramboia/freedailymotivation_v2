@@ -24,38 +24,34 @@ export default function FavoriteQuotes() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchQuotes() {
+    if (!isSignedIn) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchQuotes = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-        
         const response = await fetch('/api/favorite-quotes', {
           headers: {
             'Cache-Control': 'no-cache'
           }
         });
-        
         if (!response.ok) {
           throw new Error('Failed to fetch quotes');
         }
-        
         const data = await response.json();
         console.log('Fetched quotes:', data);
         setQuotes(data.quotes);
       } catch (err) {
         console.error('Error fetching quotes:', err);
-        setError('Failed to load your favorite quotes');
+        setError(err instanceof Error ? err.message : 'Failed to fetch quotes');
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
-    if (isLoaded && isSignedIn && userId) {
-      fetchQuotes();
-    } else if (isLoaded && !isSignedIn) {
-      setIsLoading(false);
-    }
-  }, [isLoaded, isSignedIn, userId]);
+    fetchQuotes();
+  }, [isSignedIn]);
 
   if (!isLoaded) {
     return (
@@ -75,13 +71,12 @@ export default function FavoriteQuotes() {
   if (!isSignedIn) {
     return (
       <ThemeWrapper>
-        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-          <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-              Please sign in to view your favorite quotes
-            </h1>
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow flex items-center justify-center">
             <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-              Go back home
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Sign in to view favorite quotes
+              </button>
             </Link>
           </div>
           <Footer />
@@ -92,12 +87,12 @@ export default function FavoriteQuotes() {
 
   return (
     <ThemeWrapper>
-      <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-        <div className="container mx-auto px-4 py-8">
-          <h1 className={`${poppins.className} text-4xl mb-8 text-center text-gray-800 dark:text-white`}>
-            Your Favorite Quotes
-          </h1>
-          <div className="max-w-6xl mx-auto">
+      <div className="flex flex-col min-h-screen">
+        <div className="flex-grow">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <h1 className={`${poppins.className} text-3xl font-bold text-center mb-8`}>
+              Your Favorite Quotes
+            </h1>
             {isLoading ? (
               <div className="text-center">
                 <p className="text-gray-600 dark:text-gray-400">
@@ -113,7 +108,7 @@ export default function FavoriteQuotes() {
                   onClick={() => window.location.reload()}
                   className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                 >
-                  Try again
+                  Try Again
                 </button>
               </div>
             ) : quotes.length === 0 ? (
