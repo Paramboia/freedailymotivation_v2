@@ -8,6 +8,7 @@ import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
 import { currentUser } from "@clerk/nextjs/server";
+import { cache } from 'react';
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -17,9 +18,11 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
+// Create a cached version of getFavoriteQuotes
+const getFavoriteQuotes = cache(async (clerkUserId: string): Promise<Quote[]> => {
   try {
-    const supabase = createServerComponentClient({ cookies });
+    const cookieStore = cookies();
+    const supabase = createServerComponentClient({ cookies: () => cookieStore });
     console.log('Starting fetch for Clerk user:', clerkUserId);
 
     // Step 1: Get the Supabase user ID
@@ -31,7 +34,7 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
     if (userError) {
       console.error('Error finding user:', userError);
-      throw userError;
+      return [];
     }
 
     if (!userData) {
@@ -49,7 +52,7 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
-      throw favoritesError;
+      return [];
     }
 
     if (!favorites?.length) {
@@ -74,7 +77,7 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
     if (quotesError) {
       console.error('Error fetching quotes:', quotesError);
-      throw quotesError;
+      return [];
     }
 
     console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
@@ -96,14 +99,13 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
   } catch (error) {
     console.error('Error in getFavoriteQuotes:', error);
-    throw error;
+    return [];
   }
-}
+});
 
 export default async function FavoriteQuotes() {
   const user = await currentUser();
   
-  // Handle unauthenticated users
   if (!user) {
     return (
       <ThemeWrapper>
@@ -123,9 +125,7 @@ export default async function FavoriteQuotes() {
   }
 
   try {
-    console.log('User signed in:', user);
     const quotes = await getFavoriteQuotes(user.id);
-    console.log('Final quotes:', quotes);
 
     return (
       <ThemeWrapper>
