@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
+
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
 const poppins = Poppins({
@@ -20,10 +21,6 @@ type DatabaseQuote = {
   id: string;
   quote_text: string;
   authors: { author_name: string }[];
-}
-
-type FavoriteQuote = {
-  quotes: DatabaseQuote;
 }
 
 async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
