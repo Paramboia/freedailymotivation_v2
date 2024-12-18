@@ -126,7 +126,7 @@ export async function GET() {
       .from('quotes')
       .select(`
         id,
-        authors!inner (
+        authors:author_id (
           author_name
         )
       `)
@@ -148,13 +148,17 @@ export async function GET() {
       );
     }
 
+    console.log('Author data:', authorData);
+
     // Create a map of quote ID to author name
     const quoteAuthors = new Map(
       authorData?.map(quote => [
         quote.id, 
-        quote.authors[0]?.author_name || 'Unknown Author'
+        quote.authors?.author_name || 'Unknown Author'
       ]) || []
     );
+
+    console.log('Quote authors map:', Object.fromEntries(quoteAuthors));
 
     // Then get the quotes with their exact author names
     const { data: quotes, error: quotesError } = await supabase
