@@ -117,13 +117,19 @@ export async function GET() {
 
     console.log('Found favorites:', favorites);
 
-    // Get quotes
+    // Get quotes with author information
     const quoteIds = favorites.map(f => f.quote_id);
     console.log('Quote IDs:', quoteIds);
 
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select('id, quote_text')
+      .select(`
+        id,
+        quote_text,
+        authors (
+          author_name
+        )
+      `)
       .in('id', quoteIds);
 
     if (quotesError) {
@@ -146,7 +152,7 @@ export async function GET() {
     const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: 'Unknown Author', // Simplified for now
+      author: quote.authors?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
