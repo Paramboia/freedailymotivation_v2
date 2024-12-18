@@ -131,7 +131,13 @@ export async function GET() {
 
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select('id, quote_text, authors!inner(author_name)')
+      .select(`
+        id,
+        quote_text,
+        authors!inner (
+          author_name
+        )
+      `)
       .in('id', quoteIds);
 
     if (quotesError) {
