@@ -134,7 +134,7 @@ export default function FavoriteQuotes() {
 
   return (
     <ThemeWrapper>
-      <main className="flex-1 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-purple-900 dark:to-pink-900 min-h-screen">
+      <main className="flex-1 min-h-screen">
         <div className="flex-grow">
           <div className="container mx-auto px-4 py-8">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
