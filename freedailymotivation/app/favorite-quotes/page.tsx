@@ -7,15 +7,7 @@ import Link from 'next/link';
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
 import { Poppins } from "next/font/google";
-
-interface Quote {
-  id: number;
-  text: string;
-  author: string;
-  likes: number;
-  dislikes: number;
-  category: string;
-}
+import type { Quote } from '@/types';
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -62,7 +54,13 @@ export default function FavoriteQuotes() {
           throw new Error('Invalid response format: missing quotes array');
         }
 
-        setQuotes(data.quotes);
+        // Convert numeric ids to strings
+        const formattedQuotes: Quote[] = data.quotes.map((quote: any) => ({
+          ...quote,
+          id: String(quote.id)
+        }));
+
+        setQuotes(formattedQuotes);
       } catch (err) {
         console.error('Error fetching favorite quotes:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch favorite quotes');
