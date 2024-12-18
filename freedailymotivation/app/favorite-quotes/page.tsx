@@ -134,7 +134,7 @@ export default function FavoriteQuotes() {
 
   return (
     <ThemeWrapper>
-      <main className="flex-1 bg-gradient-to-br from-purple-300 to-pink-300 dark:from-purple-900 dark:to-pink-900 min-h-screen">
+      <main className="flex-1 bg-white dark:bg-gray-900 min-h-screen">
         <div className="flex-grow">
           <div className="container mx-auto px-4 py-8">
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
@@ -150,7 +150,7 @@ export default function FavoriteQuotes() {
                 resonate with you the most.
               </p>
               <p className="mb-4 dark:text-gray-300">
-                Remember to log in and like your favorite{' '}
+                Remember to sign in and like your favorite{' '}
                 <Link href="/find-quotes" className="text-blue-600 hover:underline">
                   quotes
                 </Link>{' '}
@@ -160,10 +160,9 @@ export default function FavoriteQuotes() {
             </div>
             {!user ? (
               <div className="text-center mt-12">
-                <p className="text-lg mb-6 dark:text-gray-300">Please sign in to view your favorite quotes.</p>
                 <Link
                   href="/sign-in"
-                  className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 md:py-4 md:text-lg md:px-10 transform transition duration-200 hover:scale-105"
+                  className="inline-flex items-center justify-center px-12 py-4 text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg shadow-lg hover:from-purple-700 hover:to-pink-700 transform transition duration-200 hover:scale-105"
                 >
                   Sign In
                 </Link>
