@@ -117,7 +117,7 @@ export default function FavoriteQuotes() {
                   You haven't favorited any quotes yet.
                 </p>
                 <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                  Discover quotes to favorite
+                  Find Inspirational Quotes to Like
                 </Link>
               </div>
             ) : (
