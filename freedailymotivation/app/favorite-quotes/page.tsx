@@ -90,7 +90,7 @@ export default function FavoriteQuotes() {
       <div className="flex flex-col min-h-screen">
         <div className="flex-grow">
           <div className="max-w-4xl mx-auto px-4 py-8">
-            <h1 className={`${poppins.className} text-3xl font-bold text-center mb-8`}>
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
               Your Favorite Quotes
             </h1>
             {isLoading ? (
