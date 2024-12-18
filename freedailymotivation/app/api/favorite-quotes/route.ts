@@ -9,6 +9,8 @@ export async function GET() {
     const session = await auth();
     const userId = session.userId;
     
+    console.log('Clerk User ID:', userId);
+    
     if (!userId) {
       return new NextResponse(
         JSON.stringify({ error: 'Unauthorized' }), 
@@ -28,16 +30,20 @@ export async function GET() {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // Get favorites
+    // Get favorites - using string comparison since Clerk IDs are strings
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select('quote_id')
-      .eq('user_id', userId);
+      .eq('user_id', userId.toString());
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
       return new NextResponse(
-        JSON.stringify({ error: 'Failed to fetch favorites', details: favoritesError.message }), 
+        JSON.stringify({ 
+          error: 'Failed to fetch favorites', 
+          details: favoritesError.message,
+          userId: userId 
+        }), 
         { 
           status: 500,
           headers: {
@@ -65,6 +71,8 @@ export async function GET() {
         }
       );
     }
+
+    console.log('Found favorites:', favorites);
 
     // Get quotes
     const quoteIds = favorites.map(f => f.quote_id);
