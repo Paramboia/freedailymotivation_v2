@@ -43,22 +43,24 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
     console.log('Found Supabase user ID:', supabaseUserId);
 
     // Step 2: Get favorite quote IDs for the user
-    const { data: favorites, error: favoritesError } = await supabase
+    const { data: favoritesData, error: favoritesError } = await supabase
       .from('favorites')
-      .select('quote_id')
+      .select('*')  // Select all columns to see what we're getting
       .eq('user_id', supabaseUserId);
+
+    console.log('Favorites query result:', favoritesData);
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
       throw favoritesError;
     }
 
-    if (!favorites || favorites.length === 0) {
-      console.log('No favorites found');
+    if (!favoritesData || favoritesData.length === 0) {
+      console.log('No favorites found for user ID:', supabaseUserId);
       return [];
     }
 
-    const quoteIds = favorites.map(fav => fav.quote_id);
+    const quoteIds = favoritesData.map(fav => fav.quote_id);
     console.log('Found favorite quote IDs:', quoteIds);
 
     // Step 3: Get the actual quotes and their authors
@@ -73,6 +75,8 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
       `)
       .in('id', quoteIds);
 
+    console.log('Quotes query result:', quotes);
+
     if (quotesError) {
       console.error('Error fetching quotes:', quotesError);
       throw quotesError;
@@ -83,13 +87,11 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
       return [];
     }
 
-    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
-
     // Map the data to Quote format
     return quotes.map(quote => ({
       id: quote.id,
       text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
+      author: quote.authors?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
