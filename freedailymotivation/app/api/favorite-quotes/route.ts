@@ -4,6 +4,17 @@ import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { type NextRequest } from 'next/server';
 
+type QuoteWithAuthor = {
+  id: string;
+  quote_text: string;
+  authors: { author_name: string }[];
+}
+
+type FavoriteQuote = {
+  quote_id: string;
+  quotes: QuoteWithAuthor;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -40,7 +51,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform the data into the expected Quote format
-    const formattedQuotes = quotes.map(favorite => ({
+    const formattedQuotes = (quotes as FavoriteQuote[]).map(favorite => ({
       id: favorite.quotes.id,
       text: favorite.quotes.quote_text,
       author: favorite.quotes.authors?.[0]?.author_name || 'Unknown Author',
