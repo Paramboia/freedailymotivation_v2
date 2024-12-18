@@ -41,19 +41,10 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 
     console.log('Found user:', userData);
 
-    // Step 2: Get favorites with quotes and authors
+    // Step 2: Get the favorite quote IDs
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
-      .select(`
-        quote_id,
-        quote:quotes!inner (
-          id,
-          quote_text,
-          author:authors!inner (
-            author_name
-          )
-        )
-      `)
+      .select('quote_id')
       .eq('user_id', userData.id);
 
     if (favoritesError) {
@@ -61,18 +52,43 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
       throw favoritesError;
     }
 
-    console.log('Raw favorites data:', JSON.stringify(favorites, null, 2));
-
     if (!favorites?.length) {
       console.log('No favorites found');
       return [];
     }
 
+    const quoteIds = favorites.map(f => f.quote_id);
+    console.log('Found quote IDs:', quoteIds);
+
+    // Step 3: Get the quotes with authors
+    const { data: quotes, error: quotesError } = await supabase
+      .from('quotes')
+      .select(`
+        id,
+        quote_text,
+        authors (
+          author_name
+        )
+      `)
+      .in('id', quoteIds);
+
+    if (quotesError) {
+      console.error('Error fetching quotes:', quotesError);
+      throw quotesError;
+    }
+
+    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
+
+    if (!quotes?.length) {
+      console.log('No quotes found');
+      return [];
+    }
+
     // Transform the data into the expected Quote format
-    return favorites.map(fav => ({
-      id: fav.quote.id,
-      text: fav.quote.quote_text,
-      author: fav.quote.author.author_name || 'Unknown Author',
+    return quotes.map(quote => ({
+      id: quote.id,
+      text: quote.quote_text,
+      author: quote.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
