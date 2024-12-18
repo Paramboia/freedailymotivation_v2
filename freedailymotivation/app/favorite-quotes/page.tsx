@@ -32,7 +32,10 @@ export default function FavoriteQuotes() {
     const fetchQuotes = async () => {
       try {
         const response = await fetch('/api/favorite-quotes', {
+          method: 'GET',
           headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'Cache-Control': 'no-cache'
           }
         });

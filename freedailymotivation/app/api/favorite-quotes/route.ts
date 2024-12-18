@@ -7,14 +7,18 @@ import { type NextRequest } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     // 1. Get and validate user ID
-    const auth = getAuth(request);
-    const userId = auth.userId;
-    console.log('Auth object:', auth);
+    const { userId } = await getAuth(request);
     console.log('User ID from Clerk:', userId);
     
     if (!userId) {
       console.log('No user ID found');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return new NextResponse(
+        JSON.stringify({ error: 'Unauthorized' }), 
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
     }
 
     // 2. Initialize Supabase client
@@ -31,15 +35,24 @@ export async function GET(request: NextRequest) {
 
       if (favoritesError) {
         console.error('Error fetching favorites:', favoritesError);
-        return NextResponse.json(
-          { error: 'Error fetching favorites: ' + favoritesError.message },
-          { status: 500 }
+        return new NextResponse(
+          JSON.stringify({ error: 'Error fetching favorites: ' + favoritesError.message }),
+          { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+          }
         );
       }
 
       if (!favorites?.length) {
         console.log('No favorites found');
-        return NextResponse.json({ quotes: [] });
+        return new NextResponse(
+          JSON.stringify({ quotes: [] }),
+          { 
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
       }
 
       const quoteIds = favorites.map(f => f.quote_id);
@@ -48,14 +61,23 @@ export async function GET(request: NextRequest) {
       // 4. Then get the quotes with these IDs
       const { data: quotes, error: quotesError } = await supabase
         .from('quotes')
-        .select('id, quote_text, authors!inner(author_name)')
+        .select(`
+          id,
+          quote_text,
+          authors (
+            author_name
+          )
+        `)
         .in('id', quoteIds);
 
       if (quotesError) {
         console.error('Error fetching quotes:', quotesError);
-        return NextResponse.json(
-          { error: 'Error fetching quotes: ' + quotesError.message },
-          { status: 500 }
+        return new NextResponse(
+          JSON.stringify({ error: 'Error fetching quotes: ' + quotesError.message }),
+          { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+          }
         );
       }
 
@@ -63,7 +85,13 @@ export async function GET(request: NextRequest) {
 
       if (!quotes?.length) {
         console.log('No quotes found');
-        return NextResponse.json({ quotes: [] });
+        return new NextResponse(
+          JSON.stringify({ quotes: [] }),
+          { 
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
       }
 
       // 5. Transform the data
@@ -77,19 +105,31 @@ export async function GET(request: NextRequest) {
       }));
 
       console.log('Formatted quotes:', JSON.stringify(formattedQuotes, null, 2));
-      return NextResponse.json({ quotes: formattedQuotes });
+      return new NextResponse(
+        JSON.stringify({ quotes: formattedQuotes }),
+        { 
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
     } catch (dbError) {
       console.error('Database operation error:', dbError);
-      return NextResponse.json(
-        { error: 'Database operation failed' },
-        { status: 500 }
+      return new NextResponse(
+        JSON.stringify({ error: 'Database operation failed' }),
+        { 
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
       );
     }
   } catch (error) {
     console.error('Top level error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+    return new NextResponse(
+      JSON.stringify({ error: 'Internal server error' }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
     );
   }
 }
