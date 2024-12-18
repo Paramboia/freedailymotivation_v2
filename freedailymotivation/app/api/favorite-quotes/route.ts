@@ -126,7 +126,7 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        authors (
+        author:authors!inner (
           author_name
         )
       `)
@@ -152,7 +152,7 @@ export async function GET() {
     const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.authors?.author_name || 'Unknown Author',
+      author: quote.author[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
