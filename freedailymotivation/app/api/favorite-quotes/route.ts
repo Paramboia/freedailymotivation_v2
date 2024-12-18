@@ -2,11 +2,12 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
+import type { NextRequest } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // Get the user ID from Clerk
-    const { userId } = getAuth();
+    const { userId } = getAuth(request);
     
     if (!userId) {
       return new NextResponse(
