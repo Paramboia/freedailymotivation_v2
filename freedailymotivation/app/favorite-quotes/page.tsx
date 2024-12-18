@@ -22,40 +22,43 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
     const supabase = createServerComponentClient({ cookies });
     console.log('Fetching favorites for Clerk user:', clerkUserId);
 
-    // Single query with JOINs to get everything we need
-    const { data: favoriteQuotes, error } = await supabase
-      .from('users')
+    // Get user's favorites with quotes and authors in a single query
+    const { data: favorites, error } = await supabase
+      .from('favorites')
       .select(`
-        favorites!inner(
-          quotes!inner(
-            id,
-            quote_text,
-            authors!inner(
-              author_name
-            )
+        quote_id,
+        quotes:quotes_id (
+          id,
+          quote_text,
+          authors (
+            author_name
           )
         )
       `)
-      .eq('clerk_user_id', clerkUserId)
-      .single();
+      .eq('user_id', (
+        supabase
+          .from('users')
+          .select('id')
+          .eq('clerk_user_id', clerkUserId)
+      ));
 
     if (error) {
       console.error('Error fetching favorite quotes:', error);
       throw error;
     }
 
-    console.log('Query result:', JSON.stringify(favoriteQuotes, null, 2));
+    console.log('Query result:', JSON.stringify(favorites, null, 2));
 
-    if (!favoriteQuotes?.favorites?.length) {
+    if (!favorites?.length) {
       console.log('No favorites found');
       return [];
     }
 
     // Transform the data into the expected Quote format
-    return favoriteQuotes.favorites.map(fav => ({
+    return favorites.map(fav => ({
       id: fav.quotes.id,
       text: fav.quotes.quote_text,
-      author: fav.quotes.authors?.author_name || 'Unknown Author',
+      author: fav.quotes.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
