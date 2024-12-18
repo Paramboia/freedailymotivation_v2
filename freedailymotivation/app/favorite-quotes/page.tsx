@@ -20,14 +20,16 @@ const poppins = Poppins({
 async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
   try {
     const supabase = createServerComponentClient({ cookies });
-    console.log('Looking up user with Clerk ID:', clerkUserId);
+    console.log('1. Looking up user with Clerk ID:', clerkUserId);
 
     // Step 1: Get the Supabase user ID using the Clerk user ID
     const { data: users, error: userError } = await supabase
       .from('users')
-      .select('id')
+      .select('*')  // Select all columns to see full user data
       .eq('clerk_user_id', clerkUserId)
       .single();
+
+    console.log('2. Full user data:', users);
 
     if (userError) {
       console.error('Error finding user:', userError);
@@ -40,15 +42,15 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
     }
 
     const supabaseUserId = users.id;
-    console.log('Found Supabase user ID:', supabaseUserId);
+    console.log('3. Found Supabase user ID:', supabaseUserId);
 
     // Step 2: Get favorite quote IDs for the user
     const { data: favoritesData, error: favoritesError } = await supabase
       .from('favorites')
-      .select('*')  // Select all columns to see what we're getting
+      .select('*')
       .eq('user_id', supabaseUserId);
 
-    console.log('Favorites query result:', favoritesData);
+    console.log('4. Full favorites data:', JSON.stringify(favoritesData, null, 2));
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
@@ -61,21 +63,20 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
     }
 
     const quoteIds = favoritesData.map(fav => fav.quote_id);
-    console.log('Found favorite quote IDs:', quoteIds);
+    console.log('5. Found favorite quote IDs:', quoteIds);
 
     // Step 3: Get the actual quotes and their authors
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
       .select(`
-        id,
-        quote_text,
+        *,
         authors (
-          author_name
+          *
         )
       `)
       .in('id', quoteIds);
 
-    console.log('Quotes query result:', quotes);
+    console.log('6. Full quotes data:', JSON.stringify(quotes, null, 2));
 
     if (quotesError) {
       console.error('Error fetching quotes:', quotesError);
@@ -91,7 +92,7 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
     return quotes.map(quote => ({
       id: quote.id,
       text: quote.quote_text,
-      author: quote.authors?.author_name || 'Unknown Author',
+      author: quote.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
