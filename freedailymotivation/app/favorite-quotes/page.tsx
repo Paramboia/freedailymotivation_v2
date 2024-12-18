@@ -7,7 +7,17 @@ import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
+import styles from './page.module.css';
+
+interface Quote {
+  id: number;
+  text: string;
+  author: string;
+  likes: number;
+  dislikes: number;
+  category: string;
+}
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -18,45 +28,55 @@ const poppins = Poppins({
 });
 
 export default function FavoriteQuotes() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { user, isLoaded: isUserLoaded } = useUser();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isSignedIn) {
-      setIsLoading(false);
-      return;
-    }
+    async function fetchFavoriteQuotes() {
+      if (!isUserLoaded || !user) {
+        setIsLoading(false);
+        return;
+      }
 
-    const fetchQuotes = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
+
         const response = await fetch('/api/favorite-quotes', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-          }
+          },
+          credentials: 'include',
         });
+
         if (!response.ok) {
-          throw new Error('Failed to fetch quotes');
+          const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
         console.log('Fetched quotes:', data);
+        
+        if (!data.quotes) {
+          throw new Error('Invalid response format: missing quotes array');
+        }
+
         setQuotes(data.quotes);
       } catch (err) {
-        console.error('Error fetching quotes:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch quotes');
+        console.error('Error fetching favorite quotes:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch favorite quotes');
       } finally {
         setIsLoading(false);
       }
-    };
+    }
 
-    fetchQuotes();
-  }, [isSignedIn]);
+    fetchFavoriteQuotes();
+  }, [user, isUserLoaded]);
 
-  if (!isLoaded) {
+  if (!isUserLoaded) {
     return (
       <ThemeWrapper>
         <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
@@ -71,7 +91,7 @@ export default function FavoriteQuotes() {
     );
   }
 
-  if (!isSignedIn) {
+  if (!user) {
     return (
       <ThemeWrapper>
         <div className="flex flex-col min-h-screen">
@@ -88,6 +108,60 @@ export default function FavoriteQuotes() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <ThemeWrapper>
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow flex items-center justify-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              Loading your favorite quotes...
+            </p>
+          </div>
+          <Footer />
+        </div>
+      </ThemeWrapper>
+    );
+  }
+
+  if (error) {
+    return (
+      <ThemeWrapper>
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow flex items-center justify-center">
+            <p className="text-red-600 dark:text-red-400 mb-4">
+              {error}
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              Try Again
+            </button>
+          </div>
+          <Footer />
+        </div>
+      </ThemeWrapper>
+    );
+  }
+
+  if (quotes.length === 0) {
+    return (
+      <ThemeWrapper>
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-grow flex items-center justify-center">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              You haven't favorited any quotes yet.
+            </p>
+            <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+              Find Inspirational Quotes to Like
+            </Link>
+          </div>
+          <Footer />
+        </div>
+      </ThemeWrapper>
+    );
+  }
+
   return (
     <ThemeWrapper>
       <div className="flex flex-col min-h-screen">
@@ -96,40 +170,11 @@ export default function FavoriteQuotes() {
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
               Your Favorite Quotes
             </h1>
-            {isLoading ? (
-              <div className="text-center">
-                <p className="text-gray-600 dark:text-gray-400">
-                  Loading your favorite quotes...
-                </p>
-              </div>
-            ) : error ? (
-              <div className="text-center">
-                <p className="text-red-600 dark:text-red-400 mb-4">
-                  {error}
-                </p>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                >
-                  Try Again
-                </button>
-              </div>
-            ) : quotes.length === 0 ? (
-              <div className="text-center">
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  You haven't favorited any quotes yet.
-                </p>
-                <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                  Find Inspirational Quotes to Like
-                </Link>
-              </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {quotes.map((quote) => (
-                  <QuoteBox key={quote.id} quote={quote} />
-                ))}
-              </div>
-            )}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {quotes.map((quote) => (
+                <QuoteBox key={quote.id} quote={quote} />
+              ))}
+            </div>
           </div>
         </div>
         <Footer />

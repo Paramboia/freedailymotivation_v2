@@ -5,10 +5,8 @@ import { getAuth } from '@clerk/nextjs/server';
 import { type NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const cookieStore = cookies();
-  const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
   try {
+    // 1. Get and validate user ID
     const { userId } = await getAuth(request);
     console.log('User ID from Clerk:', userId);
     
@@ -17,41 +15,21 @@ export async function GET(request: NextRequest) {
         JSON.stringify({ error: 'Unauthorized' }), 
         { 
           status: 401,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    // First verify the database connection
-    try {
-      const { error: connectionError } = await supabase
-        .from('favorites')
-        .select('count')
-        .limit(1)
-        .single();
-
-      if (connectionError) {
-        console.error('Database connection error:', connectionError);
-        return new NextResponse(
-          JSON.stringify({ error: 'Database connection error' }),
-          { 
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
           }
-        );
-      }
-    } catch (connError) {
-      console.error('Failed to test database connection:', connError);
-      return new NextResponse(
-        JSON.stringify({ error: 'Database connection failed' }),
-        { 
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
         }
       );
     }
 
-    // Get favorites with a simpler query first
+    // 2. Initialize Supabase client
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+
+    // 3. Get favorites
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
       .select('quote_id')
@@ -60,28 +38,39 @@ export async function GET(request: NextRequest) {
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
       return new NextResponse(
-        JSON.stringify({ error: 'Failed to fetch favorites' }),
+        JSON.stringify({ error: 'Failed to fetch favorites', details: favoritesError.message }), 
         { 
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          }
         }
       );
     }
 
+    // If no favorites found, return empty array
     if (!favorites?.length) {
       return new NextResponse(
-        JSON.stringify({ quotes: [] }),
+        JSON.stringify({ quotes: [] }), 
         { 
           status: 200,
-          headers: { 'Content-Type': 'application/json' }
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          }
         }
       );
     }
 
+    // 4. Get quotes
     const quoteIds = favorites.map(f => f.quote_id);
-    console.log('Quote IDs found:', quoteIds);
+    console.log('Quote IDs:', quoteIds);
 
-    // Get quotes with a simpler query
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
       .select('id, quote_text')
@@ -90,41 +79,57 @@ export async function GET(request: NextRequest) {
     if (quotesError) {
       console.error('Error fetching quotes:', quotesError);
       return new NextResponse(
-        JSON.stringify({ error: 'Failed to fetch quotes' }),
+        JSON.stringify({ error: 'Failed to fetch quotes', details: quotesError.message }), 
         { 
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          }
         }
       );
     }
 
-    console.log('Raw quotes:', quotes);
-
-    // Transform to expected format
-    const formattedQuotes = quotes?.map(quote => ({
+    // Transform and return the data
+    const formattedQuotes = (quotes || []).map(quote => ({
       id: quote.id,
       text: quote.quote_text,
       author: 'Unknown Author', // Simplified for now
       likes: 0,
       category: '',
       dislikes: 0
-    })) || [];
+    }));
 
     return new NextResponse(
-      JSON.stringify({ quotes: formattedQuotes }),
+      JSON.stringify({ quotes: formattedQuotes }), 
       { 
         status: 200,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        }
       }
     );
 
   } catch (error) {
     console.error('API Error:', error);
     return new NextResponse(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ 
+        error: 'Internal server error', 
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }), 
       { 
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+        }
       }
     );
   }
