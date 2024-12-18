@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
+import { currentUser } from "@clerk/nextjs/server";
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -56,7 +57,7 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
       console.log('No favorites found');
       return [];
     }
- 
+
     const quoteIds = favorites.map(fav => fav.quote_id);
     console.log('Found favorite quote IDs:', quoteIds);
 
@@ -101,38 +102,31 @@ async function getFavoriteQuotes(clerkUserId: string): Promise<Quote[]> {
 }
 
 export default async function FavoriteQuotes() {
+  const user = await currentUser();
   const supabase = createServerComponentClient({ cookies });
   
-  try {
-    // Get the session from Supabase
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError) {
-      console.error('Session error:', sessionError);
-      throw sessionError;
-    }
-
-    // Handle unauthenticated users
-    if (!session) {
-      return (
-        <ThemeWrapper>
-          <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
-            <div className="flex flex-col items-center justify-center min-h-screen">
-              <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
-                Please sign in to view your favorite quotes
-              </h1>
-              <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-                Go back home
-              </Link>
-            </div>
-            <Footer />
+  // Handle unauthenticated users
+  if (!user) {
+    return (
+      <ThemeWrapper>
+        <div className="min-h-screen bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className={`${poppins.className} text-4xl mb-4 text-gray-800 dark:text-white`}>
+              Please sign in to view your favorite quotes
+            </h1>
+            <Link href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+              Go back home
+            </Link>
           </div>
-        </ThemeWrapper>
-      );
-    }
+          <Footer />
+        </div>
+      </ThemeWrapper>
+    );
+  }
 
-    console.log('User signed in:', session.user);
-    const quotes = await getFavoriteQuotes(session.user.id);
+  try {
+    console.log('User signed in:', user);
+    const quotes = await getFavoriteQuotes(user.id);
     console.log('Final quotes:', quotes);
 
     return (
@@ -189,24 +183,6 @@ export default async function FavoriteQuotes() {
 }
 
 export const metadata: Metadata = {
-  title: 'Your Favorite Quotes - Free Daily Motivation',import { currentUser } from "@clerk/nextjs/server";
-  
-  export default async function FavoriteQuotes() {
-    const user = await currentUser();
-    const supabase = createServerComponentClient({ cookies });
-    
-    // Handle unauthenticated users
-    if (!user) {
-      return <SignInComponent />;
-    }
-  
-    try {
-      // Use the Clerk user ID directly
-      const quotes = await getFavoriteQuotes(user.id);
-      // ... rest of the component
-    } catch (error) {
-      // ... error handling
-    }
-  }
+  title: 'Your Favorite Quotes - Free Daily Motivation',
   description: 'View your collection of favorite motivational quotes.',
 };
