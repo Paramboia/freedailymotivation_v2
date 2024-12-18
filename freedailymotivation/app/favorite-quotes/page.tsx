@@ -31,44 +31,58 @@ async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
     const supabase = createServerComponentClient({ cookies });
     console.log('Fetching favorites for user:', userId);
 
-    // Get favorites with quotes and authors in a single query
-    const { data, error } = await supabase
+    // Step 1: Get favorite quote IDs for the user
+    const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
-      .select(`
-        quotes (
-          id,
-          quote_text,
-          authors (
-            author_name
-          )
-        )
-      `)
-      .eq('user_id', userId)
-      .returns<FavoriteQuote[]>();
+      .select('quote_id')
+      .eq('user_id', userId);
 
-    if (error) {
-      console.error('Error fetching favorites:', error);
-      throw error;
+    if (favoritesError) {
+      console.error('Error fetching favorites:', favoritesError);
+      throw favoritesError;
     }
 
-    if (!data || data.length === 0) {
+    if (!favorites || favorites.length === 0) {
       console.log('No favorites found');
       return [];
     }
 
-    console.log('Raw favorites data:', JSON.stringify(data, null, 2));
+    const quoteIds = favorites.map(fav => fav.quote_id);
+    console.log('Found favorite quote IDs:', quoteIds);
 
-    // Map the joined data to Quote format
-    return data
-      .filter(favorite => favorite.quotes) // Filter out any null quotes
-      .map(favorite => ({
-        id: favorite.quotes.id,
-        text: favorite.quotes.quote_text,
-        author: favorite.quotes.authors?.[0]?.author_name || 'Unknown Author',
-        likes: 0,
-        category: '',
-        dislikes: 0
-      }));
+    // Step 2: Get the actual quotes and their authors
+    const { data: quotes, error: quotesError } = await supabase
+      .from('quotes')
+      .select(`
+        id,
+        quote_text,
+        authors (
+          author_name
+        )
+      `)
+      .in('id', quoteIds);
+
+    if (quotesError) {
+      console.error('Error fetching quotes:', quotesError);
+      throw quotesError;
+    }
+
+    if (!quotes) {
+      console.log('No quotes found');
+      return [];
+    }
+
+    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
+
+    // Map the data to Quote format
+    return quotes.map(quote => ({
+      id: quote.id,
+      text: quote.quote_text,
+      author: quote.authors?.[0]?.author_name || 'Unknown Author',
+      likes: 0,
+      category: '',
+      dislikes: 0
+    }));
 
   } catch (error) {
     console.error('Error in getFavoriteQuotes:', error);
