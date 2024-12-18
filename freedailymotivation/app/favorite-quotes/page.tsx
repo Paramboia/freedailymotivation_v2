@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { ThemeWrapper } from '@/components/theme-wrapper';
-import { poppins } from '@/app/fonts';
+import ThemeWrapper from "@/components/ThemeWrapper";
 import Link from 'next/link';
 import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
+import { Poppins } from "next/font/google";
 
 interface Quote {
   id: number;
@@ -18,6 +18,12 @@ interface Quote {
 }
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
+
+const poppins = Poppins({
+  weight: ['700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export default function FavoriteQuotes() {
   const { user, isLoaded: isUserLoaded } = useUser();
