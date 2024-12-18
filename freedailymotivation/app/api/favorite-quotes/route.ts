@@ -154,7 +154,7 @@ export async function GET() {
     const quoteAuthors = new Map(
       authorData?.map(quote => [
         quote.id, 
-        quote.authors?.author_name || 'Unknown Author'
+        quote.authors?.[0]?.author_name || 'Unknown Author'
       ]) || []
     );
 
