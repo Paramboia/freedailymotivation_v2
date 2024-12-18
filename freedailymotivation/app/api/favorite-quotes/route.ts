@@ -17,64 +17,51 @@ export async function GET(request: NextRequest) {
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
-    // First get the favorite quote IDs
-    console.log('Fetching favorites for user:', userId);
-    const { data: favorites, error: favoritesError } = await supabase
+    // Direct SQL query to get favorites with quotes and authors
+    const { data: quotes, error } = await supabase
       .from('favorites')
-      .select('quote_id')
-      .eq('user_id', userId);
-
-    if (favoritesError) {
-      console.error('Error fetching favorites:', favoritesError);
-      return NextResponse.json({ quotes: [] });
-    }
-
-    if (!favorites?.length) {
-      console.log('No favorites found for user');
-      return NextResponse.json({ quotes: [] });
-    }
-
-    const quoteIds = favorites.map(f => f.quote_id);
-    console.log('Found quote IDs:', quoteIds);
-
-    // Then get the quotes with authors
-    const { data: quotes, error: quotesError } = await supabase
-      .from('quotes')
       .select(`
-        id,
-        quote_text,
-        authors (
-          author_name
+        quote_id,
+        quotes (
+          id,
+          quote_text,
+          authors (
+            author_name
+          )
         )
       `)
-      .in('id', quoteIds);
+      .eq('user_id', userId)
+      .not('quotes', 'is', null);
 
-    if (quotesError) {
-      console.error('Error fetching quotes:', quotesError);
-      return NextResponse.json({ quotes: [] });
+    console.log('Raw query result:', JSON.stringify(quotes, null, 2));
+
+    if (error) {
+      console.error('Database error:', error);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
     if (!quotes?.length) {
-      console.log('No quotes found for the given IDs');
+      console.log('No quotes found for user:', userId);
       return NextResponse.json({ quotes: [] });
     }
 
-    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
-
-    // Transform the data into the expected Quote format
-    const formattedQuotes = quotes.map(quote => ({
-      id: quote.id,
-      text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      category: '',
-      dislikes: 0
-    }));
+    // Transform the data into the expected format
+    const formattedQuotes = quotes.map(favorite => {
+      const quote = favorite.quotes;
+      return {
+        id: quote.id,
+        text: quote.quote_text,
+        author: quote.authors?.[0]?.author_name || 'Unknown Author',
+        likes: 0,
+        category: '',
+        dislikes: 0
+      };
+    });
 
     console.log('Formatted quotes:', JSON.stringify(formattedQuotes, null, 2));
     return NextResponse.json({ quotes: formattedQuotes });
   } catch (error) {
     console.error('Error in favorite quotes API:', error);
-    return NextResponse.json({ quotes: [] });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
