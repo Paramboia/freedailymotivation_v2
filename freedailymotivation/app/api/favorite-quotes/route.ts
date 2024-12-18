@@ -6,7 +6,8 @@ import { auth } from '@clerk/nextjs/server';
 export async function GET() {
   try {
     // Get the current user from Clerk
-    const { userId } = auth();
+    const session = await auth();
+    const userId = session.userId;
     
     if (!userId) {
       return new NextResponse(
