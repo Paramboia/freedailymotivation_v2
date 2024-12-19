@@ -223,7 +223,7 @@ export default function FavoriteQuotes() {
                 resonate with you the most.
               </p>
               <p className="mb-4 dark:text-gray-300">
-                Remember to like your favorite{' '}
+                Remember to sign in and to like your favorite{' '}
                 <Link href="/find-quotes" className="text-blue-600 hover:underline">
                   quotes
                 </Link>{' '}
