@@ -93,8 +93,8 @@ export default function FavoriteQuotes() {
               <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
                 My Favorite Quotes
               </h1>
-              <div className="flex items-center justify-center">
-                <div className="flex flex-col items-center -mt-16">
+              <div className="flex items-center justify-center h-[60vh]">
+                <div className="flex flex-col items-center">
                   <div className="loader"></div>
                   <div className="mt-4 text-gray-600 dark:text-gray-400">Loading your favorite quotes...</div>
                 </div>
