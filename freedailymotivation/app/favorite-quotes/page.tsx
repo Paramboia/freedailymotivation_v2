@@ -87,12 +87,40 @@ export default function FavoriteQuotes() {
   if (isLoading) {
     return (
       <ThemeWrapper>
-        <div className="flex flex-col min-h-screen">
-          <div className="flex-grow flex items-center justify-center">
-            <p className="text-gray-600 dark:text-gray-400">Loading your favorite quotes...</p>
+        <main className="flex-1 min-h-screen">
+          <div className="flex-grow">
+            <div className="container mx-auto px-4 py-8">
+              <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
+                My Favorite Quotes
+              </h1>
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col items-center -mt-16">
+                  <div className="loader"></div>
+                  <div className="mt-4 text-gray-600 dark:text-gray-400">Loading your favorite quotes...</div>
+                </div>
+
+                <style jsx>{`
+                  .loader {
+                    border: 8px solid transparent;
+                    border-top: 8px solid;
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    animation: spin 1s linear infinite;
+                    border-image: linear-gradient(to right, #ff007f, #3498db);
+                    border-image-slice: 1;
+                  }
+
+                  @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                  }
+                `}</style>
+              </div>
+            </div>
           </div>
-          <Footer />
-        </div>
+        </main>
+        <Footer />
       </ThemeWrapper>
     );
   }
