@@ -118,32 +118,26 @@ export default function FavoriteQuotes() {
 
   if (quotes.length === 0 && user) {
     return (
-    <ThemeWrapper>
-      <main className="flex-1 min-h-screen">
-        <div className="flex-grow">
-          <div className="container mx-auto px-4 py-8">
-            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
-              My Favorite Quotes
-            </h1>
-            <div className="max-w-2xl mx-auto text-center mb-8">
-              <p className="mb-4 dark:text-gray-300">
-                Welcome to your personal collection of favorite quotes from{' '}
-                <Link href="/" className="text-blue-600 hover:underline">
-                  Free Daily Motivation
-                </Link>
-                ! Here, you'll find inspiring words from renowned figures that
-                resonate with you the most.
-              </p>
-              <p className="mb-4 dark:text-gray-300">
-                Remember to like your favorite{' '}
-                <Link href="/find-quotes" className="text-blue-600 hover:underline">
-                  quotes
-                </Link>{' '}
-                to build a unique selection of motivational insights you can
-                revisit anytime.
-              </p>
-            </div>
-            {!user ? (
+      <ThemeWrapper>
+        <main className="flex-1 min-h-screen">
+          <div className="flex-grow">
+            <div className="container mx-auto px-4 py-8">
+              <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
+                My Favorite Quotes
+              </h1>
+              <div className="max-w-2xl mx-auto text-center mb-8">
+                <p className="mb-4 dark:text-gray-300">
+                  Welcome to your personal collection of favorite quotes from{' '}
+                  <Link href="/" className="text-blue-600 hover:underline">
+                    Free Daily Motivation
+                  </Link>
+                  ! Here, you'll find inspiring words from renowned figures that
+                  resonate with you the most.
+                </p>
+                <p className="mb-4 dark:text-gray-300">
+                  You haven't liked any quotes yet. Start exploring our collection to find quotes that inspire you!
+                </p>
+              </div>
               <div className="text-center mt-12">
                 <Link
                   href="/find-quotes"
@@ -152,18 +146,11 @@ export default function FavoriteQuotes() {
                   Find Quotes
                 </Link>
               </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {quotes.map((quote) => (
-                  <QuoteBox key={quote.id} quote={quote} />
-                ))}
-              </div>
-            )}
+            </div>
           </div>
-        </div>
-      </main>
-      <Footer />
-    </ThemeWrapper>
+        </main>
+        <Footer />
+      </ThemeWrapper>
     );
   }
 
