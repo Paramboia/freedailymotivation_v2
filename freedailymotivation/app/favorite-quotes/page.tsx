@@ -154,7 +154,11 @@ export default function FavoriteQuotes() {
                   resonate with you the most.
                 </p>
                 <p className="mb-4 dark:text-gray-300">
-                  You haven't liked any quotes yet. Start exploring to find quotes that inspire you!
+                  You haven't liked any{' '}
+                <Link href="/find-quotes" className="text-blue-600 hover:underline">
+                  quote
+                </Link>{' '}
+                   yet. Start exploring to find quotes that inspire you!
                 </p>
               </div>
               <div className="text-center mt-12">
