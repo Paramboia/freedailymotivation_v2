@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useUser, SignInButton } from '@clerk/nextjs';
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Link from 'next/link';
 import Footer from "@/components/Footer";
@@ -233,12 +233,13 @@ export default function FavoriteQuotes() {
             </div>
             {!user ? (
               <div className="text-center mt-12">
-                <Link
-                  href="/sign-in"
-                  className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
-                >
-                  Sign In
-                </Link>
+                <SignInButton mode="modal">
+                  <button
+                    className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
+                  >
+                    Sign In
+                  </button>
+                </SignInButton>
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
