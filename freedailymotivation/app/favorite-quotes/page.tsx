@@ -100,19 +100,38 @@ export default function FavoriteQuotes() {
   if (error) {
     return (
       <ThemeWrapper>
-        <div className="flex flex-col min-h-screen">
-          <div className="flex-grow flex items-center justify-center flex-col">
-            <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+      <main className="flex-1 min-h-screen">
+        <div className="flex-grow">
+          <div className="container mx-auto px-4 py-8">
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
+              My Favorite Quotes
+            </h1>
+            <div className="max-w-2xl mx-auto text-center mb-8">
+              <p className="mb-4 dark:text-gray-300">
+                Welcome to your personal collection of favorite quotes from{' '}
+                <Link href="/" className="text-blue-600 hover:underline">
+                  Free Daily Motivation
+                </Link>
+                ! Here, you'll find inspiring words from renowned figures that
+                resonate with you the most.
+              </p>
+              <p className="mb-4 dark:text-gray-300">
+                Oops... something went wrong! Please try again or refresh the page.
+              </p>
+            </div>
+            <div className="text-center mt-12">
             <button 
               onClick={() => window.location.reload()}
-              className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              Try Again
+                className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
+              >
+                Try Again
             </button>
+            </div>
           </div>
-          <Footer />
         </div>
-      </ThemeWrapper>
+      </main>
+      <Footer />
+    </ThemeWrapper>
     );
   }
 
@@ -135,7 +154,7 @@ export default function FavoriteQuotes() {
                   resonate with you the most.
                 </p>
                 <p className="mb-4 dark:text-gray-300">
-                  You haven't liked any quotes yet. Start exploring our collection to find quotes that inspire you!
+                  You haven't liked any quotes yet. Start exploring to find quotes that inspire you!
                 </p>
               </div>
               <div className="text-center mt-12">
@@ -172,7 +191,7 @@ export default function FavoriteQuotes() {
                 resonate with you the most.
               </p>
               <p className="mb-4 dark:text-gray-300">
-                Remember to sign in and like your favorite{' '}
+                Remember to like your favorite{' '}
                 <Link href="/find-quotes" className="text-blue-600 hover:underline">
                   quotes
                 </Link>{' '}
