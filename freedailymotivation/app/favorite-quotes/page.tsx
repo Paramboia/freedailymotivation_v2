@@ -184,7 +184,7 @@ export default function FavoriteQuotes() {
                 <p className="mb-4 dark:text-gray-300">
                   You haven't liked any{' '}
                 <Link href="/find-quotes" className="text-blue-600 hover:underline">
-                  quote
+                  quotes
                 </Link>{' '}
                    yet. Start exploring to find quotes that inspire you!
                 </p>
