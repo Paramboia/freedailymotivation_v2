@@ -124,7 +124,13 @@ export async function GET() {
     // Get quotes with their author information
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select('id, quote_text, authors!inner(author_name)')
+      .select(`
+        id,
+        quote_text,
+        authors!inner (
+          author_name
+        )
+      `)
       .in('id', quoteIds);
 
     if (quotesError) {
@@ -149,7 +155,7 @@ export async function GET() {
     const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
+      author: quote.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
