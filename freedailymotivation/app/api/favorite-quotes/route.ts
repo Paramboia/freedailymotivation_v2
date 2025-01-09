@@ -6,7 +6,6 @@ import { auth } from '@clerk/nextjs/server';
 interface DatabaseQuote {
   id: string;
   quote_text: string;
-  author_id: string;
   authors: {
     author_name: string;
   }[];
@@ -164,7 +163,7 @@ export async function GET() {
     console.log('Raw quotes data structure:', JSON.stringify(quotes, null, 2));
 
     // Transform and return the data
-    const formattedQuotes = (quotes || []).map(quote => ({
+    const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
       author: quote.authors[0]?.author_name || 'Unknown Author',
