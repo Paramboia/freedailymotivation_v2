@@ -132,7 +132,13 @@ export async function GET() {
     // Get quotes with their author information
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select('id, quote_text, authors!inner(author_name)')
+      .select(`
+        id,
+        quote_text,
+        authors:authors!quotes_author_id_fkey (
+          author_name
+        )
+      `)
       .in('id', quoteIds);
 
     if (quotesError) {
@@ -155,29 +161,6 @@ export async function GET() {
 
     // Add this console.log to see the raw data structure
     console.log('Raw quotes data structure:', JSON.stringify(quotes, null, 2));
-
-    // If we got quotes, let's get the exact author names
-    if (quotes?.length) {
-      const authorIds = quotes.map(quote => quote.authors[0]?.id).filter(Boolean);
-      
-      const { data: authorData, error: authorError } = await supabase
-        .from('authors')
-        .select('id, author_name')
-        .in('id', authorIds);
-
-      if (!authorError && authorData) {
-        // Create a map of author IDs to their exact names
-        const authorMap = new Map(authorData.map(author => [author.id, author.author_name]));
-        
-        // Update the quotes with exact author names
-        quotes.forEach(quote => {
-          const authorId = quote.authors[0]?.id;
-          if (authorId) {
-            quote.authors[0].author_name = authorMap.get(authorId) || 'Unknown Author';
-          }
-        });
-      }
-    }
 
     // Transform and return the data
     const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
