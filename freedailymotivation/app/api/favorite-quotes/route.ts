@@ -124,7 +124,13 @@ export async function GET() {
     // Get quotes with their author information
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select('id, quote_text, authors!inner(author_name)')
+      .select(`
+        id,
+        quote_text,
+        authors:authors!inner (
+          author_name
+        )
+      `)
       .in('id', quoteIds);
 
     if (quotesError) {
@@ -146,7 +152,7 @@ export async function GET() {
     console.log('Quotes with authors:', quotes);
 
     // Add this console.log to see the raw data structure
-    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
+    console.log('Raw quotes data structure:', JSON.stringify(quotes, null, 2));
 
     // Transform and return the data
     const formattedQuotes = (quotes || []).map(quote => ({
