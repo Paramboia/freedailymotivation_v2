@@ -127,8 +127,7 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        author_id,
-        authors!quotes_author_id_fkey (
+        authors (
           author_name
         )
       `)
@@ -152,11 +151,14 @@ export async function GET() {
 
     console.log('Quotes with authors:', quotes);
 
-    // Transform and return the data
+    // Add this console.log to see the raw data structure
+    console.log('Raw quotes data:', JSON.stringify(quotes, null, 2));
+
+    // Modify the formatting section to handle the data structure
     const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
+      author: quote.authors?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
