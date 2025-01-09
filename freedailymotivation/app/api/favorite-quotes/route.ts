@@ -3,6 +3,15 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
+interface DatabaseQuote {
+  id: string;
+  quote_text: string;
+  author_id: string;
+  authors: {
+    author_name: string;
+  }[];
+}
+
 export async function GET() {
   try {
     // Get the current user from Clerk
@@ -127,7 +136,8 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        authors:authors!inner (
+        author_id,
+        authors!quotes_author_id_fkey (
           author_name
         )
       `)
