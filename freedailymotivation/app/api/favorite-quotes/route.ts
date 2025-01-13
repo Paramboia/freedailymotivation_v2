@@ -159,17 +159,7 @@ export async function GET() {
       );
     }
 
-    // Get exact author names
-    const authorIds = quotes?.map(quote => quote.authors[0]?.id).filter(Boolean) || [];
-    const { data: authorData } = await supabase
-      .from('authors')
-      .select('id, author_name')
-      .in('id', authorIds);
-
-    // Create a map of author IDs to exact names
-    const authorMap = new Map(authorData?.map(author => [author.id, author.author_name]) || []);
-
-    // Transform and return the data with exact author names
+    // Transform and return the data
     const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
