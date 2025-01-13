@@ -7,6 +7,7 @@ interface DatabaseQuote {
   id: string;
   quote_text: string;
   authors: {
+    id: string;
     author_name: string;
   }[];
 }
@@ -169,10 +170,10 @@ export async function GET() {
     const authorMap = new Map(authorData?.map(author => [author.id, author.author_name]) || []);
 
     // Transform and return the data with exact author names
-    const formattedQuotes = (quotes || []).map(quote => ({
+    const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: authorMap.get(quote.authors[0]?.id) || 'Unknown Author',
+      author: quote.authors[0]?.author_name || 'Unknown Author',
       likes: 0,
       category: '',
       dislikes: 0
