@@ -136,7 +136,7 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        authors:authors!quotes_author_id_fkey (
+        authors:authors!inner (
           author_name
         )
       `)
