@@ -4,11 +4,11 @@ import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
 interface DatabaseQuote {
-  id: string;
-  quote_text: string;
+  id: any;
+  quote_text: any;
+  author_id: any;
   authors: {
-    id: string;
-    author_name: string;
+    author_name: any;
   }[];
 }
 
@@ -160,7 +160,7 @@ export async function GET() {
     }
 
     // Transform and return the data
-    const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
+    const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
       author: quote.authors[0]?.author_name || 'Unknown Author',
