@@ -158,7 +158,7 @@ export async function GET() {
     }
 
     // Transform and return the data
-    const formattedQuotes = (quotes || []).map(quote => ({
+    const formattedQuotes = ((quotes as DatabaseQuote[]) || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
       author: quote.authors?.[0]?.author_name || 'Unknown Author',
