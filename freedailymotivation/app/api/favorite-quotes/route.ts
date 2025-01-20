@@ -7,9 +7,8 @@ interface DatabaseQuote {
   id: string;
   quote_text: string;
   authors: {
-    id: string;
     author_name: string;
-  }[];
+  };
 }
 
 export async function GET() {
@@ -136,7 +135,7 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        authors!inner (
+        authors:authors!inner (
           author_name
         )
       `)
@@ -162,10 +161,10 @@ export async function GET() {
     const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
+      author: quote.authors?.author_name || 'Unknown Author',
       likes: 0,
-      category: '',
-      dislikes: 0
+      dislikes: 0,
+      category: ''
     }));
 
     return new NextResponse(
