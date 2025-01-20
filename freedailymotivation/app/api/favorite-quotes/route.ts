@@ -157,15 +157,22 @@ export async function GET() {
       );
     }
 
-    // Transform and return the data
-    const formattedQuotes = ((quotes as DatabaseQuote[]) || []).map(quote => ({
-      id: String(quote.id),
-      text: quote.quote_text,
-      author: quote.authors?.[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      dislikes: 0,
-      category: ''
-    }));
+    // Transform the data using the same pattern as getRandomQuote
+    const formattedQuotes = (quotes || []).map(quote => {
+      // Ensure we're treating authors as an array to match DatabaseQuote interface
+      const authors = Array.isArray(quote.authors) 
+        ? quote.authors 
+        : [quote.authors];
+
+      return {
+        id: String(quote.id),
+        text: quote.quote_text,
+        author: authors[0]?.author_name || 'Unknown Author',
+        likes: 0,
+        dislikes: 0,
+        category: ''
+      };
+    });
 
     return new NextResponse(
       JSON.stringify({ quotes: formattedQuotes }), 
