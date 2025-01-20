@@ -8,7 +8,7 @@ interface DatabaseQuote {
   quote_text: string;
   authors: {
     author_name: string;
-  };
+  }[];
 }
 
 export async function GET() {
@@ -158,10 +158,10 @@ export async function GET() {
     }
 
     // Transform and return the data
-    const formattedQuotes = (quotes as DatabaseQuote[] || []).map(quote => ({
+    const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
-      author: quote.authors?.author_name || 'Unknown Author',
+      author: quote.authors?.[0]?.author_name || 'Unknown Author',
       likes: 0,
       dislikes: 0,
       category: ''
