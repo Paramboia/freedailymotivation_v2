@@ -132,13 +132,7 @@ export async function GET() {
     // Get quotes with their author information
     const { data: quotes, error: quotesError } = await supabase
       .from('quotes')
-      .select(`
-        id,
-        quote_text,
-        authors:authors!inner (
-          author_name
-        )
-      `)
+      .select('id, quote_text, authors!inner(author_name)')
       .in('id', quoteIds);
 
     if (quotesError) {
@@ -158,21 +152,14 @@ export async function GET() {
     }
 
     // Transform the data using the same pattern as getRandomQuote
-    const formattedQuotes = (quotes || []).map(quote => {
-      // Ensure we're treating authors as an array to match DatabaseQuote interface
-      const authors = Array.isArray(quote.authors) 
-        ? quote.authors 
-        : [quote.authors];
-
-      return {
-        id: String(quote.id),
-        text: quote.quote_text,
-        author: authors[0]?.author_name || 'Unknown Author',
-        likes: 0,
-        dislikes: 0,
-        category: ''
-      };
-    });
+    const formattedQuotes = ((quotes as DatabaseQuote[]) || []).map(quote => ({
+      id: String(quote.id),
+      text: quote.quote_text,
+      author: quote.authors[0]?.author_name || 'Unknown Author',
+      likes: 0,
+      dislikes: 0,
+      category: ''
+    }));
 
     return new NextResponse(
       JSON.stringify({ quotes: formattedQuotes }), 
