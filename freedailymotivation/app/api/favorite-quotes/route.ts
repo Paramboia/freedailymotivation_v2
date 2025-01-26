@@ -3,14 +3,6 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
-interface DatabaseQuote {
-  id: string;
-  quote_text: string;
-  authors: {
-    author_name: string;
-  }[];
-}
-
 export async function GET() {
   try {
     // Get the current user from Clerk
@@ -135,7 +127,7 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        authors!inner (
+        authors:authors!inner (
           author_name
         )
       `)
@@ -157,7 +149,7 @@ export async function GET() {
       );
     }
 
-    // Transform the data
+    // Transform the data using the same pattern as getRandomQuote
     const formattedQuotes = (quotes || []).map(quote => ({
       id: String(quote.id),
       text: quote.quote_text,
