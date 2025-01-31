@@ -54,10 +54,14 @@ export default function FavoriteQuotes() {
           throw new Error('Invalid response format: missing quotes array');
         }
 
-        // Convert numeric ids to strings
+        // Convert numeric ids to strings and ensure author is properly mapped
         const formattedQuotes: Quote[] = data.quotes.map((quote: any) => ({
-          ...quote,
-          id: String(quote.id)
+          id: String(quote.id),
+          text: quote.text,
+          author: quote.author || 'Unknown Author',
+          likes: quote.likes || 0,
+          dislikes: quote.dislikes || 0,
+          category: quote.category || ''
         }));
 
         setQuotes(formattedQuotes);
