@@ -58,7 +58,7 @@ export default function FavoriteQuotes() {
         const formattedQuotes: Quote[] = data.quotes.map((quote: any) => ({
           id: String(quote.id),
           text: quote.text,
-          author: quote.author || 'Unknown Author',
+          author: quote.author,
           likes: quote.likes || 0,
           dislikes: quote.dislikes || 0,
           category: quote.category || ''
