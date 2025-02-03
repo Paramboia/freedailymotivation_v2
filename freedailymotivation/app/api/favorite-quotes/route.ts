@@ -127,7 +127,8 @@ export async function GET() {
       .select(`
         id,
         quote_text,
-        authors!inner (
+        authors!quotes_author_id_fkey (
+          id,
           author_name
         )
       `)
@@ -150,14 +151,21 @@ export async function GET() {
     }
 
     // Transform the data
-    const formattedQuotes = (quotes || []).map(quote => ({
-      id: String(quote.id),
-      text: quote.quote_text,
-      author: quote.authors[0]?.author_name || 'Unknown Author',
-      likes: 0,
-      dislikes: 0,
-      category: ''
-    }));
+    const formattedQuotes = (quotes || []).map(quote => {
+      // Ensure we handle the authors array correctly
+      const authors = Array.isArray(quote.authors) 
+        ? quote.authors 
+        : [quote.authors];
+
+      return {
+        id: String(quote.id),
+        text: quote.quote_text,
+        author: authors[0]?.author_name || 'Unknown Author',
+        likes: 0,
+        dislikes: 0,
+        category: ''
+      };
+    });
 
     return new NextResponse(
       JSON.stringify({ quotes: formattedQuotes }), 
