@@ -23,6 +23,14 @@ const ErrorBoundary = dynamic(
 export const metadata: Metadata = {
   title: "Free Daily Motivation",
   description: "Get your daily dose of motivation with free inspirational quotes.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
