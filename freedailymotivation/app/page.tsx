@@ -49,7 +49,7 @@ export default function Home() {
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
               Free Daily Motivation
             </h1>
-            <p className="text-lg mb-4 text-gray-700">
+            <p className="text-lg mb-4 text-gray-700 dark:text-white">
               Find the best inspirational quotes from famous and influential
               people across various fields, including business, sports, science,
               and life, to motivate and inspire you daily.
