@@ -70,9 +70,8 @@ export const SparklesCore = ({
             number: {
               density: {
                 enable: true,
-                value: particleDensity,
               },
-              value: 80,
+              value: particleDensity,
             },
             opacity: {
               value: 0.5,
