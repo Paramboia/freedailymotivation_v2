@@ -43,48 +43,50 @@ export const SparklesCore = ({
 
   if (init) {
     return (
-      <Particles
-        id={id}
-        className={className}
-        particlesLoaded={particlesLoaded}
-        options={{
-          background: {
-            color: {
-              value: background,
-            },
-          },
-          particles: {
-            color: {
-              value: particleColor,
-            },
-            move: {
-              direction: "none",
-              enable: true,
-              outModes: {
-                default: "bounce",
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <Particles
+          id={id}
+          className={className}
+          particlesLoaded={particlesLoaded}
+          options={{
+            background: {
+              color: {
+                value: background,
               },
-              random: true,
-              speed: speed,
-              straight: false,
             },
-            number: {
-              density: {
+            particles: {
+              color: {
+                value: particleColor,
+              },
+              move: {
+                direction: "none",
                 enable: true,
+                outModes: {
+                  default: "bounce",
+                },
+                random: true,
+                speed: speed,
+                straight: false,
               },
-              value: particleDensity,
+              number: {
+                density: {
+                  enable: true,
+                },
+                value: particleDensity,
+              },
+              opacity: {
+                value: 0.5,
+              },
+              shape: {
+                type: "circle",
+              },
+              size: {
+                value: { min: minSize, max: maxSize },
+              },
             },
-            opacity: {
-              value: 0.5,
-            },
-            shape: {
-              type: "circle",
-            },
-            size: {
-              value: { min: minSize, max: maxSize },
-            },
-          },
-        }}
-      />
+          }}
+        />
+      </div>
     );
   }
 
