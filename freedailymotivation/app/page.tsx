@@ -46,7 +46,7 @@ export default function Home() {
         
         <main className="container mx-auto px-4 py-12 md:py-8 flex-grow flex items-center justify-center flex-col relative z-10">
           <div className="mb-16 md:mb-12 text-center">
-            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-white`}>
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>
               Free Daily Motivation
             </h1>
             <p className="text-lg mb-4 text-gray-200">
