@@ -6,6 +6,7 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import Footer from "@/components/Footer";
 import { Poppins } from "next/font/google";
 import SavePagePopup from "@/components/SavePagePopup";
+import { SparklesCore } from "@/components/ui/sparkles";
 
 const poppins = Poppins({
   weight: ["700"],
@@ -27,21 +28,28 @@ export default function Home() {
     setClicks(newClicks); // Update the number of clicks
   };
 
-  const handleClosePopup = () => {
-    setShowPopup(false); // Close the popup
-  };
-
   return (
     <ThemeWrapper>
-      <div className="min-h-screen flex flex-col" onClick={handleClick}>
-        <main className="container mx-auto px-4 py-12 md:py-8 flex-grow flex items-center justify-center flex-col">
+      <div className="min-h-screen flex flex-col relative" onClick={handleClick}>
+        <div className="absolute inset-0 w-full h-full">
+          <SparklesCore
+            id="tsparticlesfullpage"
+            background="transparent"
+            minSize={0.6}
+            maxSize={1.4}
+            particleDensity={100}
+            className="w-full h-full"
+            particleColor="#FFFFFF"
+            speed={0.5}
+          />
+        </div>
+        
+        <main className="container mx-auto px-4 py-12 md:py-8 flex-grow flex items-center justify-center flex-col relative z-10">
           <div className="mb-16 md:mb-12 text-center">
-            <h1
-              className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white`}
-            >
+            <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-white`}>
               Free Daily Motivation
             </h1>
-            <p className="text-lg mb-4 text-gray-500 dark:text-gray-400">
+            <p className="text-lg mb-4 text-gray-200">
               Find the best inspirational quotes from famous and influential
               people across various fields, including business, sports, science,
               and life, to motivate and inspire you daily.
@@ -56,7 +64,7 @@ export default function Home() {
           </div>
         </main>
         <Footer />
-        {showPopup && <SavePagePopup onClose={handleClosePopup} />}
+        {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
       </div>
     </ThemeWrapper>
   );
