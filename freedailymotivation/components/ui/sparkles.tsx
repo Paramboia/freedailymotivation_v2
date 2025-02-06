@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useEffect, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -68,7 +70,7 @@ export const SparklesCore = ({
             number: {
               density: {
                 enable: true,
-                area: particleDensity,
+                value: particleDensity,
               },
               value: 80,
             },
