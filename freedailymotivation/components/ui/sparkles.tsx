@@ -46,7 +46,7 @@ export const SparklesCore = ({
       <Particles
         id={id}
         className={className}
-        loaded={particlesLoaded}
+        onParticlesLoaded={particlesLoaded}
         options={{
           background: {
             color: {
