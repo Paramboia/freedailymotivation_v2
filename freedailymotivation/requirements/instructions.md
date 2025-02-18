@@ -19,8 +19,10 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Cle
 13. Authentication: Users can sign up, log in, and log out using Clerk.
 14. Google Tag Manager: Implement Google Tag Manager for tracking and analytics.
 15. Search Functionality: Implement a search bar to allow users to search for quotes by keyword or phrase.
+16. Web push notifications: Implement OneSignal to trigger notifications daily with inspirational quotes.
 
 # Relevant Docs:
+
 - Clerk: https://clerk.com/docs/components/overview
     Install @clerk/nextjs
     The package to use with Clerk and NextJS.
@@ -139,6 +141,19 @@ You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Cle
     created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE (user_id, quote_id)  -- Ensures only one like per user per quote
     );
+
+- OneSignal: https://documentation.onesignal.com/docs/mobile-push-setup
+    I have already created an account in OneSignal:
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+        appId: "9bee561c-d825-4050-b998-1b3245cad317",
+        });
+    });
+    </script>
+
 
 # Current File Structure:
 FreeDailyMotivation/

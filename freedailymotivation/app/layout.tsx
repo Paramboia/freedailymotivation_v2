@@ -7,6 +7,7 @@ import SiteHeader from "@/components/SiteHeader";
 import dynamic from 'next/dynamic';
 import { Analytics } from "@vercel/analytics/react";
 import Script from 'next/script';
+import OneSignalProvider from "@/components/OneSignalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -67,6 +68,7 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-PQ8LSCWN');
           `}
         </Script>
+        <OneSignalProvider />
       </head>
       <ClerkProvider>
         <body className={inter.className}>
