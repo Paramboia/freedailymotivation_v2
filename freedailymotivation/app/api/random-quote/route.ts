@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+interface Author {
+  author_name: string;
+}
+
+interface Quote {
+  quote_text: string;
+  authors: Author[] | null;
+}
+
 export async function GET() {
   try {
     console.log('Fetching random quote from Supabase...');
@@ -48,8 +57,8 @@ export async function GET() {
 
     console.log('Successfully fetched quote:', quote);
 
-    // Handle case where quote has no author
-    const authorName = quote.authors?.author_name || 'Unknown Author';
+    // Handle case where quote has no author or authors is an array
+    const authorName = quote.authors?.[0]?.author_name || 'Unknown Author';
 
     return NextResponse.json({
       message: quote.quote_text,
