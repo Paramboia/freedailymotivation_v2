@@ -39,7 +39,7 @@ export async function GET() {
       `)
       .order('RANDOM()')
       .limit(1)
-      .single();
+      .single() as { data: Quote | null, error: any };
 
     if (error) {
       console.error('Supabase error:', {
