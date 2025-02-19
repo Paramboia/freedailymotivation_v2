@@ -41,15 +41,23 @@ export async function GET(request: Request) {
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(8, 0, 0, 0);
 
+    // Check if required env vars are present
+    const restApiKey = process.env.ONESIGNAL_REST_API_KEY;
+    const appId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
+
+    if (!restApiKey || !appId) {
+      throw new Error('Missing required OneSignal configuration');
+    }
+
     // Send notification
     const response = await fetch('https://onesignal.com/api/v1/notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': process.env.ONESIGNAL_REST_API_KEY,
+        'Authorization': restApiKey,
       },
       body: JSON.stringify({
-        app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
+        app_id: appId,
         included_segments: ['Subscribed Users'],
         contents: { 
           en: quote.message 
