@@ -7,7 +7,7 @@ export async function GET() {
       .from('Quotes')
       .select(`
         quote_text,
-        Authors (
+        Authors!inner (
           name
         )
       `)
@@ -19,7 +19,7 @@ export async function GET() {
 
     return NextResponse.json({
       message: quote.quote_text,
-      heading: `Quote by ${quote.Authors.name}`
+      heading: `Quote by ${quote.Authors?.name || 'Unknown Author'}`
     });
   } catch (error) {
     console.error('Random quote error:', error);
