@@ -2,10 +2,12 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 interface Author {
+  id: number;
   author_name: string;
 }
 
 interface Quote {
+  id: number;
   quote_text: string;
   authors: Author[] | null;
 }
@@ -16,7 +18,7 @@ export async function GET() {
     
     // First, check if we can connect to Supabase
     const { data: _test, error: testError } = await supabase
-      .from('Quotes')
+      .from('quotes')
       .select('count(*)', { count: 'exact', head: true });
 
     if (testError) {
@@ -30,10 +32,12 @@ export async function GET() {
 
     // Fetch random quote with optional author
     const { data: quote, error } = await supabase
-      .from('Quotes')
+      .from('quotes')
       .select(`
+        id,
         quote_text,
-        authors:Authors (
+        authors!quotes_author_id_fkey (
+          id,
           author_name
         )
       `)
@@ -45,7 +49,8 @@ export async function GET() {
       console.error('Supabase error:', {
         message: error.message,
         code: error.code,
-        details: error.details
+        details: error.details,
+        query: 'quotes with author join'
       });
       throw error;
     }
@@ -57,7 +62,7 @@ export async function GET() {
 
     console.log('Successfully fetched quote:', quote);
 
-    // Handle case where quote has no author or authors is an array
+    // Handle case where quote has no author
     const authorName = quote.authors?.[0]?.author_name || 'Unknown Author';
 
     return NextResponse.json({
