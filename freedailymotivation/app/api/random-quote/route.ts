@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 interface Author {
-  id: number;
   author_name: string;
 }
 
 interface Quote {
-  id: number;
   quote_text: string;
   authors: Author[] | null;
 }
@@ -15,6 +14,9 @@ interface Quote {
 export async function GET() {
   try {
     console.log('Fetching random quote from Supabase...');
+    
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     
     // First, check if we can connect to Supabase
     const { data: _test, error: testError } = await supabase
@@ -43,7 +45,7 @@ export async function GET() {
       `)
       .order('RANDOM()')
       .limit(1)
-      .single() as { data: Quote | null, error: any };
+      .single();
 
     if (error) {
       console.error('Supabase error:', {
