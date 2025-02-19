@@ -46,7 +46,7 @@ export async function GET(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Basic ${process.env.ONESIGNAL_REST_API_KEY}`,
+        'Authorization': process.env.ONESIGNAL_REST_API_KEY,
       },
       body: JSON.stringify({
         app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
