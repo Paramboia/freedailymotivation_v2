@@ -6,7 +6,7 @@ export async function GET() {
     console.log('Fetching random quote from Supabase...');
     
     // First, check if we can connect to Supabase
-    const { data: test, error: testError } = await supabase
+    const { data: _test, error: testError } = await supabase
       .from('Quotes')
       .select('count(*)', { count: 'exact', head: true });
 
