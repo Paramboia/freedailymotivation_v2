@@ -64,15 +64,13 @@ export async function GET() {
         message: testError.message,
         code: testError.code,
         details: testError.details,
-        hint: testError.hint,
-        status: testError.status
+        hint: testError.hint
       });
       return NextResponse.json(
         { 
           error: 'Failed to fetch random quote',
           details: `Supabase connection error: ${testError.message}`,
-          code: testError.code,
-          status: testError.status
+          code: testError.code
         },
         { status: 500, headers }
       );
@@ -100,15 +98,13 @@ export async function GET() {
         message: error.message,
         code: error.code,
         details: error.details,
-        hint: error.hint,
-        status: error.status
+        hint: error.hint
       });
       return NextResponse.json(
         { 
           error: 'Failed to fetch random quote',
           details: `Supabase query error: ${error.message}`,
-          code: error.code,
-          status: error.status
+          code: error.code
         },
         { status: 500, headers }
       );
