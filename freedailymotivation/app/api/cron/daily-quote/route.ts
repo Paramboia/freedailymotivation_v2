@@ -6,8 +6,20 @@ export async function GET(request: Request) {
   try {
     // Verify the request is from Vercel Cron
     const authHeader = request.headers.get('authorization');
+    
+    // Add proper response headers
+    const headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    };
+
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return new Response('Unauthorized', { status: 401 });
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401, headers }
+      );
     }
 
     // Get random quote
