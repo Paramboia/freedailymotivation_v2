@@ -62,14 +62,16 @@ export async function GET() {
       throw new Error('No quote found in database');
     }
 
-    console.log('Successfully fetched quote:', quote);
+    const formattedQuote: Quote = {
+      quote_text: quote.quote_text,
+      authors: quote.authors ? [{ author_name: quote.authors[0]?.author_name || 'Unknown Author' }] : null
+    };
 
-    // Handle case where quote has no author
-    const authorName = quote.authors?.[0]?.author_name || 'Unknown Author';
+    console.log('Successfully fetched quote:', formattedQuote);
 
     return NextResponse.json({
-      message: quote.quote_text,
-      heading: `Quote by ${authorName}`
+      message: formattedQuote.quote_text,
+      heading: `Quote by ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
     });
   } catch (error) {
     console.error('Random quote error:', error);
