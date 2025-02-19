@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 
 export const runtime = 'edge';
 
@@ -16,6 +17,7 @@ export async function GET(request: Request) {
     };
 
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      console.error('Unauthorized cron request');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401, headers }
@@ -24,11 +26,21 @@ export async function GET(request: Request) {
 
     // Get random quote
     const quoteResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/random-quote`);
+    
+    if (!quoteResponse.ok) {
+      throw new Error(`Failed to fetch quote: ${quoteResponse.statusText}`);
+    }
+
     const quote = await quoteResponse.json();
 
     if (!quote.message) {
-      throw new Error('Failed to fetch quote');
+      throw new Error('Invalid quote format received');
     }
+
+    // Get tomorrow at 8 AM in the user's timezone (Europe/Madrid)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(8, 0, 0, 0);
 
     // Send notification
     const response = await fetch('https://onesignal.com/api/v1/notifications', {
@@ -38,25 +50,53 @@ export async function GET(request: Request) {
         'Authorization': `Basic ${process.env.ONESIGNAL_REST_API_KEY}`,
       },
       body: JSON.stringify({
-        app_id: "9bee561c-d825-4050-b998-1b3245cad317",
+        app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
         included_segments: ['Subscribed Users'],
-        contents: { en: quote.message },
-        headings: { en: quote.heading || 'Daily Motivation' },
+        contents: { 
+          en: quote.message 
+        },
+        headings: { 
+          en: quote.heading || 'Your Daily Dose of Motivation' 
+        },
+        send_after: tomorrow.toISOString(),
+        delayed_option: "timezone",
+        delivery_time_of_day: "8:00AM",
+        ttl: 86400, // Expire after 24 hours if not delivered
       }),
     });
 
     const data = await response.json();
     
     if (!response.ok) {
+      console.error('OneSignal API error:', data);
       throw new Error(data.errors?.[0] || 'Failed to send notification');
     }
 
-    return NextResponse.json({ success: true, data });
+    console.log('Successfully scheduled notification:', {
+      quoteText: quote.message,
+      heading: quote.heading,
+      scheduledFor: tomorrow.toISOString()
+    });
+
+    return NextResponse.json({ 
+      success: true, 
+      data: {
+        notification: data,
+        scheduledFor: tomorrow.toISOString(),
+        quote: {
+          text: quote.message,
+          heading: quote.heading
+        }
+      }
+    });
   } catch (error) {
     console.error('Daily quote notification error:', error);
     return NextResponse.json(
-      { error: 'Failed to send daily quote' },
+      { 
+        error: 'Failed to send daily quote',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
-} 
+}
