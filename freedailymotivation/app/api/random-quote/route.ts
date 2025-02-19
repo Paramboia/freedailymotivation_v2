@@ -117,7 +117,7 @@ export async function GET() {
 
     return NextResponse.json({
       message: formattedQuote.quote_text,
-      heading: `Quote by ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
+      heading: `- ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
     }, { headers });
   } catch (error) {
     console.error('Random quote error:', {
