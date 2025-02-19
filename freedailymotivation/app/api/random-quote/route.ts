@@ -52,46 +52,18 @@ export async function GET() {
       }
     });
     
-    console.log('Testing Supabase connection...');
-    
-    // First, check if we can connect to Supabase
-    const { data: _test, error: testError } = await supabase
-      .from('quotes')
-      .select('count(*)', { count: 'exact', head: true });
+    console.log('Fetching quotes...');
 
-    if (testError) {
-      console.error('Supabase connection test error:', {
-        message: testError.message,
-        code: testError.code,
-        details: testError.details,
-        hint: testError.hint
-      });
-      return NextResponse.json(
-        { 
-          error: 'Failed to fetch random quote',
-          details: `Supabase connection error: ${testError.message}`,
-          code: testError.code
-        },
-        { status: 500, headers }
-      );
-    }
-
-    console.log('Connection successful, fetching random quote...');
-
-    // Fetch random quote with optional author
-    const { data: quote, error } = await supabase
+    // Fetch quotes with authors using inner join
+    const { data: quotesData, error } = await supabase
       .from('quotes')
       .select(`
         id,
         quote_text,
-        authors!quotes_author_id_fkey (
-          id,
+        authors:authors!inner (
           author_name
         )
-      `)
-      .order('RANDOM()')
-      .limit(1)
-      .single();
+      `);
 
     if (error) {
       console.error('Supabase query error:', {
@@ -110,26 +82,35 @@ export async function GET() {
       );
     }
 
-    if (!quote) {
-      console.error('No quote found in database');
+    if (!quotesData || quotesData.length === 0) {
+      console.error('No quotes found in database');
       return NextResponse.json(
         { 
           error: 'Failed to fetch random quote',
-          details: 'No quote found in database'
+          details: 'No quotes found in database'
         },
         { status: 404, headers }
       );
     }
 
+    // Select a random quote
+    const randomIndex = Math.floor(Math.random() * quotesData.length);
+    const randomQuote = quotesData[randomIndex];
+
     console.log('Quote fetched successfully:', {
-      id: quote.id,
-      hasAuthor: !!quote.authors,
-      quoteLength: quote.quote_text.length
+      id: randomQuote.id,
+      hasAuthor: !!randomQuote.authors,
+      quoteLength: randomQuote.quote_text.length
     });
 
+    // Ensure we're treating authors as an array
+    const authors = Array.isArray(randomQuote.authors) 
+      ? randomQuote.authors 
+      : [randomQuote.authors];
+
     const formattedQuote: Quote = {
-      quote_text: quote.quote_text,
-      authors: quote.authors ? [{ author_name: quote.authors[0]?.author_name || 'Unknown Author' }] : null
+      quote_text: randomQuote.quote_text,
+      authors: authors.map(author => ({ author_name: author.author_name }))
     };
 
     console.log('Quote formatted successfully');
