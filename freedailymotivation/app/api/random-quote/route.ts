@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
 interface Author {
   author_name: string;
@@ -11,12 +10,35 @@ interface Quote {
   authors: Author[] | null;
 }
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
-    console.log('Fetching random quote from Supabase...');
+    console.log('Starting random quote fetch...');
     
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    // Verify environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      throw new Error('NEXT_PUBLIC_SUPABASE_URL is not defined');
+    }
+    if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is not defined');
+    }
+
+    console.log('Environment variables verified');
+    
+    // Create Supabase client
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false
+        }
+      }
+    );
+    
+    console.log('Supabase client created, testing connection...');
     
     // First, check if we can connect to Supabase
     const { data: _test, error: testError } = await supabase
@@ -27,10 +49,13 @@ export async function GET() {
       console.error('Supabase connection test error:', {
         message: testError.message,
         code: testError.code,
-        details: testError.details
+        details: testError.details,
+        url: process.env.NEXT_PUBLIC_SUPABASE_URL // Don't log the key!
       });
       throw new Error(`Supabase connection error: ${testError.message}`);
     }
+
+    console.log('Connection test successful, fetching random quote...');
 
     // Fetch random quote with optional author
     const { data: quote, error } = await supabase
@@ -48,13 +73,13 @@ export async function GET() {
       .single();
 
     if (error) {
-      console.error('Supabase error:', {
+      console.error('Supabase query error:', {
         message: error.message,
         code: error.code,
         details: error.details,
         query: 'quotes with author join'
       });
-      throw error;
+      throw new Error(`Supabase query error: ${error.message}`);
     }
 
     if (!quote) {
@@ -62,19 +87,28 @@ export async function GET() {
       throw new Error('No quote found in database');
     }
 
+    console.log('Quote fetched successfully:', {
+      id: quote.id,
+      hasAuthor: !!quote.authors
+    });
+
     const formattedQuote: Quote = {
       quote_text: quote.quote_text,
       authors: quote.authors ? [{ author_name: quote.authors[0]?.author_name || 'Unknown Author' }] : null
     };
 
-    console.log('Successfully fetched quote:', formattedQuote);
+    console.log('Quote formatted successfully');
 
     return NextResponse.json({
       message: formattedQuote.quote_text,
       heading: `Quote by ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
     });
   } catch (error) {
-    console.error('Random quote error:', error);
+    console.error('Random quote error:', error instanceof Error ? {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    } : error); 
     return NextResponse.json(
       { 
         error: 'Failed to fetch random quote',
