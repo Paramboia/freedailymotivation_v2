@@ -4,14 +4,27 @@ import { supabase } from '@/lib/supabase';
 export async function GET() {
   try {
     console.log('Fetching random quote from Supabase...');
-    console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log('Has Supabase Key:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+    
+    // First, check if we can connect to Supabase
+    const { data: test, error: testError } = await supabase
+      .from('Quotes')
+      .select('count(*)', { count: 'exact', head: true });
 
+    if (testError) {
+      console.error('Supabase connection test error:', {
+        message: testError.message,
+        code: testError.code,
+        details: testError.details
+      });
+      throw new Error(`Supabase connection error: ${testError.message}`);
+    }
+
+    // Fetch random quote with optional author
     const { data: quote, error } = await supabase
       .from('Quotes')
       .select(`
         quote_text,
-        authors:Authors!inner (
+        authors:Authors (
           author_name
         )
       `)
@@ -35,14 +48,12 @@ export async function GET() {
 
     console.log('Successfully fetched quote:', quote);
 
-    // Ensure authors is treated as an array
-    const authors = Array.isArray(quote.authors) 
-      ? quote.authors 
-      : [quote.authors];
+    // Handle case where quote has no author
+    const authorName = quote.authors?.author_name || 'Unknown Author';
 
     return NextResponse.json({
       message: quote.quote_text,
-      heading: `Quote by ${authors[0]?.author_name || 'Unknown Author'}`
+      heading: `Quote by ${authorName}`
     });
   } catch (error) {
     console.error('Random quote error:', error);
