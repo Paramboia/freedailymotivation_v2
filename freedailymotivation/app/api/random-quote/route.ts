@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 interface Author {
   author_name: string;
@@ -12,9 +12,36 @@ interface Quote {
 
 export const runtime = 'edge';
 
+// Headers for all responses
+const headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+};
+
 export async function GET() {
   try {
     console.log('Starting random quote fetch...');
+    
+    // Verify environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      throw new Error('Missing Supabase environment variables');
+    }
+
+    // Create Supabase client specifically for this request
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false
+        }
+      }
+    );
+    
+    console.log('Supabase client created, testing connection...');
     
     // First, check if we can connect to Supabase
     const { data: _test, error: testError } = await supabase
@@ -27,7 +54,13 @@ export async function GET() {
         code: testError.code,
         details: testError.details
       });
-      throw new Error(`Supabase connection error: ${testError.message}`);
+      return NextResponse.json(
+        { 
+          error: 'Failed to fetch random quote',
+          details: `Supabase connection error: ${testError.message}`
+        },
+        { status: 500, headers }
+      );
     }
 
     console.log('Connection test successful, fetching random quote...');
@@ -54,12 +87,24 @@ export async function GET() {
         details: error.details,
         query: 'quotes with author join'
       });
-      throw new Error(`Supabase query error: ${error.message}`);
+      return NextResponse.json(
+        { 
+          error: 'Failed to fetch random quote',
+          details: `Supabase query error: ${error.message}`
+        },
+        { status: 500, headers }
+      );
     }
 
     if (!quote) {
       console.error('No quote found in database');
-      throw new Error('No quote found in database');
+      return NextResponse.json(
+        { 
+          error: 'Failed to fetch random quote',
+          details: 'No quote found in database'
+        },
+        { status: 404, headers }
+      );
     }
 
     console.log('Quote fetched successfully:', {
@@ -77,7 +122,7 @@ export async function GET() {
     return NextResponse.json({
       message: formattedQuote.quote_text,
       heading: `Quote by ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
-    });
+    }, { headers });
   } catch (error) {
     console.error('Random quote error:', error instanceof Error ? {
       message: error.message,
@@ -89,7 +134,12 @@ export async function GET() {
         error: 'Failed to fetch random quote',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
-      { status: 500 }
+      { status: 500, headers }
     );
   }
+}
+
+// Handle OPTIONS request for CORS
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers });
 }
