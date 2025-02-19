@@ -24,24 +24,35 @@ export async function GET() {
   try {
     console.log('Starting random quote fetch...');
     
-    // Verify environment variables
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    // Verify and log environment variables (without exposing sensitive data)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    console.log('Environment check:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey,
+      urlLength: supabaseUrl?.length || 0,
+      keyLength: supabaseKey?.length || 0
+    });
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Missing environment variables:', {
+        url: !supabaseUrl ? 'missing' : 'present',
+        key: !supabaseKey ? 'missing' : 'present'
+      });
       throw new Error('Missing Supabase environment variables');
     }
 
     // Create Supabase client specifically for this request
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false
-        }
+    console.log('Creating Supabase client...');
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
       }
-    );
+    });
     
-    console.log('Supabase client created, testing connection...');
+    console.log('Testing Supabase connection...');
     
     // First, check if we can connect to Supabase
     const { data: _test, error: testError } = await supabase
@@ -52,18 +63,22 @@ export async function GET() {
       console.error('Supabase connection test error:', {
         message: testError.message,
         code: testError.code,
-        details: testError.details
+        details: testError.details,
+        hint: testError.hint,
+        status: testError.status
       });
       return NextResponse.json(
         { 
           error: 'Failed to fetch random quote',
-          details: `Supabase connection error: ${testError.message}`
+          details: `Supabase connection error: ${testError.message}`,
+          code: testError.code,
+          status: testError.status
         },
         { status: 500, headers }
       );
     }
 
-    console.log('Connection test successful, fetching random quote...');
+    console.log('Connection successful, fetching random quote...');
 
     // Fetch random quote with optional author
     const { data: quote, error } = await supabase
@@ -85,12 +100,15 @@ export async function GET() {
         message: error.message,
         code: error.code,
         details: error.details,
-        query: 'quotes with author join'
+        hint: error.hint,
+        status: error.status
       });
       return NextResponse.json(
         { 
           error: 'Failed to fetch random quote',
-          details: `Supabase query error: ${error.message}`
+          details: `Supabase query error: ${error.message}`,
+          code: error.code,
+          status: error.status
         },
         { status: 500, headers }
       );
@@ -109,7 +127,8 @@ export async function GET() {
 
     console.log('Quote fetched successfully:', {
       id: quote.id,
-      hasAuthor: !!quote.authors
+      hasAuthor: !!quote.authors,
+      quoteLength: quote.quote_text.length
     });
 
     const formattedQuote: Quote = {
@@ -124,15 +143,17 @@ export async function GET() {
       heading: `Quote by ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
     }, { headers });
   } catch (error) {
-    console.error('Random quote error:', error instanceof Error ? {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    } : error); 
+    console.error('Random quote error:', {
+      name: error instanceof Error ? error.name : 'Unknown error type',
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      error: error // Log the full error object
+    }); 
     return NextResponse.json(
       { 
         error: 'Failed to fetch random quote',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        type: error instanceof Error ? error.name : typeof error
       },
       { status: 500, headers }
     );
