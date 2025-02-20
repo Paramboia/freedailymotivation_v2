@@ -49,12 +49,20 @@ export async function GET(request: Request) {
       throw new Error('Missing required OneSignal configuration');
     }
 
+    // Base64 encode the REST API key
+    const encodedKey = Buffer.from(restApiKey).toString('base64');
+
+    console.log('OneSignal configuration:', {
+      appId,
+      authHeader: `Basic ${encodedKey.substring(0, 10)}...` // Only log part of the encoded key for security
+    });
+
     // Send notification
     const response = await fetch('https://onesignal.com/api/v1/notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Basic ${restApiKey}`,
+        'Authorization': `Basic ${encodedKey}`,
       },
       body: JSON.stringify({
         app_id: appId,
