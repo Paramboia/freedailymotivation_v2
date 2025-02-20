@@ -51,9 +51,9 @@ export default function OneSignalProvider() {
               await OneSignal.init({
                 appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
                 allowLocalhostAsSecureOrigin: true,
-                serviceWorkerPath: "/onesignal/OneSignalSDKWorker.js",
+                serviceWorkerPath: "/OneSignalSDKWorker.js",
                 serviceWorkerParam: {
-                  scope: "/onesignal/"
+                  scope: "/"
                 },
                 notifyButton: {
                   enable: true,
