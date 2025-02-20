@@ -72,6 +72,7 @@ export default function RootLayout({
       </head>
       <ClerkProvider>
         <body className={inter.className}>
+          <div id="onesignal-slidedown-container"></div>
           {/* Google Tag Manager (noscript) */}
           <noscript dangerouslySetInnerHTML={{
             __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ8LSCWN"

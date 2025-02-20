@@ -38,6 +38,13 @@ export default function OneSignalProvider() {
                 allowLocalhostAsSecureOrigin: true,
                 serviceWorkerParam: { scope: '/onesignal/' },
                 serviceWorkerPath: 'onesignal/OneSignalSDKWorker.js',
+                notifyButton: {
+                  enable: true,
+                  size: 'large',
+                  position: 'bottom-right',
+                  showCredit: false,
+                },
+                persistNotification: false,
                 promptOptions: {
                   slidedown: {
                     prompts: [
@@ -45,9 +52,9 @@ export default function OneSignalProvider() {
                         type: "push",
                         autoPrompt: true,
                         text: {
-                          actionMessage: "Would you like to receive daily motivational quotes?",
-                          acceptButton: "Allow",
-                          cancelButton: "Cancel"
+                          actionMessage: "Get daily motivational quotes delivered right to you!",
+                          acceptButton: "Yes, I'm in!",
+                          cancelButton: "Maybe later"
                         },
                         delay: {
                           pageViews: 1,
@@ -60,41 +67,60 @@ export default function OneSignalProvider() {
               });
               console.log('OneSignal: Init completed');
 
-              // Log current state
+              // Check push support
               const isPushSupported = await OneSignal.Notifications.isPushSupported();
               console.log('OneSignal: Push support status:', isPushSupported);
+              
+              if (!isPushSupported) {
+                console.log('OneSignal: Push notifications are not supported');
+                return;
+              }
 
+              // Check permission status
               const permission = await OneSignal.Notifications.permission;
               console.log('OneSignal: Current permission status:', permission);
 
-              // Check if subscribed using the correct API
-              const isSubscribed = await OneSignal.Notifications.isSubscribed();
-              console.log('OneSignal: Current subscription status:', isSubscribed);
+              // Handle different permission states
+              switch (permission) {
+                case false:
+                  console.log('OneSignal: Permission not granted yet');
+                  // Show custom prompt or handle first-time users
+                  break;
+                case true:
+                  console.log('OneSignal: Permission already granted');
+                  break;
+                default:
+                  console.log('OneSignal: Permission status unknown');
+                  break;
+              }
 
-              // Get user ID if available
-              const deviceId = await OneSignal.getUserId();
-              console.log('OneSignal: Device ID:', deviceId);
-
-              // Add subscription change listener
+              // Add permission change listener
               OneSignal.Notifications.addEventListener('permissionChange', async (permissionChange) => {
                 console.log('OneSignal: Permission changed:', permissionChange);
                 
-                const newIsSubscribed = await OneSignal.Notifications.isSubscribed();
-                console.log('OneSignal: New subscription status:', newIsSubscribed);
-                
-                if (newIsSubscribed) {
-                  const newDeviceId = await OneSignal.getUserId();
-                  console.log('OneSignal: New device ID:', newDeviceId);
+                if (permissionChange) {
+                  try {
+                    // Attempt to get the device ID after permission is granted
+                    const deviceId = await OneSignal.User.getOneSignalId();
+                    console.log('OneSignal: Device registered with ID:', deviceId);
+                    
+                    // Get subscription state
+                    const isSubscribed = await OneSignal.Notifications.isSubscribed();
+                    console.log('OneSignal: Subscription status:', isSubscribed);
+                  } catch (error) {
+                    console.error('OneSignal: Error after permission change:', error);
+                  }
                 }
               });
 
             } catch (error) {
               console.error('OneSignal: Initialization error:', error);
-              // Log additional error details
               if (error instanceof Error) {
-                console.error('Error name:', error.name);
-                console.error('Error message:', error.message);
-                console.error('Error stack:', error.stack);
+                console.error('Error details:', {
+                  name: error.name,
+                  message: error.message,
+                  stack: error.stack
+                });
               }
             }
           });
