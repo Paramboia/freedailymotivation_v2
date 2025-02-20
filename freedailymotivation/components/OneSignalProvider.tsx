@@ -12,7 +12,7 @@ export default function OneSignalProvider() {
       // Unregister any existing service workers
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
+          for(const registration of registrations) {
             if (registration.active && (
               registration.active.scriptURL.includes("OneSignalSDKWorker") ||
               registration.active.scriptURL.includes("onesignal")
@@ -51,9 +51,9 @@ export default function OneSignalProvider() {
               await OneSignal.init({
                 appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
                 allowLocalhostAsSecureOrigin: true,
-                serviceWorkerPath: "/push/onesignal/OneSignalSDKWorker.js",
+                serviceWorkerPath: "/onesignal/OneSignalSDKWorker.js",
                 serviceWorkerParam: {
-                  scope: "/push/onesignal/"
+                  scope: "/onesignal/"
                 },
                 notifyButton: {
                   enable: true,
@@ -101,7 +101,6 @@ export default function OneSignalProvider() {
               switch (permission) {
                 case false:
                   console.log('OneSignal: Permission not granted yet');
-                  // Show custom prompt or handle first-time users
                   break;
                 case true:
                   console.log('OneSignal: Permission already granted');
