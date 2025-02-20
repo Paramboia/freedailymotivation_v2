@@ -51,7 +51,7 @@ export default function OneSignalProvider() {
                         },
                         delay: {
                           pageViews: 1,
-                          timeDelay: 5 // Reduced for testing
+                          timeDelay: 5
                         }
                       }
                     ]
@@ -67,22 +67,25 @@ export default function OneSignalProvider() {
               const permission = await OneSignal.Notifications.permission;
               console.log('OneSignal: Current permission status:', permission);
 
-              const isSubscribed = await OneSignal.User.PushSubscription.optedIn();
+              // Check if subscribed using the correct API
+              const isSubscribed = await OneSignal.Notifications.isSubscribed();
               console.log('OneSignal: Current subscription status:', isSubscribed);
 
               // Get user ID if available
-              const user = await OneSignal.User.getUser();
-              console.log('OneSignal: User data:', user);
+              const deviceId = await OneSignal.getUserId();
+              console.log('OneSignal: Device ID:', deviceId);
 
               // Add subscription change listener
-              OneSignal.User.PushSubscription.addEventListener('change', async (event) => {
-                console.log('OneSignal: Subscription changed:', event);
-                const newStatus = await OneSignal.User.PushSubscription.optedIn();
-                console.log('OneSignal: New subscription status:', newStatus);
+              OneSignal.Notifications.addEventListener('permissionChange', async (permissionChange) => {
+                console.log('OneSignal: Permission changed:', permissionChange);
                 
-                // Get updated user data
-                const updatedUser = await OneSignal.User.getUser();
-                console.log('OneSignal: Updated user data:', updatedUser);
+                const newIsSubscribed = await OneSignal.Notifications.isSubscribed();
+                console.log('OneSignal: New subscription status:', newIsSubscribed);
+                
+                if (newIsSubscribed) {
+                  const newDeviceId = await OneSignal.getUserId();
+                  console.log('OneSignal: New device ID:', newDeviceId);
+                }
               });
 
             } catch (error) {
