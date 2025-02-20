@@ -8,6 +8,21 @@ export default function OneSignalProvider() {
     if (typeof window !== 'undefined') {
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       console.log('OneSignal: Window object initialized');
+
+      // Unregister any existing service workers
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            if (registration.active && (
+              registration.active.scriptURL.includes("OneSignalSDKWorker") ||
+              registration.active.scriptURL.includes("onesignal")
+            )) {
+              console.log('Unregistering existing OneSignal service worker');
+              registration.unregister();
+            }
+          } 
+        });
+      }
     }
   }, []);
 
@@ -36,9 +51,9 @@ export default function OneSignalProvider() {
               await OneSignal.init({
                 appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
                 allowLocalhostAsSecureOrigin: true,
-                serviceWorkerPath: "/onesignal/OneSignalSDKWorker.js",
+                serviceWorkerPath: "/push/onesignal/OneSignalSDKWorker.js",
                 serviceWorkerParam: {
-                  scope: "/onesignal/"
+                  scope: "/push/onesignal/"
                 },
                 notifyButton: {
                   enable: true,
