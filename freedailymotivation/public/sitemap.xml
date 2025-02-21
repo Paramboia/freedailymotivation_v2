@@ -52,7 +52,6 @@
     <lastmod>2024-10-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/aisha-tyler</loc>
     <lastmod>2024-10-25</lastmod>
@@ -276,5 +275,12 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url> 
+    </url>
+    <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/chris-voss</loc>
+    <lastmod>2025-02-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- Add more author pages as needed -->
 </urlset>
