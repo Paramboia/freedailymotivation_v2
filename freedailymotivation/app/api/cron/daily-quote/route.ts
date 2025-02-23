@@ -59,11 +59,11 @@ export async function GET(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Key ${restApiKey}`,
+        'Authorization': `Basic ${restApiKey}`,
       },
       body: JSON.stringify({
         app_id: appId,
-        included_segments: ['Subscribed Users'],
+        included_segments: ['Total Subscribed Users'],
         contents: { 
           en: quote.message 
         },
@@ -72,22 +72,36 @@ export async function GET(request: Request) {
         },
         send_after: tomorrow.toISOString(),
         delayed_option: "timezone",
-        delivery_time_of_day: "8:00AM",
+        delivery_time_of_day: "08:00",
         ttl: 86400, // Expire after 24 hours if not delivered
+        isAnyWeb: true,
+        target_channel: "push",
+        channel_for_external_user_ids: "push"
       }),
     });
 
     const data = await response.json();
     
     if (!response.ok) {
-      console.error('OneSignal API error:', data);
+      console.error('OneSignal API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        data,
+        requestBody: {
+          app_id: appId,
+          scheduledFor: tomorrow.toISOString(),
+          messageLength: quote.message.length
+        }
+      });
       throw new Error(data.errors?.[0] || 'Failed to send notification');
     }
 
     console.log('Successfully scheduled notification:', {
+      notificationId: data.id,
+      recipients: data.recipients,
+      scheduledFor: tomorrow.toISOString(),
       quoteText: quote.message,
-      heading: quote.heading,
-      scheduledFor: tomorrow.toISOString()
+      heading: quote.heading
     });
 
     return NextResponse.json({ 
