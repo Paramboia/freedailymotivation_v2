@@ -282,5 +282,22 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+    </url> 
+    </url>
+    <url>
+    <loc>https://www.freedailymotivation.com/inspirational-quotes-famous/jason-calacanis</loc>
+    <lastmod>2025-02-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+    </url>
+    </url> 
+    </url>
+    <url>
+    <loc>https://www.freedailymotivation.com/inspirational-quotes-famous/bill-gurley</loc>
+    <lastmod>2025-02-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- Add more author pages as needed -->
 </urlset>
