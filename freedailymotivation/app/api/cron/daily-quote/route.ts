@@ -54,7 +54,7 @@ export async function GET(request: Request) {
       authHeader: `Key ${restApiKey.substring(0, 10)}...` // Only log part of the key for security
     });
 
-    // Send notification
+    // Send notification for tomorrow at 8 AM
     const response = await fetch('https://onesignal.com/api/v1/notifications', {
       method: 'POST',
       headers: {
@@ -70,13 +70,14 @@ export async function GET(request: Request) {
         headings: { 
           en: quote.heading || 'Your Daily Dose of Motivation' 
         },
-        send_after: tomorrow.toISOString(),
         delayed_option: "timezone",
         delivery_time_of_day: "08:00",
         ttl: 86400, // Expire after 24 hours if not delivered
         isAnyWeb: true,
         target_channel: "push",
-        channel_for_external_user_ids: "push"
+        channel_for_external_user_ids: "push",
+        web_push_topic: "daily_motivation", // Add a topic to prevent duplicate notifications
+        priority: 10 // High priority to ensure delivery
       }),
     });
 
