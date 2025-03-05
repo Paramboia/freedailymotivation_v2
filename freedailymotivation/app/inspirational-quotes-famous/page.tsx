@@ -6,12 +6,15 @@ import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
+import dynamic from 'next/dynamic';
 
 const poppins = Poppins({
   weight: ['700'],
   subsets: ['latin'],
   display: 'swap',
 });
+
+const ClientPageTracker = dynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +43,7 @@ export default async function InspirationalQuotesFamous() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ClientPageTracker />
       <div className="container mx-auto px-4 py-8 flex-grow">
         <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>Famous Inspirational Quotes</h1>
         <p className="mb-4 dark:text-gray-300 text-center">

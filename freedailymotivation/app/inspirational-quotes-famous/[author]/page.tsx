@@ -8,6 +8,7 @@ import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
+import ClientPageTracker from "@/components/ClientPageTracker"; // Import the ClientPageTracker component
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -73,6 +74,7 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
 
   return (
     <ThemeWrapper>
+      <ClientPageTracker />
       <div className="min-h-screen flex flex-col">
         <main className="flex-grow flex flex-col items-center justify-center p-8">
           <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>Famous Inspirational Quotes - {authorName}</h1>

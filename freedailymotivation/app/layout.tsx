@@ -21,6 +21,8 @@ const ErrorBoundary = dynamic(
   { ssr: false }
 );
 
+const ClientPageTracker = dynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
+
 export const metadata: Metadata = {
   title: "Free Daily Motivation",
   description: "Get your daily dose of motivation with free inspirational quotes.",
@@ -72,6 +74,7 @@ export default function RootLayout({
       </head>
       <ClerkProvider>
         <body className={inter.className}>
+          <ClientPageTracker />
           <div id="onesignal-slidedown-container"></div>
           {/* Google Tag Manager (noscript) */}
           <noscript dangerouslySetInnerHTML={{
