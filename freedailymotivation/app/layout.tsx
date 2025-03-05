@@ -4,24 +4,24 @@ import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ClerkProvider } from '@clerk/nextjs';
 import SiteHeader from "@/components/SiteHeader";
-import dynamic from 'next/dynamic';
+import { default as nextDynamic } from 'next/dynamic';
 import { Analytics } from "@vercel/analytics/react";
 import Script from 'next/script';
 import OneSignalProvider from "@/components/OneSignalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const SupabaseUserProvider = dynamic(
+const SupabaseUserProvider = nextDynamic(
   () => import('@/components/SupabaseUserProvider').then(mod => mod.SupabaseUserProvider),
   { ssr: false }
 );
 
-const ErrorBoundary = dynamic(
+const ErrorBoundary = nextDynamic(
   () => import('@/components/ErrorBoundary'),
   { ssr: false }
 );
 
-const ClientPageTracker = dynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
+const ClientPageTracker = nextDynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
 
 export const metadata: Metadata = {
   title: "Free Daily Motivation",

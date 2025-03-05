@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
-import dynamic from 'next/dynamic';
+import { default as nextDynamic } from 'next/dynamic';
 
 const poppins = Poppins({
   weight: ['700'],
@@ -14,7 +14,7 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-const ClientPageTracker = dynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
+const ClientPageTracker = nextDynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
 

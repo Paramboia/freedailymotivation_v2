@@ -3,14 +3,14 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
-import dynamic from 'next/dynamic';
+import { default as nextDynamic } from 'next/dynamic';
 import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import Footer from "@/components/Footer"; // Import the Footer component
 import ClientPageTracker from "@/components/ClientPageTracker"; // Import the ClientPageTracker component
 
-const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
+const QuoteBox = nextDynamic(() => import("@/components/quote-box"), { ssr: false });
 
 const poppins = Poppins({
   weight: ['700'],
