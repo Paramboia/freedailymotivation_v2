@@ -1,12 +1,21 @@
-import Head from 'next/head';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Inspirational Quotes - Free Daily Motivation",
+  description: "Explore our collection of inspirational quotes from famous thinkers, leaders, and innovators. Find the perfect quote to motivate yourself or others.",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+};
 
 export default function Quotes() {
   return (
     <>
-      <Head>
-        <title>Inspirational Quotes - Free Daily Motivation</title>
-        <meta name="description" content="Explore our collection of inspirational quotes from famous thinkers, leaders, and innovators. Find the perfect quote to motivate yourself or others." />
-      </Head>
       {/* Rest of your component */}
     </>
   );

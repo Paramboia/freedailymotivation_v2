@@ -105,5 +105,13 @@ export async function generateMetadata({ params }: { params: { author: string } 
   return {
     title: `Inspirational Quotes by ${authorName} | Free Daily Motivation`,
     description: `Explore inspiring quotes from ${authorName}. Find wisdom and motivation to fuel your success. Perfect for presentations, social media, and personal growth.`,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
   };
 }
