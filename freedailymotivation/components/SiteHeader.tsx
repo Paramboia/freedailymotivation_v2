@@ -21,7 +21,7 @@ const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.
 
 const SiteHeader = () => {
   return (
-    <header className="py-2 px-4 flex justify-between items-center bg-transparent dark:bg-black dark:shadow-dark">
+    <header className="sticky top-0 z-50 py-2 px-4 flex justify-between items-center bg-purple-400/80 backdrop-blur-sm dark:bg-black/80 dark:shadow-dark">
       <div className="flex items-center gap-4">
         <Header />
         <SearchBar />
