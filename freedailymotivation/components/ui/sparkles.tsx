@@ -43,10 +43,10 @@ export const SparklesCore = ({
 
   if (init) {
     return (
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+      <div className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}>
         <Particles
           id={id}
-          className={className}
+          className="pointer-events-none"
           particlesLoaded={particlesLoaded}
           options={{
             background: {
@@ -82,6 +82,16 @@ export const SparklesCore = ({
               },
               size: {
                 value: { min: minSize, max: maxSize },
+              },
+            },
+            interactivity: {
+              events: {
+                onClick: {
+                  enable: false,
+                },
+                onHover: {
+                  enable: false,
+                },
               },
             },
           }}
