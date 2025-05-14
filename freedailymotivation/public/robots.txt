@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+
+# OpenAI ChatGPT Bot
+User-agent: GPTBot
+Allow: /
+
+# OpenAI SearchBot
+User-agent: OAI-SearchBot
+Allow: /
+
+# Google Bard / Gemini Bot
+User-agent: Google-Extended
+Allow: /
+
+# Claude Bot
+User-agent: Anthropic-AI
+Allow: /
+
+# Sitemap
+Sitemap: https://freedailymotivation.com/sitemap.xml 

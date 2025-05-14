@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/supabase-client';
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
+import Link from 'next/link';
 
 interface QuoteBoxProps {
   quote: Quote;
@@ -71,6 +72,10 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
     }
   };
 
+  const slugifyAuthor = (author: string) => {
+    return author.toLowerCase().replace(/\s+/g, '-');
+  };
+
   return (
     <div className={cn("w-full flex justify-center mb-8")}>
       <TooltipProvider>
@@ -81,7 +86,9 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
                 "{currentQuote.text}"
               </p>
               <p className="text-right mt-4 text-gray-600 dark:text-gray-400">
-                - {currentQuote.author}
+                - <Link href={`/quotes/${slugifyAuthor(currentQuote.author)}`} className="">
+                    {currentQuote.author}
+                  </Link>
               </p>
             </div>
             
