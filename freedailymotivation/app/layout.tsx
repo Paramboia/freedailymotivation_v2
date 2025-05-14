@@ -11,6 +11,11 @@ import OneSignalProvider from "@/components/OneSignalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const SparklesBackground = nextDynamic(
+  () => import('@/components/SparklesBackground'),
+  { ssr: false }
+);
+
 const SupabaseUserProvider = nextDynamic(
   () => import('@/components/SupabaseUserProvider').then(mod => mod.SupabaseUserProvider),
   { ssr: false }
@@ -83,7 +88,8 @@ export default function RootLayout({
           }} />
           {/* End Google Tag Manager (noscript) */}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="min-h-screen flex flex-col transition-colors duration-300 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900">
+            <div className="min-h-screen flex flex-col transition-colors duration-300 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900 relative">
+              <SparklesBackground />
               <SiteHeader />
               <ErrorBoundary>
                 <SupabaseUserProvider>

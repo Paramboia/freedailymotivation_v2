@@ -6,7 +6,6 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import Footer from "@/components/Footer";
 import { Poppins } from "next/font/google";
 import SavePagePopup from "@/components/SavePagePopup";
-import { SparklesCore } from "@/components/ui/sparkles";
 
 const poppins = Poppins({
   weight: ["700"],
@@ -31,18 +30,6 @@ export default function Home() {
   return (
     <ThemeWrapper>
       <div className="min-h-screen flex flex-col relative" onClick={handleClick}>
-        <div className="absolute inset-0 w-full h-full">
-          <SparklesCore
-            id="tsparticlesfullpage"
-            background="transparent"
-            minSize={0.6}
-            maxSize={1.4}
-            particleDensity={100}
-            className="w-full h-full"
-            particleColor="#FFFFFF"
-            speed={0.5}
-          />
-        </div>
         
         <main className="container mx-auto px-4 py-12 md:py-8 flex-grow flex items-center justify-center flex-col relative z-10">
           <div className="mb-16 md:mb-12 text-center">
