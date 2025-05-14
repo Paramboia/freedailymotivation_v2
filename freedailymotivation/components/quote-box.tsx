@@ -86,7 +86,7 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
                 "{currentQuote.text}"
               </p>
               <p className="text-right mt-4 text-gray-600 dark:text-gray-400">
-                - <Link href={`/quotes/${slugifyAuthor(currentQuote.author)}`} className="">
+                - <Link href={`/inspirational-quotes-famous/${slugifyAuthor(currentQuote.author)}`} className="">
                     {currentQuote.author}
                   </Link>
               </p>
