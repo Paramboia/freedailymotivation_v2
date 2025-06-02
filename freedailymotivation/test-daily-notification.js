@@ -255,6 +255,49 @@ async function testOneSignalAPI() {
   }
 }
 
+// Test 6: Test OneSignal webhook endpoint
+async function testOneSignalWebhook() {
+  console.log('\n6️⃣ Testing OneSignal Webhook Endpoint');
+  console.log('--------------------------------------');
+
+  try {
+    // Test webhook with a sample payload
+    const sampleWebhookData = {
+      event: 'notification.clicked',
+      id: 'test-notification-id',
+      app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
+      user_id: 'test-user-id',
+      timestamp: Date.now(),
+      url: 'https://www.freedailymotivation.com'
+    };
+
+    const response = await makeRequest(`${BASE_URL}/api/webhooks/onesignal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Daily-Notification-Test/1.0'
+      },
+      body: JSON.stringify(sampleWebhookData)
+    });
+
+    console.log(`Status: ${response.status}`);
+    
+    if (response.status === 200) {
+      console.log('✅ OneSignal webhook endpoint is working');
+      console.log(`📨 Event processed: ${response.data.event}`);
+      console.log(`✅ Response: ${response.data.message}`);
+      return { success: true };
+    } else {
+      console.log('❌ OneSignal webhook endpoint failed');
+      console.log('Response:', response.data);
+      return { success: false };
+    }
+  } catch (error) {
+    console.log('❌ Error testing OneSignal webhook:', error.message);
+    return { success: false };
+  }
+}
+
 // Main test function
 async function runTests() {
   console.log(`🌐 Testing against: ${BASE_URL}`);
@@ -263,6 +306,7 @@ async function runTests() {
   const configTest = testOneSignalConfig();
   const quoteTest = await testRandomQuoteAPI();
   const oneSignalTest = await testOneSignalAPI();
+  const webhookTest = await testOneSignalWebhook();
   const cronTest = await testDailyQuoteCron();
 
   console.log('\n📊 Test Summary');
@@ -271,10 +315,12 @@ async function runTests() {
   console.log(`OneSignal Configuration: ${configTest ? '✅ Pass' : '❌ Fail'}`);
   console.log(`Random Quote API: ${quoteTest.success ? '✅ Pass' : '❌ Fail'}`);
   console.log(`OneSignal API: ${oneSignalTest.success ? '✅ Pass' : oneSignalTest.reason ? `⚠️ Skipped (${oneSignalTest.reason})` : '❌ Fail'}`);
+  console.log(`OneSignal Webhook: ${webhookTest.success ? '✅ Pass' : '❌ Fail'}`);
   console.log(`Daily Quote Cron: ${cronTest.success ? '✅ Pass' : cronTest.reason ? `⚠️ Skipped (${cronTest.reason})` : '❌ Fail'}`);
 
   const allPassed = envTest && configTest && quoteTest.success && 
                    (oneSignalTest.success || oneSignalTest.reason) && 
+                   webhookTest.success &&
                    (cronTest.success || cronTest.reason);
   
   console.log(`\n🎯 Overall Status: ${allPassed ? '✅ All tests passed!' : '❌ Some tests failed'}`);
@@ -285,11 +331,13 @@ async function runTests() {
     if (!configTest) console.log('   - Check OneSignal configuration');
     if (!quoteTest.success) console.log('   - Debug random quote API endpoint');
     if (!oneSignalTest.success && !oneSignalTest.reason) console.log('   - Debug OneSignal API connection');
+    if (!webhookTest.success) console.log('   - Debug OneSignal webhook endpoint');
     if (!cronTest.success && !cronTest.reason) console.log('   - Debug daily quote cron endpoint');
   } else {
     console.log('\n🎉 Your daily notification system is ready to go!');
     console.log('   - All APIs are working correctly');
     console.log('   - OneSignal is properly configured');
+    console.log('   - Webhook tracking is set up');
     console.log('   - Cron job should run daily at 8:00 AM');
   }
 }
