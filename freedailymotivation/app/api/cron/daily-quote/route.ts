@@ -23,9 +23,9 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get random liked quote from API
+    // Get random quote from API
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://freedailymotivation.com';
-    const quoteResponse = await fetch(`${appUrl}/api/random-liked-quote`);
+    const quoteResponse = await fetch(`${appUrl}/api/random-quote`);
     
     if (!quoteResponse.ok) {
       throw new Error(`Failed to fetch quote: ${quoteResponse.statusText}`);
