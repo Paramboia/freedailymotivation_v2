@@ -60,7 +60,7 @@ export async function GET(request: Request) {
       },
       body: JSON.stringify({
         app_id: appId,
-        included_segments: ['Subscribed Users'], // Fixed segment name
+        included_segments: ['Total Subscriptions'], // Use the correct segment name from OneSignal dashboard
         contents: { 
           en: quote.message 
         },
