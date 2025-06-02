@@ -23,9 +23,9 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get random quote from API
+    // Get random liked quote from API
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://freedailymotivation.com';
-    const quoteResponse = await fetch(`${appUrl}/api/random-quote`);
+    const quoteResponse = await fetch(`${appUrl}/api/random-liked-quote`);
     
     if (!quoteResponse.ok) {
       throw new Error(`Failed to fetch quote: ${quoteResponse.statusText}`);
@@ -62,10 +62,10 @@ export async function GET(request: Request) {
         app_id: appId,
         included_segments: ['Total Subscriptions'], // Use the correct segment name from OneSignal dashboard
         contents: { 
-          en: quote.message 
+          en: `"${quote.message}" ${quote.heading}` 
         },
         headings: { 
-          en: quote.heading || 'Your Daily Dose of Motivation' 
+          en: 'FreeDailyMotivation ✨' 
         },
         ttl: 86400, // Expire after 24 hours if not delivered
         isAnyWeb: true,
