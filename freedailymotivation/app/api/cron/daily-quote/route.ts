@@ -23,8 +23,9 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get random quote
-    const quoteResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/random-quote`);
+    // Get random quote from API
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://freedailymotivation.com';
+    const quoteResponse = await fetch(`${appUrl}/api/random-quote`);
     
     if (!quoteResponse.ok) {
       throw new Error(`Failed to fetch quote: ${quoteResponse.statusText}`);
@@ -36,11 +37,6 @@ export async function GET(request: Request) {
       throw new Error('Invalid quote format received');
     }
 
-    // Get tomorrow at 8 AM in the user's timezone (Europe/Madrid)
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(8, 0, 0, 0);
-
     // Check if required env vars are present
     const restApiKey = process.env.ONESIGNAL_REST_API_KEY;
     const appId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
@@ -51,10 +47,11 @@ export async function GET(request: Request) {
 
     console.log('OneSignal configuration:', {
       appId,
-      authHeader: `Key ${restApiKey.substring(0, 10)}...` // Only log part of the key for security
+      restApiKeyPrefix: restApiKey.substring(0, 10) + '...',
+      quoteLength: quote.message.length
     });
 
-    // Send notification for tomorrow at 8 AM
+    // Send notification immediately (cron runs at 8:00 AM)
     const response = await fetch('https://onesignal.com/api/v1/notifications', {
       method: 'POST',
       headers: {
@@ -63,20 +60,18 @@ export async function GET(request: Request) {
       },
       body: JSON.stringify({
         app_id: appId,
-        included_segments: ['Total Subscribed Users'],
+        included_segments: ['Subscribed Users'], // Fixed segment name
         contents: { 
           en: quote.message 
         },
         headings: { 
           en: quote.heading || 'Your Daily Dose of Motivation' 
         },
-        delayed_option: "timezone",
-        delivery_time_of_day: "08:00",
         ttl: 86400, // Expire after 24 hours if not delivered
         isAnyWeb: true,
         target_channel: "push",
         channel_for_external_user_ids: "push",
-        web_push_topic: "daily_motivation", // Add a topic to prevent duplicate notifications
+        web_push_topic: "daily_motivation",
         priority: 10 // High priority to ensure delivery
       }),
     });
@@ -90,17 +85,15 @@ export async function GET(request: Request) {
         data,
         requestBody: {
           app_id: appId,
-          scheduledFor: tomorrow.toISOString(),
           messageLength: quote.message.length
         }
       });
       throw new Error(data.errors?.[0] || 'Failed to send notification');
     }
 
-    console.log('Successfully scheduled notification:', {
+    console.log('Successfully sent notification:', {
       notificationId: data.id,
       recipients: data.recipients,
-      scheduledFor: tomorrow.toISOString(),
       quoteText: quote.message,
       heading: quote.heading
     });
@@ -109,13 +102,12 @@ export async function GET(request: Request) {
       success: true, 
       data: {
         notification: data,
-        scheduledFor: tomorrow.toISOString(),
         quote: {
           text: quote.message,
           heading: quote.heading
         }
       }
-    });
+    }, { headers });
   } catch (error) {
     console.error('Daily quote notification error:', error);
     return NextResponse.json(
