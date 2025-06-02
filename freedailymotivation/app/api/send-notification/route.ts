@@ -21,7 +21,7 @@ export async function POST(request: Request) {
         'Authorization': `Basic ${process.env.ONESIGNAL_REST_API_KEY}`,
       },
       body: JSON.stringify({
-        app_id: "9bee561c-d825-4050-b998-1b3245cad317",
+        app_id: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
         included_segments: ['Subscribed Users'],
         contents: { en: message },
         headings: { en: heading || 'Daily Motivation' },
