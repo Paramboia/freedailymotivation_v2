@@ -62,11 +62,20 @@ export async function GET(request: Request) {
         app_id: appId,
         included_segments: ['Total Subscriptions'], // Use the correct segment name from OneSignal dashboard
         contents: { 
-          en: `"${quote.message}" ${quote.heading}` 
+          en: `"${quote.message}" - ${quote.heading}` 
         },
         headings: { 
-          en: 'FreeDailyMotivation ✨' 
+          en: 'FreeDailyMotivation ⭐' 
         },
+        url: appUrl, // Open the website when notification is clicked
+        web_buttons: [
+          {
+            id: "find-more",
+            text: "Find More",
+            icon: `${appUrl}/icon-192x192.png`, // Use your app icon
+            url: appUrl
+          }
+        ],
         ttl: 86400, // Expire after 24 hours if not delivered
         isAnyWeb: true,
         target_channel: "push",
