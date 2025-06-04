@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { analytics } from "@/lib/analytics";
 
 interface CategoryButtonsProps {
   categories: string[];
@@ -11,10 +12,16 @@ interface CategoryButtonsProps {
 
 export default function CategoryButtons({ categories, onCategorySelect, selectedCategory }: CategoryButtonsProps) {
   const handleCategoryClick = (category: string) => {
-    if (selectedCategory === category) {
+    const isCurrentlySelected = selectedCategory === category;
+    
+    if (isCurrentlySelected) {
       onCategorySelect(undefined);
+      // Track category deselection
+      analytics.trackCategorySelection(category, true);
     } else {
       onCategorySelect(category);
+      // Track category selection
+      analytics.trackCategorySelection(category, false);
     }
   };
 

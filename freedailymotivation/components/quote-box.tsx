@@ -12,6 +12,7 @@ import { useUser } from "@clerk/nextjs";
 import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/supabase-client';
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 import Link from 'next/link';
+import { analytics } from "@/lib/analytics";
 
 interface QuoteBoxProps {
   quote: Quote;
@@ -47,6 +48,9 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
 
   const copyQuote = () => {
     navigator.clipboard.writeText(`"${currentQuote.text}" - ${currentQuote.author}`);
+    
+    // Track copy action
+    analytics.trackQuoteAction('copy', currentQuote.id, currentQuote.author);
   };
 
   const handleLike = async () => {
@@ -60,6 +64,9 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
       
       const newLikeCount = await getLikeCount(currentQuote.id);
       setLikeCount(newLikeCount);
+
+      // Track like action
+      analytics.trackQuoteAction('like', currentQuote.id, currentQuote.author);
     } catch (error) {
       console.error('Error toggling like:', error);
     }
@@ -67,8 +74,29 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
 
   const handleNewQuote = () => {
     console.log('Generating new quote for category:', selectedCategory);
+    
+    // Track get new quote action
+    analytics.trackQuoteAction('get_new_quote', currentQuote.id, currentQuote.author);
+    
     if (onNewQuote) {
       onNewQuote();
+    }
+  };
+
+  const handleShare = () => {
+    const shareText = `"${currentQuote.text}" - ${currentQuote.author}\n\nVisit www.freedailymotivation.com for more inspirational quotes! ✨`;
+    
+    // Track share action
+    analytics.trackQuoteAction('share', currentQuote.id, currentQuote.author);
+    
+    if (navigator.share) {
+      navigator.share({
+        text: shareText,
+      }).catch((error) => console.error('Error sharing:', error));
+    } else {
+      navigator.clipboard.writeText(shareText)
+        .then(() => alert('Quote copied to clipboard!'))
+        .catch((error) => console.error('Error copying to clipboard:', error));
     }
   };
 
@@ -149,19 +177,7 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      onClick={() => {
-                        const shareText = `"${currentQuote.text}" - ${currentQuote.author}\n\nVisit www.freedailymotivation.com for more inspirational quotes! ✨`;
-                        
-                        if (navigator.share) {
-                          navigator.share({
-                            text: shareText,
-                          }).catch((error) => console.error('Error sharing:', error));
-                        } else {
-                          navigator.clipboard.writeText(shareText)
-                            .then(() => alert('Quote copied to clipboard!'))
-                            .catch((error) => console.error('Error copying to clipboard:', error));
-                        }
-                      }}
+                      onClick={handleShare}
                     >
                       <Send className="h-5 w-5" />
                     </Button>

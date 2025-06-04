@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import dynamic from 'next/dynamic';
 import { Poppins } from "next/font/google";
 import type { Quote } from '@/types';
+import { analytics } from "@/lib/analytics";
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -22,6 +23,14 @@ export default function FavoriteQuotes() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleFindQuotesClick = () => {
+    analytics.trackCTAClick('Find Quotes', 'Favorite Quotes Page');
+  };
+
+  const handleSignInClick = () => {
+    analytics.trackCTAClick('Sign In', 'Favorite Quotes Page');
+  };
 
   useEffect(() => {
     async function fetchFavoriteQuotes() {
@@ -197,6 +206,7 @@ export default function FavoriteQuotes() {
                 <Link
                   href="/find-quotes"
                   className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
+                  onClick={handleFindQuotesClick}
                 >
                   Find Quotes
                 </Link>
@@ -240,6 +250,7 @@ export default function FavoriteQuotes() {
                 <SignInButton mode="modal">
                   <button
                     className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
+                    onClick={handleSignInClick}
                   >
                     Sign In
                   </button>

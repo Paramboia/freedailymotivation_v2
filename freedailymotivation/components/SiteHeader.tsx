@@ -7,6 +7,7 @@ import { User, Quote, Lightbulb, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import SearchBar from "@/components/SearchBar";
+import { analytics } from "@/lib/analytics";
 
 const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) => (
   <Button
@@ -20,6 +21,14 @@ const HeaderIconButton = ({ children, ...props }: React.PropsWithChildren<React.
 );
 
 const SiteHeader = () => {
+  const handleNavClick = (navItem: string) => {
+    analytics.trackCTAClick(navItem, 'Header Navigation');
+  };
+
+  const handleSignInClick = () => {
+    analytics.trackCTAClick('Sign In', 'Header');
+  };
+
   return (
     <header className="sticky top-0 z-50 py-2 px-4 flex justify-between items-center bg-purple-400/80 backdrop-blur-sm dark:bg-black/80 dark:shadow-dark">
       <div className="flex items-center gap-4">
@@ -29,19 +38,19 @@ const SiteHeader = () => {
       <div className="flex items-center">
         <div className="flex items-center gap-0.1">
           <Link href="/find-quotes" className="flex items-center">
-            <HeaderIconButton>
+            <HeaderIconButton onClick={() => handleNavClick('Find Quotes')}>
               <Lightbulb className="h-4 w-4" />
               <span className="hidden md:inline ml-2">Find Quotes</span>
             </HeaderIconButton>
           </Link>
           <Link href="/inspirational-quotes-famous" className="flex items-center">
-            <HeaderIconButton>
+            <HeaderIconButton onClick={() => handleNavClick('Famous Quotes')}>
               <Quote className="h-4 w-4" />
               <span className="hidden md:inline ml-2">Famous Quotes</span>
             </HeaderIconButton>
           </Link>
           <Link href="/favorite-quotes" className="flex items-center">
-            <HeaderIconButton>
+            <HeaderIconButton onClick={() => handleNavClick('Favorite Quotes')}>
               <Star className="h-4 w-4" />
               <span className="hidden md:inline ml-2">Favorite Quotes</span>
             </HeaderIconButton>
@@ -50,12 +59,14 @@ const SiteHeader = () => {
         </div>
         <div className="ml-0.5">
           <SignedOut>
-            <SignInButton>
-              <HeaderIconButton>
-                <User className="h-4 w-4" />
-                <span className="hidden md:inline ml-2">Sign In</span>
-              </HeaderIconButton>
-            </SignInButton>
+            <div onClick={handleSignInClick}>
+              <SignInButton>
+                <HeaderIconButton>
+                  <User className="h-4 w-4" />
+                  <span className="hidden md:inline ml-2">Sign In</span>
+                </HeaderIconButton>
+              </SignInButton>
+            </div>
           </SignedOut>
           <SignedIn>
             <UserButton />

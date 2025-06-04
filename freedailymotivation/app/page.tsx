@@ -6,6 +6,7 @@ import ThemeWrapper from "@/components/ThemeWrapper";
 import Footer from "@/components/Footer";
 import { Poppins } from "next/font/google";
 import SavePagePopup from "@/components/SavePagePopup";
+import { analytics } from "@/lib/analytics";
 
 const poppins = Poppins({
   weight: ["700"],
@@ -27,6 +28,11 @@ export default function Home() {
     setClicks(newClicks); // Update the number of clicks
   };
 
+  const handleFindQuotesClick = () => {
+    // Track CTA click event
+    analytics.trackCTAClick('Find Quotes', 'Home Page');
+  };
+
   return (
     <ThemeWrapper>
       <div className="min-h-screen flex flex-col relative" onClick={handleClick}>
@@ -43,7 +49,10 @@ export default function Home() {
             </p>
             <div className="flex justify-center">
               <Link href="/find-quotes">
-                <button className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600">
+                <button 
+                  className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
+                  onClick={handleFindQuotesClick}
+                >
                   Find Quotes
                 </button>
               </Link>
