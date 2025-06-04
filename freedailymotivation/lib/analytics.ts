@@ -1,10 +1,3 @@
-declare global {
-  interface Window {
-    dataLayer: Record<string, any>[];
-    gtag: (...args: any[]) => void;
-  }
-}
-
 // Google Analytics 4 event tracking
 export const trackEvent = (
   action: string,
@@ -14,7 +7,8 @@ export const trackEvent = (
   customParameters?: Record<string, any>
 ) => {
   try {
-    if (typeof window !== 'undefined' && window.gtag) {
+    // Check if gtag is available
+    if (typeof window !== 'undefined' && (window as any).gtag) {
       const eventData: Record<string, any> = {
         event_category: category,
         event_label: label,
@@ -29,12 +23,12 @@ export const trackEvent = (
         }
       });
 
-      window.gtag('event', action, eventData);
+      (window as any).gtag('event', action, eventData);
     }
 
     // Also push to dataLayer for GTM
-    if (typeof window !== 'undefined' && window.dataLayer) {
-      window.dataLayer.push({
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
         event: 'custom_event',
         event_action: action,
         event_category: category,
