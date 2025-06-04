@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { analytics } from "@/lib/analytics";
 
 export default function AuthComponent() {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, user: _user } = useUser();
   const prevSignedInState = useRef<boolean | null>(null);
 
   useEffect(() => {
