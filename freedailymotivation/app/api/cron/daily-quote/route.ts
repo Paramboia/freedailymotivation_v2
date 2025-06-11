@@ -62,7 +62,7 @@ export async function GET(request: Request) {
         app_id: appId,
         included_segments: ['Total Subscriptions'], // Use the correct segment name from OneSignal dashboard
         contents: { 
-          en: `"${quote.message}" - ${quote.heading}` 
+          en: `"${quote.message}" ${quote.heading}` 
         },
         headings: { 
           en: 'FreeDailyMotivation ⭐' 
