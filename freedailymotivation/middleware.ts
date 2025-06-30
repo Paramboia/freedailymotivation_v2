@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server";
 // Please edit this to allow other routes to be public as needed.
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
 export default clerkMiddleware({
-  authorizedParties: ['https://freedailymotivation.com']
+  authorizedParties: ['https://freedailymotivation.com', 'https://www.freedailymotivation.com']
 });
 
 // Stop Middleware running on static files

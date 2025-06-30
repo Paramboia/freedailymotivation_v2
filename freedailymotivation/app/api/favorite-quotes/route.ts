@@ -3,17 +3,31 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    // Add debugging information
+    console.log('Request URL:', request.url);
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
+    
     // Get the current user from Clerk
     const session = await auth();
+    console.log('Full session object:', session);
     const clerkUserId = session.userId;
     
     console.log('Clerk User ID:', clerkUserId);
     
     if (!clerkUserId) {
+      console.log('No user ID found in session - user not authenticated');
       return new NextResponse(
-        JSON.stringify({ error: 'Unauthorized' }), 
+        JSON.stringify({ 
+          error: 'Unauthorized',
+          debug: {
+            sessionExists: !!session,
+            sessionKeys: session ? Object.keys(session) : [],
+            userIdExists: !!session?.userId,
+            url: request.url
+          }
+        }), 
         { 
           status: 401,
           headers: {
