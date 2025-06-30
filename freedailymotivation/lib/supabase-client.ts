@@ -18,36 +18,67 @@ export async function testSupabaseConnection() {
 }
 
 export async function createOrGetUser(clerkUser: UserResource): Promise<string | null> {
+  const userEmail = clerkUser.emailAddresses[0]?.emailAddress;
+  
   try {
-    const { data: existingUser, error: initialError } = await supabase
+    // First, try to find user by Clerk ID (normal case)
+    let { data: existingUser, error: initialError } = await supabase
       .from('users')
       .select()
       .eq('clerk_user_id', clerkUser.id)
       .single();
 
-    if (initialError) {
-      if (initialError.code === 'PGRST116') {
-        const { data: newUser, error: createError } = await supabase
+    if (!initialError && existingUser) {
+      console.log('User found by Clerk ID:', existingUser.id);
+      return existingUser.id;
+    }
+
+    // If not found by Clerk ID, try to find by email (migration case)
+    if (userEmail) {
+      const { data: emailUser, error: emailError } = await supabase
+        .from('users')
+        .select()
+        .eq('email', userEmail)
+        .single();
+
+      if (!emailError && emailUser) {
+        console.log('User found by email - updating Clerk ID for production migration:', emailUser.id);
+        
+        // Update the existing user with the new production Clerk ID
+        const { data: updatedUser, error: updateError } = await supabase
           .from('users')
-          .insert({
-            clerk_user_id: clerkUser.id,
-            email: clerkUser.emailAddresses[0]?.emailAddress ?? null,
-          })
+          .update({ clerk_user_id: clerkUser.id })
+          .eq('id', emailUser.id)
           .select()
           .single();
 
-        if (createError) {
-          console.error("Error creating user:", createError);
+        if (updateError) {
+          console.error('Error updating user Clerk ID:', updateError);
           return null;
         }
 
-        return newUser?.id ?? null;
+        console.log('User migrated to production Clerk ID:', updatedUser?.id);
+        return updatedUser?.id ?? null;
       }
-      console.error("Error fetching user:", initialError);
+    }
+
+    // User doesn't exist at all, create a new one
+    const { data: newUser, error: createError } = await supabase
+      .from('users')
+      .insert({
+        clerk_user_id: clerkUser.id,
+        email: userEmail ?? null,
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error("Error creating user:", createError);
       return null;
     }
 
-    return existingUser?.id ?? null;
+    console.log('New user created:', newUser?.id);
+    return newUser?.id ?? null;
   } catch (error) {
     console.error("Unexpected error:", error);
     return null;

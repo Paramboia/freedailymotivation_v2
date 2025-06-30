@@ -12,7 +12,7 @@ export function middleware(_request: NextRequest) {
   // Content Security Policy
   response.headers.set(
     'Content-Security-Policy',
-    'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://cdn.clerk.io https://www.googletagmanager.com https://cdn.onesignal.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com; img-src \'self\' data: https:; connect-src \'self\' https://api.clerk.dev https://clerk.freedailymotivation.com https://onesignal.com;'
+    'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://cdn.clerk.io https://www.googletagmanager.com https://cdn.onesignal.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com; img-src \'self\' data: https:; connect-src \'self\' https://clerk.freedailymotivation.com https://onesignal.com;'
   );
 
   // Strict Transport Security
