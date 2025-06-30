@@ -22,7 +22,7 @@ export async function createOrGetUser(clerkUser: UserResource): Promise<string |
   
   try {
     // First, try to find user by Clerk ID (normal case)
-    let { data: existingUser, error: initialError } = await supabase
+    const { data: existingUser, error: initialError } = await supabase
       .from('users')
       .select()
       .eq('clerk_user_id', clerkUser.id)

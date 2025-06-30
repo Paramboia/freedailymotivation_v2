@@ -7,7 +7,7 @@ export async function getOrCreateSupabaseUser(clerkUser: UserResource) {
 
   try {
     // First, try to find user by Clerk ID (normal case)
-    let { data: existingUser, error: fetchError } = await supabase
+    const { data: existingUser, error: fetchError } = await supabase
       .from('users')
       .select('*')
       .eq('clerk_user_id', clerkUser.id)
