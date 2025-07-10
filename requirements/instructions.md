@@ -1,4 +1,4 @@
-#Project Overview 
+#Project Overview
 Use this guide to build FreeDailyMotivation.com a user-friendly website designed to provide daily doses of inspiration through a curated collection of motivational quotes. The platform aims to inspire and uplift users by offering a seamless experience to explore, share, and engage with quotes across various categories (busienss, science, sports, life), including those from famous entrepreneurs, athletes, and thought leaders.
 
 You will be using Next.js, Shadcn UI, Tailwind CSS, Lucid icon, Supabase and Clerk for authentication.
