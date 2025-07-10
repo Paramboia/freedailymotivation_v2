@@ -3,301 +3,1060 @@
   <!-- Main Pages -->
   <url>
     <loc>https://freedailymotivation.com/</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/find-quotes</loc>
-    <lastmod>2024-11-22</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous</loc>
-    <lastmod>2024-11-22</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/about</loc>
-    <lastmod>2024-11-22</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-    <url>
+  <url>
     <loc>https://freedailymotivation.com/favorite-quotes</loc>
-    <lastmod>2024-11-22</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-   <!-- Author Pages -->
-  <!-- Start of Author Entries -->
+  <!-- Author Pages -->
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/abraham-lincoln</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/elon-musk</loc>
-    <lastmod>2025-02-05</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/adam-smith</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/aisha-tyler</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/alan-kay</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/alan-watts</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/albert-einstein</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority> 
-  </url>
-  <url>
-    <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/donald-trump</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority> 
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/albert-schweitzer</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/anais-nin</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/albert-schweitzer</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/anas-nin</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/ann-landers</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/anonymous</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority> <!-- Slightly lower priority -->
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/chris-grosser</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority> <!-- Slightly lower priority -->
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/arnold-h.-glasow</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority> <!-- Slightly lower priority -->
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ernie-banks</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority> <!-- Slightly lower priority -->
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ann-landers</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority> <!-- Slightly lower priority -->
-  </url>
-<url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/georgia-o'keeffe</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority> <!-- Slightly lower priority -->
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/aristotle</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/winston-churchill</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/aristotle-onassis</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/zig-ziglar</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/arnold-h-glasow</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ash-ketchum</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/babe-ruth</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ben-graham</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/benjamin-graham</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/bill-gates</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/bill-gurley</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/billie-jean-king</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/bill-nye</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/bo-bennett</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/booker-t-washington</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/bruce-lee</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/bruce-mau</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/buddha</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/carl-lewis</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/carl-sagan</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/charles-kingsleigh</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/charlie-munger</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/chris-grosser</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/chris-voss</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/colin-powell</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/colin-r-davis</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/confucius</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/cs-lewis</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/dalai-lama</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/daniel-boorstin</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/david-tepper</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/dennis-gabor</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/donald-trump</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/dwight-d-eisenhower</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/edgar-degas</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/edmund-burke</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/edwin-hubble</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/elbert-hubbard</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/eleanor-roosevelt</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/elon-musk</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ernie-banks</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/franklin-d-roosevelt</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/frank-sinatra</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/fred-wilson</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/gary-player</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/gary-vaynerchuk</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/joe-rogan</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/george-bernard-shaw</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jeff-bezos</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/steve-jobs</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/oprah-winfrey</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mahatma-gandhi</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/walt-disney</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/michael-jordan</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/warren-buffett</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/george-soros</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>      
+  </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/eleanor-roosevelt</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/george-s-patton</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>     
+  </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/old-wall-street-saying</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/george-washington</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>   
+  </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/shelby-cullom-davis</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/georgia-okeeffe</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>   
+  </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/robert-collier</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/gk-chesterton</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>   
+  </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ben-graham</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/helen-keller</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>  
+  </url>
   <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/c.s.-lewis</loc>
-    <lastmod>2024-10-25</lastmod>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/henri-matisse</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>  
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/henry-david-thoreau</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/henry-ford</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/henry-moore</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/h-jackson-brown-jr</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/howard-marks</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/isaac-newton</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jackson-pollock</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jason-calacanis</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jeff-bezos</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jerzy-gregorek</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/jerzy-kosinski</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url> 
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jim-breyer</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jim-rohn</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/joel-greenblatt</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/joe-rogan</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/john-bogle</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/john-d-rockefeller</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/john-f-kennedy</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/john-kenneth-galbraith</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/john-lennon</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/jony-ive</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/kareem-abdul-jabbar</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/karl-popper</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ken-fisher</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/kevin-durant</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/kobe-bryant</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/lao-tzu</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/les-brown</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mae-west</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mahatma-gandhi</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/marc-andreessen</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/marc-chagall</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/marcus-aurelius</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mark-twain</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mark-zuckerberg</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/martin-luther-king-jr</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mary-roach</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/michael-jordan</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/michael-moritz</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/mitch-albom</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/muhammad-ali</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/napoleon-hill</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/neil-armstrong</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/neil-degrasse-tyson</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/nelson-mandela</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/niels-bohr</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/old-wall-street-saying</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/oliver-goldsmith</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/oprah-winfrey</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/oscar-wilde</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/pablo-picasso</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/paul-samuelson</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/pel</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/peter-bernstein</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/peter-drucker</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/peter-lynch</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/peter-thiel</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/philip-fisher</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/plato</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ralph-nader</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ralph-waldo-emerson</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/richard-branson</loc>
-    <lastmod>2024-10-25</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-  </url>   
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/richard-dawkins</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/richard-feynman</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/richard-marcinko</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/rick-rubin</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/robert-a-heinlein</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/robert-arnott</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/robert-collier</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/rocky-balboa</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/ronnie-lott</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/rosalind-franklin</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/sam-altman</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/samuel-goldwyn</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/sarah-louise-delany</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/serena-williams</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/shelby-cullom-davis</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/sir-edmund-hillary</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/sir-john-templeton</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/socrates</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/stella-adler</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/stephen-hawking</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/steve-jobs</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/sun-tzu</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/theodore-roosevelt</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/thomas-edison</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/thomas-jefferson</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/thomas-merton</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/thomas-sowell</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/tom-brady</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/tony-hsieh</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/tony-robbins</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/twyla-tharp</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/vidal-sassoon</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/vince-lombardi</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/vincent-van-gogh</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/walt-disney</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/warren-buffett</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/wassily-kandinsky</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/wayne-gretzky</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/w-edwards-deming</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/william-butler-yeats</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/william-james</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://freedailymotivation.com/inspirational-quotes-famous/will-rogers</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url> 
-    <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/wassily-kandinsky</loc>
-    <lastmod>2024-10-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url> 
-    </url>
-    <url>
-    <loc>https://freedailymotivation.com/inspirational-quotes-famous/chris-voss</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-    </url> 
-    </url>
-    <url>
-    <loc>https://www.freedailymotivation.com/inspirational-quotes-famous/jason-calacanis</loc>
-    <lastmod>2025-02-24</lastmod>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/wilson-kanadi</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-    </url>
-    </url> 
-    </url>
-    <url>
-    <loc>https://www.freedailymotivation.com/inspirational-quotes-famous/bill-gurley</loc>
-    <lastmod>2025-02-24</lastmod>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/winston-churchill</loc>
+    <lastmod>2025-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  <!-- Add more author pages as needed -->
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/yogi-berra</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/yu-gi-oh</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freedailymotivation.com/inspirational-quotes-famous/zig-ziglar</loc>
+    <lastmod>2025-07-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
