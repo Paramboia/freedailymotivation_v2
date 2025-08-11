@@ -142,7 +142,7 @@ export default function FavoriteQuotesFilters({
             options={sortOptions}
             onSelect={onSortChange}
             allowClear={false}
-            className="sm:min-w-[120px] min-w-[340px]"
+            className="sm:min-w-[120px] min-w-[300px]"
           />
         </div>
         
