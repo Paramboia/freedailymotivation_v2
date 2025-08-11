@@ -12,7 +12,6 @@ interface FavoriteQuotesFiltersProps {
   onSortChange: (value: string) => void;
   onAuthorChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
-  onClearFilters: () => void;
 }
 
 // Simple dropdown button component
@@ -108,8 +107,7 @@ export default function FavoriteQuotesFilters({
   availableCategories,
   onSortChange,
   onAuthorChange,
-  onCategoryChange,
-  onClearFilters
+  onCategoryChange
 }: FavoriteQuotesFiltersProps) {
   // Prepare options for dropdowns
   const sortOptions = [

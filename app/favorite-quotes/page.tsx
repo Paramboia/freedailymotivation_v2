@@ -73,10 +73,7 @@ export default function FavoriteQuotes() {
     setSelectedCategory(value);
   };
 
-  const handleClearFilters = () => {
-    setSelectedAuthor('all');
-    setSelectedCategory('all');
-  };
+
 
   const fetchFavoriteQuotes = useCallback(async (currentSortBy?: string, currentAuthor?: string, currentCategory?: string) => {
     if (!isUserLoaded || !user) {
@@ -327,20 +324,13 @@ export default function FavoriteQuotes() {
                   onSortChange={handleSortChange}
                   onAuthorChange={handleAuthorChange}
                   onCategoryChange={handleCategoryChange}
-                  onClearFilters={handleClearFilters}
                 />
                 
                 {filteredQuotes.length === 0 ? (
                   <div className="text-center mt-8 p-8 bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/20 dark:border-gray-700/50">
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      No quotes found with the current filters.
+                    <p className="text-gray-600 dark:text-gray-400">
+                      No quotes found with the current filters. Try adjusting your filter selections above.
                     </p>
-                    <button
-                      onClick={handleClearFilters}
-                      className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
-                    >
-                      Clear Filters
-                    </button>
                   </div>
                 ) : (
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
