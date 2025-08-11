@@ -64,10 +64,10 @@ function DropdownButton({
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         type="button"
-        className="flex items-center justify-between h-9 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+        className="flex items-center justify-between h-9 px-3 py-1.5 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[120px]"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="truncate">{displayLabel}</span>
+        <span className={`truncate ${!hasValue ? 'text-gray-500 dark:text-gray-400' : ''}`}>{displayLabel}</span>
         {hasValue ? (
           <X 
             className="h-4 w-4 ml-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" 
@@ -79,12 +79,12 @@ function DropdownButton({
       </button>
       
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-auto">
           {options.map((option) => (
             <button
               key={option.value}
               type="button"
-              className="w-full px-3 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
+              className="w-full px-3 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-zinc-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-zinc-700"
               onClick={() => {
                 onSelect(option.value);
                 setIsOpen(false);
@@ -116,18 +116,18 @@ export default function FavoriteQuotesFilters({
   ];
 
   const authorOptions = [
-    { value: 'all', label: 'Author' },
     ...availableAuthors.map(author => ({ value: author, label: author }))
   ];
 
   const categoryOptions = [
-    { value: 'all', label: 'Category' },
     ...availableCategories.map(category => ({ value: category, label: category }))
   ];
 
   return (
     <div className="mb-6">
       <div className="flex flex-wrap gap-3 items-center">
+        <span className="text-sm text-gray-700 dark:text-gray-300">Sort by Liked first:</span>
+        
         <DropdownButton
           label="Newest first"
           value={sortBy}
