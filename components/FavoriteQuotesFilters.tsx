@@ -129,7 +129,8 @@ export default function FavoriteQuotesFilters({
 
   return (
     <div className="mb-6">
-      <div className="flex flex-wrap gap-3 items-center">
+      {/* Sort filter - always on first line */}
+      <div className="flex flex-wrap gap-3 items-center mb-3">
         <span className="text-sm text-gray-700 dark:text-gray-300">Sort by first:</span>
         
         <DropdownButton
@@ -140,7 +141,10 @@ export default function FavoriteQuotesFilters({
           onSelect={onSortChange}
           allowClear={false}
         />
-        
+      </div>
+      
+      {/* Author and Category filters - on second line on mobile, same line on desktop */}
+      <div className="flex flex-wrap gap-3 items-center">
         <DropdownButton
           label="Author"
           value={selectedAuthor}
