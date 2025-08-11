@@ -113,8 +113,10 @@ export default function FavoriteQuotesFilters({
 }: FavoriteQuotesFiltersProps) {
   // Prepare options for dropdowns
   const sortOptions = [
-    { value: 'newest', label: 'Newest first' },
-    { value: 'oldest', label: 'Oldest first' }
+    { value: 'newest', label: 'Newest Liked' },
+    { value: 'oldest', label: 'Oldest Liked' },
+    { value: 'most_liked', label: 'Most Liked' },
+    { value: 'less_liked', label: 'Less Liked' }
   ];
 
   const authorOptions = [
@@ -128,10 +130,10 @@ export default function FavoriteQuotesFilters({
   return (
     <div className="mb-6">
       <div className="flex flex-wrap gap-3 items-center">
-        <span className="text-sm text-gray-700 dark:text-gray-300">Sort by Liked first:</span>
+        <span className="text-sm text-gray-700 dark:text-gray-300">Sort by first:</span>
         
         <DropdownButton
-          label="Newest first"
+          label="Newest Liked"
           value={sortBy}
           defaultValue="newest"
           options={sortOptions}

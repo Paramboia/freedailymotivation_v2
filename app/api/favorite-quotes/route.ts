@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   try {
     // Parse query parameters for filtering
     const url = new URL(request.url);
-    const sortBy = url.searchParams.get('sortBy') || 'newest'; // 'newest' or 'oldest'
+    const sortBy = url.searchParams.get('sortBy') || 'newest'; // 'newest', 'oldest', 'most_liked', 'less_liked'
     const authorFilter = url.searchParams.get('author');
     const categoryFilter = url.searchParams.get('category');
     
@@ -96,11 +96,20 @@ export async function GET(request: Request) {
     console.log('Found Supabase user:', userData);
 
     // Get favorites using the Supabase user ID with creation dates for sorting
-    const { data: favorites, error: favoritesError } = await supabase
+    let favoritesQuery = supabase
       .from('favorites')
       .select('quote_id, created_at')
-      .eq('user_id', userData.id)
-      .order('created_at', { ascending: sortBy === 'oldest' });
+      .eq('user_id', userData.id);
+
+    // Apply sorting based on sortBy parameter
+    if (sortBy === 'oldest') {
+      favoritesQuery = favoritesQuery.order('created_at', { ascending: true });
+    } else if (sortBy === 'newest') {
+      favoritesQuery = favoritesQuery.order('created_at', { ascending: false });
+    }
+    // For most_liked and less_liked, we'll sort after getting the quotes with like counts
+
+    const { data: favorites, error: favoritesError } = await favoritesQuery;
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
@@ -188,8 +197,44 @@ export async function GET(request: Request) {
       );
     }
 
+    // Get like counts for each quote if we need to sort by likes
+    let quotesWithLikes = quotes || [];
+    if (sortBy === 'most_liked' || sortBy === 'less_liked') {
+      const quoteIdsForLikes = quotesWithLikes.map(q => q.id);
+      
+      if (quoteIdsForLikes.length > 0) {
+        const { data: likeCounts, error: likeError } = await supabase
+          .from('favorites')
+          .select('quote_id')
+          .in('quote_id', quoteIdsForLikes);
+
+        if (!likeError && likeCounts) {
+          // Count likes for each quote
+          const likeCountMap = likeCounts.reduce((acc, like) => {
+            acc[like.quote_id] = (acc[like.quote_id] || 0) + 1;
+            return acc;
+          }, {} as Record<string, number>);
+
+          // Add like counts to quotes and sort
+          quotesWithLikes = quotesWithLikes.map(quote => ({
+            ...quote,
+            likeCount: likeCountMap[quote.id] || 0
+          }));
+
+          // Sort by like count
+          quotesWithLikes.sort((a, b) => {
+            if (sortBy === 'most_liked') {
+              return b.likeCount - a.likeCount;
+            } else {
+              return a.likeCount - b.likeCount;
+            }
+          });
+        }
+      }
+    }
+
     // Transform the data
-    const formattedQuotes = (quotes || []).map(quote => {
+    const formattedQuotes = quotesWithLikes.map(quote => {
       // Ensure we handle the authors array correctly
       const authors = Array.isArray(quote.authors) 
         ? quote.authors 
@@ -204,7 +249,7 @@ export async function GET(request: Request) {
         id: String(quote.id),
         text: quote.quote_text,
         author: authors[0]?.author_name || 'Unknown Author',
-        likes: 0,
+        likes: quote.likeCount || 0,
         dislikes: 0,
         category: categories[0]?.category_name || ''
       };
