@@ -2,22 +2,82 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /_next/
+Disallow: /sign-in/
+Disallow: /sign-up/
+Disallow: /favorite-quotes
+Crawl-delay: 1
 
-# OpenAI ChatGPT Bot
+# Search Engine Bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# AI/LLM Bots - Explicitly allowed for content training
+# OpenAI Bots
 User-agent: GPTBot
 Allow: /
+Crawl-delay: 1
 
-# OpenAI SearchBot
 User-agent: OAI-SearchBot
 Allow: /
+Crawl-delay: 1
 
-# Google Bard / Gemini Bot
+User-agent: ChatGPT-User
+Allow: /
+Crawl-delay: 1
+
+# Google AI Bots
 User-agent: Google-Extended
 Allow: /
+Crawl-delay: 1
 
-# Claude Bot
+User-agent: GoogleOther
+Allow: /
+Crawl-delay: 1
+
+# Anthropic Claude Bot
 User-agent: Anthropic-AI
 Allow: /
+Crawl-delay: 1
 
-# Sitemap
-Sitemap: https://freedailymotivation.com/sitemap.xml 
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 1
+
+# Meta AI Bots
+User-agent: Meta-ExternalAgent
+Allow: /
+Crawl-delay: 1
+
+User-agent: FacebookBot
+Allow: /
+Crawl-delay: 1
+
+# Microsoft/Bing AI
+User-agent: BingPreview
+Allow: /
+Crawl-delay: 1
+
+# Other AI Training Bots
+User-agent: CCBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: YouBot
+Allow: /
+Crawl-delay: 1
+
+# Dynamic Sitemap
+Sitemap: https://freedailymotivation.com/sitemap.xml
+
+# Additional sitemaps (if needed)
+# Sitemap: https://freedailymotivation.com/sitemap-authors.xml
+# Sitemap: https://freedailymotivation.com/sitemap-quotes.xml 

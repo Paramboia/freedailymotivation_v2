@@ -8,6 +8,7 @@ import { default as nextDynamic } from 'next/dynamic';
 import { Analytics } from "@vercel/analytics/react";
 import Script from 'next/script';
 import OneSignalProvider from "@/components/OneSignalProvider";
+import StructuredData from "@/components/StructuredData";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,14 +30,69 @@ const ErrorBoundary = nextDynamic(
 const ClientPageTracker = nextDynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
 
 export const metadata: Metadata = {
-  title: "Free Daily Motivation",
-  description: "Get your daily dose of motivation with free inspirational quotes.",
+  title: {
+    default: "Free Daily Motivation - Inspirational Quotes",
+    template: "%s | Free Daily Motivation"
+  },
+  description: "Get your daily dose of motivation with inspirational quotes from famous figures across business, sports, science, and life. Discover wisdom to fuel your success.",
+  keywords: [
+    "inspirational quotes",
+    "motivational quotes", 
+    "daily motivation",
+    "famous quotes",
+    "business quotes",
+    "success quotes",
+    "life quotes",
+    "wisdom",
+    "personal growth",
+    "self improvement"
+  ],
+  authors: [{ name: "Free Daily Motivation Team" }],
+  creator: "Free Daily Motivation",
+  publisher: "Free Daily Motivation",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://freedailymotivation.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://freedailymotivation.com',
+    title: 'Free Daily Motivation - Inspirational Quotes',
+    description: 'Get your daily dose of motivation with inspirational quotes from famous figures across business, sports, science, and life.',
+    siteName: 'Free Daily Motivation',
+    images: [
+      {
+        url: '/logo.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Free Daily Motivation - Inspirational Quotes',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Daily Motivation - Inspirational Quotes',
+    description: 'Get your daily dose of motivation with inspirational quotes from famous figures across business, sports, science, and life.',
+    images: ['/logo.webp'],
+    creator: '@freedailymotiv',
+  },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   icons: {
@@ -56,6 +112,11 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   themeColor: '#ffffff',
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+    yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION,
+  },
 };
 
 export default function RootLayout({
@@ -100,6 +161,8 @@ export default function RootLayout({
           }} />
           {/* End Google Tag Manager (noscript) */}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <StructuredData type="organization" />
+            <StructuredData type="website" />
             <div className="min-h-screen flex flex-col transition-colors duration-300 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900 relative">
               <SparklesBackground />
               <SiteHeader />
