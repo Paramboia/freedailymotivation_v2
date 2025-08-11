@@ -129,37 +129,41 @@ export default function FavoriteQuotesFilters({
 
   return (
     <div className="mb-6">
-      {/* Sort filter - always on first line */}
-      <div className="flex flex-wrap gap-3 items-center mb-3">
-        <span className="text-sm text-gray-700 dark:text-gray-300">Sort by first:</span>
+      {/* Mobile: Two lines, Desktop: Single line */}
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:items-center">
+        {/* Sort filter */}
+        <div className="flex flex-wrap gap-3 items-center">
+          <span className="text-sm text-gray-700 dark:text-gray-300">Sort by first:</span>
+          
+          <DropdownButton
+            label="Newest Liked"
+            value={sortBy}
+            defaultValue="newest"
+            options={sortOptions}
+            onSelect={onSortChange}
+            allowClear={false}
+            className="sm:min-w-[120px] min-w-[140px]"
+          />
+        </div>
         
-        <DropdownButton
-          label="Newest Liked"
-          value={sortBy}
-          defaultValue="newest"
-          options={sortOptions}
-          onSelect={onSortChange}
-          allowClear={false}
-        />
-      </div>
-      
-      {/* Author and Category filters - on second line on mobile, same line on desktop */}
-      <div className="flex flex-wrap gap-3 items-center">
-        <DropdownButton
-          label="Author"
-          value={selectedAuthor}
-          defaultValue="all"
-          options={authorOptions}
-          onSelect={onAuthorChange}
-        />
-        
-        <DropdownButton
-          label="Category"
-          value={selectedCategory}
-          defaultValue="all"
-          options={categoryOptions}
-          onSelect={onCategoryChange}
-        />
+        {/* Author and Category filters */}
+        <div className="flex flex-wrap gap-3 items-center">
+          <DropdownButton
+            label="Author"
+            value={selectedAuthor}
+            defaultValue="all"
+            options={authorOptions}
+            onSelect={onAuthorChange}
+          />
+          
+          <DropdownButton
+            label="Category"
+            value={selectedCategory}
+            defaultValue="all"
+            options={categoryOptions}
+            onSelect={onCategoryChange}
+          />
+        </div>
       </div>
     </div>
   );
