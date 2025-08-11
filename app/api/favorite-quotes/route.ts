@@ -211,8 +211,8 @@ export async function GET(request: Request) {
     });
 
     // Also return available filters for the frontend
-    const availableAuthors = [...new Set(formattedQuotes.map(q => q.author))].sort();
-    const availableCategories = [...new Set(formattedQuotes.map(q => q.category).filter(c => c))].sort();
+    const availableAuthors = Array.from(new Set(formattedQuotes.map(q => q.author))).sort();
+    const availableCategories = Array.from(new Set(formattedQuotes.map(q => q.category).filter(c => c))).sort();
 
     return new NextResponse(
       JSON.stringify({ 
