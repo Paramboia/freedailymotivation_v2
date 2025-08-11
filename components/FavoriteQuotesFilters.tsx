@@ -22,6 +22,7 @@ interface DropdownButtonProps {
   options: { value: string; label: string }[];
   onSelect: (value: string) => void;
   className?: string;
+  allowClear?: boolean; // New prop to control whether X button shows
 }
 
 function DropdownButton({ 
@@ -30,7 +31,8 @@ function DropdownButton({
   defaultValue, 
   options, 
   onSelect,
-  className = ""
+  className = "",
+  allowClear = true
 }: DropdownButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const hasValue = value !== defaultValue;
@@ -67,8 +69,8 @@ function DropdownButton({
         className="flex items-center justify-between h-9 px-3 py-1.5 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[120px]"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className={`truncate ${!hasValue ? 'text-gray-500 dark:text-gray-400' : ''}`}>{displayLabel}</span>
-        {hasValue ? (
+        <span className={`truncate ${!hasValue && allowClear ? 'text-gray-500 dark:text-gray-400' : ''}`}>{displayLabel}</span>
+        {hasValue && allowClear ? (
           <X 
             className="h-4 w-4 ml-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" 
             onClick={handleClearClick}
@@ -134,6 +136,7 @@ export default function FavoriteQuotesFilters({
           defaultValue="newest"
           options={sortOptions}
           onSelect={onSortChange}
+          allowClear={false}
         />
         
         <DropdownButton

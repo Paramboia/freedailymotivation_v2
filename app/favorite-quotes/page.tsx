@@ -327,7 +327,7 @@ export default function FavoriteQuotes() {
                 />
                 
                 {filteredQuotes.length === 0 ? (
-                  <div className="text-center mt-8 p-8 bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/20 dark:border-gray-700/50">
+                  <div className="text-center mt-8 p-8 bg-white/10 dark:bg-zinc-800/50 backdrop-blur-sm rounded-lg border border-white/20 dark:border-zinc-700/50">
                     <p className="text-gray-600 dark:text-gray-400">
                       No quotes found with the current filters. Try adjusting your filter selections above.
                     </p>
