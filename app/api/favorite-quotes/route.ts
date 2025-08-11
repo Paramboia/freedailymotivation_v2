@@ -198,7 +198,7 @@ export async function GET(request: Request) {
     }
 
     // Get like counts for each quote if we need to sort by likes
-    let quotesWithLikes = quotes || [];
+    let quotesWithLikes: Array<any> = quotes || [];
     if (sortBy === 'most_liked' || sortBy === 'less_liked') {
       const quoteIdsForLikes = quotesWithLikes.map(q => q.id);
       
@@ -210,19 +210,19 @@ export async function GET(request: Request) {
 
         if (!likeError && likeCounts) {
           // Count likes for each quote
-          const likeCountMap = likeCounts.reduce((acc, like) => {
+          const likeCountMap = likeCounts.reduce((acc: Record<string, number>, like: any) => {
             acc[like.quote_id] = (acc[like.quote_id] || 0) + 1;
             return acc;
-          }, {} as Record<string, number>);
+          }, {});
 
           // Add like counts to quotes and sort
-          quotesWithLikes = quotesWithLikes.map(quote => ({
+          quotesWithLikes = quotesWithLikes.map((quote: any) => ({
             ...quote,
             likeCount: likeCountMap[quote.id] || 0
           }));
 
           // Sort by like count
-          quotesWithLikes.sort((a, b) => {
+          quotesWithLikes.sort((a: any, b: any) => {
             if (sortBy === 'most_liked') {
               return b.likeCount - a.likeCount;
             } else {
@@ -234,7 +234,7 @@ export async function GET(request: Request) {
     }
 
     // Transform the data
-    const formattedQuotes = quotesWithLikes.map(quote => {
+    const formattedQuotes = quotesWithLikes.map((quote: any) => {
       // Ensure we handle the authors array correctly
       const authors = Array.isArray(quote.authors) 
         ? quote.authors 
