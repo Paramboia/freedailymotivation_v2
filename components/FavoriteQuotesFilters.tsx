@@ -1,8 +1,6 @@
 'use client';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { FilterX, ChevronDown, X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 interface FavoriteQuotesFiltersProps {
@@ -17,51 +15,88 @@ interface FavoriteQuotesFiltersProps {
   onClearFilters: () => void;
 }
 
-// Custom Select Trigger component that shows X when value is selected
-interface CustomSelectTriggerProps {
+// Simple dropdown button component
+interface DropdownButtonProps {
+  label: string;
   value: string;
   defaultValue: string;
-  placeholder: string;
-  onClear: () => void;
-  isOpen: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
+  options: { value: string; label: string }[];
+  onSelect: (value: string) => void;
+  className?: string;
 }
 
-function CustomSelectTrigger({ 
+function DropdownButton({ 
+  label, 
   value, 
   defaultValue, 
-  placeholder, 
-  onClear, 
-  isOpen, 
-  onClick,
-  children 
-}: CustomSelectTriggerProps) {
+  options, 
+  onSelect,
+  className = ""
+}: DropdownButtonProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const hasValue = value !== defaultValue;
-  
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
+
   const handleClearClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClear();
+    onSelect(defaultValue);
+    setIsOpen(false);
   };
 
+  const displayLabel = hasValue 
+    ? options.find(opt => opt.value === value)?.label || label
+    : label;
+
   return (
-    <button
-      type="button"
-      className="flex h-10 w-full items-center justify-between rounded-md border border-white/30 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      onClick={onClick}
-    >
-      <span className="block truncate">
-        {hasValue ? children : placeholder}
-      </span>
-      {hasValue ? (
-        <X 
-          className="h-4 w-4 opacity-50 hover:opacity-100 cursor-pointer" 
-          onClick={handleClearClick}
-        />
-      ) : (
-        <ChevronDown className={`h-4 w-4 opacity-50 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+    <div ref={dropdownRef} className={`relative ${className}`}>
+      <button
+        type="button"
+        className="flex items-center justify-between h-9 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[120px]"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="truncate">{displayLabel}</span>
+        {hasValue ? (
+          <X 
+            className="h-4 w-4 ml-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" 
+            onClick={handleClearClick}
+          />
+        ) : (
+          <ChevronDown className={`h-4 w-4 ml-2 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        )}
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className="w-full px-3 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
+              onClick={() => {
+                onSelect(option.value);
+                setIsOpen(false);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
       )}
-    </button>
+    </div>
   );
 }
 
@@ -76,162 +111,48 @@ export default function FavoriteQuotesFilters({
   onCategoryChange,
   onClearFilters
 }: FavoriteQuotesFiltersProps) {
-  const hasActiveFilters = selectedAuthor !== 'all' || selectedCategory !== 'all';
-  
-  // State for tracking which dropdowns are open
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  // Prepare options for dropdowns
+  const sortOptions = [
+    { value: 'newest', label: 'Newest first' },
+    { value: 'oldest', label: 'Oldest first' }
+  ];
 
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setOpenDropdown(null);
-      }
-    };
+  const authorOptions = [
+    { value: 'all', label: 'Author' },
+    ...availableAuthors.map(author => ({ value: author, label: author }))
+  ];
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleAuthorClear = () => {
-    onAuthorChange('all');
-    setOpenDropdown(null);
-  };
-
-  const handleCategoryClear = () => {
-    onCategoryChange('all');
-    setOpenDropdown(null);
-  };
-
-  const getDisplayValue = (value: string, defaultValue: string, items: string[]) => {
-    if (value === defaultValue) return '';
-    return items.find(item => item === value) || value;
-  };
+  const categoryOptions = [
+    { value: 'all', label: 'Category' },
+    ...availableCategories.map(category => ({ value: category, label: category }))
+  ];
 
   return (
-    <div ref={containerRef} className="mb-8 p-4 bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/20 dark:border-gray-700/50">
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex flex-col sm:flex-row gap-4 flex-1">
-          {/* Sort By */}
-          <div className="flex flex-col gap-2 min-w-[140px]">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Sort by
-            </label>
-            <Select value={sortBy} onValueChange={onSortChange}>
-              <SelectTrigger className="bg-white/80 dark:bg-gray-800/80 border-white/30 dark:border-gray-600/50">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest first</SelectItem>
-                <SelectItem value="oldest">Oldest first</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Author Filter */}
-          <div className="flex flex-col gap-2 min-w-[160px] relative">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Author
-            </label>
-            <div className="relative">
-              <CustomSelectTrigger
-                value={selectedAuthor}
-                defaultValue="all"
-                placeholder="All authors"
-                onClear={handleAuthorClear}
-                isOpen={openDropdown === 'author'}
-                onClick={() => setOpenDropdown(openDropdown === 'author' ? null : 'author')}
-              >
-                {getDisplayValue(selectedAuthor, 'all', availableAuthors)}
-              </CustomSelectTrigger>
-              {openDropdown === 'author' && (
-                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
-                  <div
-                    className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    onClick={() => {
-                      onAuthorChange('all');
-                      setOpenDropdown(null);
-                    }}
-                  >
-                    All authors
-                  </div>
-                  {availableAuthors.map((author) => (
-                    <div
-                      key={author}
-                      className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                      onClick={() => {
-                        onAuthorChange(author);
-                        setOpenDropdown(null);
-                      }}
-                    >
-                      {author}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-col gap-2 min-w-[160px] relative">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Category
-            </label>
-            <div className="relative">
-              <CustomSelectTrigger
-                value={selectedCategory}
-                defaultValue="all"
-                placeholder="All categories"
-                onClear={handleCategoryClear}
-                isOpen={openDropdown === 'category'}
-                onClick={() => setOpenDropdown(openDropdown === 'category' ? null : 'category')}
-              >
-                {getDisplayValue(selectedCategory, 'all', availableCategories)}
-              </CustomSelectTrigger>
-              {openDropdown === 'category' && (
-                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
-                  <div
-                    className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    onClick={() => {
-                      onCategoryChange('all');
-                      setOpenDropdown(null);
-                    }}
-                  >
-                    All categories
-                  </div>
-                  {availableCategories.map((category) => (
-                    <div
-                      key={category}
-                      className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                      onClick={() => {
-                        onCategoryChange(category);
-                        setOpenDropdown(null);
-                      }}
-                    >
-                      {category}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Clear Filters Button */}
-        {hasActiveFilters && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onClearFilters}
-            className="bg-white/80 dark:bg-gray-800/80 border-white/30 dark:border-gray-600/50 hover:bg-white/90 dark:hover:bg-gray-800/90 mt-2 sm:mt-6"
-          >
-            <FilterX className="h-4 w-4 mr-2" />
-            Clear Filters
-          </Button>
-        )}
+    <div className="mb-6">
+      <div className="flex flex-wrap gap-3 items-center">
+        <DropdownButton
+          label="Newest first"
+          value={sortBy}
+          defaultValue="newest"
+          options={sortOptions}
+          onSelect={onSortChange}
+        />
+        
+        <DropdownButton
+          label="Author"
+          value={selectedAuthor}
+          defaultValue="all"
+          options={authorOptions}
+          onSelect={onAuthorChange}
+        />
+        
+        <DropdownButton
+          label="Category"
+          value={selectedCategory}
+          defaultValue="all"
+          options={categoryOptions}
+          onSelect={onCategoryChange}
+        />
       </div>
     </div>
   );
