@@ -5,8 +5,15 @@ import { auth } from '@clerk/nextjs/server';
 
 export async function GET(request: Request) {
   try {
+    // Parse query parameters for filtering
+    const url = new URL(request.url);
+    const sortBy = url.searchParams.get('sortBy') || 'newest'; // 'newest' or 'oldest'
+    const authorFilter = url.searchParams.get('author');
+    const categoryFilter = url.searchParams.get('category');
+    
     // Add debugging information
     console.log('Request URL:', request.url);
+    console.log('Query params:', { sortBy, authorFilter, categoryFilter });
     console.log('Request headers:', Object.fromEntries(request.headers.entries()));
     
     // Get the current user from Clerk
@@ -88,11 +95,12 @@ export async function GET(request: Request) {
 
     console.log('Found Supabase user:', userData);
 
-    // Get favorites using the Supabase user ID
+    // Get favorites using the Supabase user ID with creation dates for sorting
     const { data: favorites, error: favoritesError } = await supabase
       .from('favorites')
-      .select('quote_id')
-      .eq('user_id', userData.id);
+      .select('quote_id, created_at')
+      .eq('user_id', userData.id)
+      .order('created_at', { ascending: sortBy === 'oldest' });
 
     if (favoritesError) {
       console.error('Error fetching favorites:', favoritesError);
@@ -135,8 +143,8 @@ export async function GET(request: Request) {
     const quoteIds = favorites.map(f => f.quote_id);
     console.log('Quote IDs:', quoteIds);
 
-    // Get quotes with their author information
-    const { data: quotes, error: quotesError } = await supabase
+    // Build the quotes query with author and category filtering
+    let quotesQuery = supabase
       .from('quotes')
       .select(`
         id,
@@ -144,9 +152,25 @@ export async function GET(request: Request) {
         authors!quotes_author_id_fkey (
           id,
           author_name
+        ),
+        categories!quotes_category_id_fkey (
+          id,
+          category_name
         )
       `)
       .in('id', quoteIds);
+
+    // Apply author filter if specified
+    if (authorFilter) {
+      quotesQuery = quotesQuery.eq('authors.author_name', authorFilter);
+    }
+
+    // Apply category filter if specified
+    if (categoryFilter) {
+      quotesQuery = quotesQuery.eq('categories.category_name', categoryFilter);
+    }
+
+    const { data: quotes, error: quotesError } = await quotesQuery;
 
     if (quotesError) {
       console.error('Error fetching quotes:', quotesError);
@@ -171,18 +195,31 @@ export async function GET(request: Request) {
         ? quote.authors 
         : [quote.authors];
 
+      // Ensure we handle the categories array correctly
+      const categories = Array.isArray(quote.categories) 
+        ? quote.categories 
+        : [quote.categories];
+
       return {
         id: String(quote.id),
         text: quote.quote_text,
         author: authors[0]?.author_name || 'Unknown Author',
         likes: 0,
         dislikes: 0,
-        category: ''
+        category: categories[0]?.category_name || ''
       };
     });
 
+    // Also return available filters for the frontend
+    const availableAuthors = [...new Set(formattedQuotes.map(q => q.author))].sort();
+    const availableCategories = [...new Set(formattedQuotes.map(q => q.category).filter(c => c))].sort();
+
     return new NextResponse(
-      JSON.stringify({ quotes: formattedQuotes }), 
+      JSON.stringify({ 
+        quotes: formattedQuotes,
+        availableAuthors,
+        availableCategories
+      }), 
       { 
         status: 200,
         headers: {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import { Poppins } from "next/font/google";
 import type { Quote } from '@/types';
 import { analytics } from "@/lib/analytics";
+import FavoriteQuotesFilters from "@/components/FavoriteQuotesFilters";
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -21,8 +22,16 @@ const poppins = Poppins({
 export default function FavoriteQuotes() {
   const { user, isLoaded: isUserLoaded } = useUser();
   const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [filteredQuotes, setFilteredQuotes] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [availableAuthors, setAvailableAuthors] = useState<string[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  
+  // Filter states
+  const [sortBy, setSortBy] = useState('newest');
+  const [selectedAuthor, setSelectedAuthor] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const handleFindQuotesClick = () => {
     analytics.trackCTAClick('Find Quotes', 'Favorite Quotes Page');
@@ -32,58 +41,109 @@ export default function FavoriteQuotes() {
     analytics.trackCTAClick('Sign In', 'Favorite Quotes Page');
   };
 
-  useEffect(() => {
-    async function fetchFavoriteQuotes() {
-      if (!isUserLoaded || !user) {
-        setIsLoading(false);
-        return;
-      }
+  // Filter and sort quotes based on current filters
+  const applyFilters = useCallback(() => {
+    let filtered = [...quotes];
 
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const response = await fetch('/api/favorite-quotes', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
-          throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Fetched quotes:', data);
-        
-        if (!data.quotes) {
-          throw new Error('Invalid response format: missing quotes array');
-        }
-
-        // Convert numeric ids to strings and ensure author is properly mapped
-        const formattedQuotes: Quote[] = data.quotes.map((quote: any) => ({
-          id: String(quote.id),
-          text: quote.text,
-          author: quote.author,
-          likes: quote.likes || 0,
-          dislikes: quote.dislikes || 0,
-          category: quote.category || ''
-        }));
-
-        setQuotes(formattedQuotes);
-      } catch (err) {
-        console.error('Error fetching favorite quotes:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch favorite quotes');
-      } finally {
-        setIsLoading(false);
-      }
+    // Apply author filter
+    if (selectedAuthor !== 'all') {
+      filtered = filtered.filter(quote => quote.author === selectedAuthor);
     }
 
-    fetchFavoriteQuotes();
+    // Apply category filter
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(quote => quote.category === selectedCategory);
+    }
+
+    setFilteredQuotes(filtered);
+  }, [quotes, selectedAuthor, selectedCategory]);
+
+  // Handle filter changes
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    // Re-fetch with new sort order
+    fetchFavoriteQuotes(value, selectedAuthor, selectedCategory);
+  };
+
+  const handleAuthorChange = (value: string) => {
+    setSelectedAuthor(value);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value);
+  };
+
+  const handleClearFilters = () => {
+    setSelectedAuthor('all');
+    setSelectedCategory('all');
+  };
+
+  const fetchFavoriteQuotes = useCallback(async (currentSortBy?: string, currentAuthor?: string, currentCategory?: string) => {
+    if (!isUserLoaded || !user) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Build query parameters
+      const params = new URLSearchParams();
+      if (currentSortBy) params.append('sortBy', currentSortBy);
+      if (currentAuthor && currentAuthor !== 'all') params.append('author', currentAuthor);
+      if (currentCategory && currentCategory !== 'all') params.append('category', currentCategory);
+
+      const response = await fetch(`/api/favorite-quotes?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Fetched quotes:', data);
+      
+      if (!data.quotes) {
+        throw new Error('Invalid response format: missing quotes array');
+      }
+
+      // Convert numeric ids to strings and ensure author is properly mapped
+      const formattedQuotes: Quote[] = data.quotes.map((quote: any) => ({
+        id: String(quote.id),
+        text: quote.text,
+        author: quote.author,
+        likes: quote.likes || 0,
+        dislikes: quote.dislikes || 0,
+        category: quote.category || ''
+      }));
+
+      setQuotes(formattedQuotes);
+      setAvailableAuthors(data.availableAuthors || []);
+      setAvailableCategories(data.availableCategories || []);
+    } catch (err) {
+      console.error('Error fetching favorite quotes:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch favorite quotes');
+    } finally {
+      setIsLoading(false);
+    }
   }, [user, isUserLoaded]);
+
+  // Initial fetch
+  useEffect(() => {
+    fetchFavoriteQuotes();
+  }, [fetchFavoriteQuotes]);
+
+  // Apply filters when filter states change
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   if (!isUserLoaded) {
     return (
@@ -257,10 +317,38 @@ export default function FavoriteQuotes() {
                 </SignInButton>
               </div>
             ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {quotes.map((quote) => (
-                  <QuoteBox key={quote.id} quote={quote} />
-                ))}
+              <div>
+                <FavoriteQuotesFilters
+                  sortBy={sortBy}
+                  selectedAuthor={selectedAuthor}
+                  selectedCategory={selectedCategory}
+                  availableAuthors={availableAuthors}
+                  availableCategories={availableCategories}
+                  onSortChange={handleSortChange}
+                  onAuthorChange={handleAuthorChange}
+                  onCategoryChange={handleCategoryChange}
+                  onClearFilters={handleClearFilters}
+                />
+                
+                {filteredQuotes.length === 0 ? (
+                  <div className="text-center mt-8 p-8 bg-white/10 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg border border-white/20 dark:border-gray-700/50">
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      No quotes found with the current filters.
+                    </p>
+                    <button
+                      onClick={handleClearFilters}
+                      className="px-4 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600"
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {filteredQuotes.map((quote) => (
+                      <QuoteBox key={quote.id} quote={quote} />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
