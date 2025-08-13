@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ClerkProvider } from '@clerk/nextjs';
-import SiteHeader from "@/components/SiteHeader";
 import { default as nextDynamic } from 'next/dynamic';
 import { Analytics } from "@vercel/analytics/react";
 import Script from 'next/script';
@@ -12,11 +11,6 @@ import StructuredData from "@/components/StructuredData";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const SparklesBackground = nextDynamic(
-  () => import('@/components/SparklesBackground'),
-  { ssr: false }
-);
-
 const SupabaseUserProvider = nextDynamic(
   () => import('@/components/SupabaseUserProvider').then(mod => mod.SupabaseUserProvider),
   { ssr: false }
@@ -24,6 +18,11 @@ const SupabaseUserProvider = nextDynamic(
 
 const ErrorBoundary = nextDynamic(
   () => import('@/components/ErrorBoundary'),
+  { ssr: false }
+);
+
+const MobileLayout = nextDynamic(
+  () => import('@/components/mobile/MobileLayout'),
   { ssr: false }
 );
 
@@ -163,15 +162,13 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <StructuredData type="organization" />
             <StructuredData type="website" />
-            <div className="min-h-screen flex flex-col transition-colors duration-300 bg-gradient-to-br from-purple-400 to-pink-400 dark:from-black dark:to-zinc-900 relative">
-              <SparklesBackground />
-              <SiteHeader />
-              <ErrorBoundary>
-                <SupabaseUserProvider>
+            <ErrorBoundary>
+              <SupabaseUserProvider>
+                <MobileLayout>
                   {children}
-                </SupabaseUserProvider>
-              </ErrorBoundary>
-            </div>
+                </MobileLayout>
+              </SupabaseUserProvider>
+            </ErrorBoundary>
           </ThemeProvider>
           <Analytics />
         </body>
