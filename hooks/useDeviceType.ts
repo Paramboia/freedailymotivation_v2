@@ -17,21 +17,47 @@ export const useDeviceType = (): DeviceInfo => {
 
   useEffect(() => {
     const detectDevice = async () => {
-      // Check if running in Capacitor
-      const isNativeApp = typeof window !== 'undefined' && 
-        (window as any).Capacitor !== undefined;
-
-      // Detect platform
+      let isNativeApp = false;
       let platform: 'ios' | 'android' | 'web' = 'web';
       let isMobile = false;
+
+      // Multiple checks for Capacitor
+      if (typeof window !== 'undefined') {
+        // Check for Capacitor object
+        isNativeApp = (window as any).Capacitor !== undefined;
+        
+        // Alternative check: look for Capacitor in global scope
+        if (!isNativeApp) {
+          isNativeApp = (window as any).cordova !== undefined || 
+                       (window as any).PhoneGap !== undefined ||
+                       (window as any).phonegap !== undefined;
+        }
+
+        // Check user agent for app context
+        const userAgent = navigator.userAgent || '';
+        if (userAgent.includes('FreeDailyMotivation') || 
+            userAgent.includes('wv') || // WebView indicator
+            window.location.protocol === 'file:') {
+          isNativeApp = true;
+        }
+      }
 
       if (isNativeApp) {
         try {
           const { Capacitor } = await import('@capacitor/core');
           platform = Capacitor.getPlatform() as 'ios' | 'android';
           isMobile = true;
+          console.log('Capacitor detected:', platform);
         } catch (error) {
-          console.error('Error detecting Capacitor platform:', error);
+          console.log('Capacitor import failed, checking user agent');
+          // Fallback platform detection
+          const userAgent = navigator.userAgent;
+          if (userAgent.includes('Android')) {
+            platform = 'android';
+          } else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+            platform = 'ios';
+          }
+          isMobile = true;
         }
       } else {
         // Fallback mobile detection for web
@@ -40,6 +66,8 @@ export const useDeviceType = (): DeviceInfo => {
         );
       }
 
+      console.log('Device detection:', { isNativeApp, isMobile, platform });
+      
       setDeviceInfo({
         isNativeApp,
         isMobile,
