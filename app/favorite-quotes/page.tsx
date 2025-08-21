@@ -228,7 +228,7 @@ export default function FavoriteQuotes() {
           </div>
         </div>
       </main>
-      <Footer />
+      <ConditionalFooter />
     </ThemeWrapper>
     );
   }
@@ -344,7 +344,7 @@ export default function FavoriteQuotes() {
           </div>
         </div>
       </main>
-      <Footer />
+      <ConditionalFooter />
     </ThemeWrapper>
   );
 }
