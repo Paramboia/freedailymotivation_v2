@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
-import Footer from "@/components/Footer"; // Import the Footer component
+import ConditionalFooter from "@/components/ConditionalFooter"; // Import the ConditionalFooter component
 import { default as nextDynamic } from 'next/dynamic';
 
 const poppins = Poppins({
@@ -74,7 +74,7 @@ export default async function InspirationalQuotesFamous() {
           ))}
         </div>
       </div>
-      <Footer /> {/* Use the Footer component */}
+      <ConditionalFooter /> {/* Use the ConditionalFooter component */}
     </div>
   );
 }

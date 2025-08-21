@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Quote, Star, Info, Moon, Sun } from 'lucide-react';
+import { Lightbulb, Quote, Star, Info, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { analytics } from "@/lib/analytics";
 
@@ -16,7 +16,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     href: '/find-quotes',
-    icon: Search,
+    icon: Lightbulb,
     label: 'Find',
     analyticsLabel: 'Find Quotes'
   },

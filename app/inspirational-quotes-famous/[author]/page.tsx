@@ -7,7 +7,7 @@ import { default as nextDynamic } from 'next/dynamic';
 import { Quote } from '@/types';
 import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
-import Footer from "@/components/Footer"; // Import the Footer component
+import ConditionalFooter from "@/components/ConditionalFooter"; // Import the ConditionalFooter component
 import ClientPageTracker from "@/components/ClientPageTracker"; // Import the ClientPageTracker component
 
 const QuoteBox = nextDynamic(() => import("@/components/quote-box"), { ssr: false });
@@ -94,7 +94,7 @@ export default async function AuthorQuotes({ params }: { params: { author: strin
             </Button>
           </Link>
         </main>
-        <Footer /> {/* Use the Footer component */}
+        <ConditionalFooter /> {/* Use the ConditionalFooter component */}
       </div>
     </ThemeWrapper>
   );

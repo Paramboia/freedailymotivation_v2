@@ -3,7 +3,7 @@ import Link from "next/link";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Head from 'next/head';
 import { Poppins } from "next/font/google";
-import Footer from "@/components/Footer";
+import ConditionalFooter from "@/components/ConditionalFooter";
 
 const poppins = Poppins({
   weight: ['700'],
@@ -40,7 +40,7 @@ export default function AboutUs() {
               <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">Back to Home Page</Button>
             </Link>
           </main>
-          <Footer />
+          <ConditionalFooter />
         </div>
       </ThemeWrapper>
     </>

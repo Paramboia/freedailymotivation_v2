@@ -9,7 +9,7 @@ import CategoryButtons from "@/components/category-buttons";
 import SavePagePopup from "@/components/SavePagePopup";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import { Poppins } from "next/font/google";
-import Footer from "@/components/Footer"; // Import the Footer component
+import ConditionalFooter from "@/components/ConditionalFooter"; // Import the ConditionalFooter component
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { 
   ssr: false,
@@ -118,7 +118,7 @@ export default function FindQuotes() {
             </div>
           )}
         </main>
-        <Footer /> {/* Use the Footer component */}
+        <ConditionalFooter /> {/* Use the ConditionalFooter component */}
       </div>
       {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
       <style jsx>{`

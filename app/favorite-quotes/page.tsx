@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
 import ThemeWrapper from "@/components/ThemeWrapper";
 import Link from 'next/link';
-import Footer from "@/components/Footer";
+import ConditionalFooter from "@/components/ConditionalFooter";
 import dynamic from 'next/dynamic';
 import { Poppins } from "next/font/google";
 import type { Quote } from '@/types';
@@ -190,7 +190,7 @@ export default function FavoriteQuotes() {
             </div>
           </div>
         </main>
-        <Footer />
+        <ConditionalFooter />
       </ThemeWrapper>
     );
   }
@@ -271,7 +271,7 @@ export default function FavoriteQuotes() {
             </div>
           </div>
         </main>
-        <Footer />
+        <ConditionalFooter />
       </ThemeWrapper>
     );
   }

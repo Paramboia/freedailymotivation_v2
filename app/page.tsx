@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import ThemeWrapper from "@/components/ThemeWrapper";
-import Footer from "@/components/Footer";
+import ConditionalFooter from "@/components/ConditionalFooter";
 import { Poppins } from "next/font/google";
 import SavePagePopup from "@/components/SavePagePopup";
 import { analytics } from "@/lib/analytics";
@@ -59,7 +59,7 @@ export default function Home() {
             </div>
           </div>
         </main>
-        <Footer />
+        <ConditionalFooter />
         {showPopup && <SavePagePopup onClose={() => setShowPopup(false)} />}
       </div>
     </ThemeWrapper>
