@@ -226,7 +226,7 @@ export async function GET(request: Request) {
     }
 
     // Transform the data and add user's like timestamp for proper sorting
-    let formattedQuotes = quotesWithLikes.map((quote: any) => {
+    const formattedQuotes = quotesWithLikes.map((quote: any) => {
       // Ensure we handle the authors array correctly
       const authors = Array.isArray(quote.authors) 
         ? quote.authors 
