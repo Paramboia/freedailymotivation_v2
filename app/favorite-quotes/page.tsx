@@ -32,6 +32,10 @@ export default function FavoriteQuotes() {
   const [sortBy, setSortBy] = useState('newest');
   const [selectedAuthor, setSelectedAuthor] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 9;
 
   const handleFindQuotesClick = () => {
     analytics.trackCTAClick('Find Quotes', 'Favorite Quotes Page');
@@ -56,6 +60,7 @@ export default function FavoriteQuotes() {
     }
 
     setFilteredQuotes(filtered);
+    setCurrentPage(1); // Reset to first page when filtering
   }, [quotes, selectedAuthor, selectedCategory]);
 
   // Handle filter changes
@@ -141,6 +146,12 @@ export default function FavoriteQuotes() {
   useEffect(() => {
     applyFilters();
   }, [applyFilters]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredQuotes.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedQuotes = filteredQuotes.slice(startIndex, endIndex);
 
   if (!isUserLoaded) {
     return (
@@ -333,11 +344,121 @@ export default function FavoriteQuotes() {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {filteredQuotes.map((quote) => (
-                      <QuoteBox key={quote.id} quote={quote} />
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                      {paginatedQuotes.map((quote) => (
+                        <QuoteBox key={quote.id} quote={quote} />
+                      ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <div className="flex items-center justify-center space-x-2 mt-8">
+                        <button
+                          className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                        >
+                          Previous
+                        </button>
+
+                        <div className="flex items-center space-x-1">
+                          {(() => {
+                            let startPage, endPage;
+                            
+                            if (totalPages <= 3) {
+                              // Show all pages if 3 or fewer
+                              startPage = 1;
+                              endPage = totalPages;
+                            } else {
+                              // Always show 3 pages with current in middle
+                              startPage = Math.max(1, currentPage - 1);
+                              endPage = Math.min(totalPages, startPage + 2);
+                              
+                              // Adjust if we're near the end
+                              if (endPage - startPage < 2) {
+                                startPage = Math.max(1, endPage - 2);
+                              }
+                            }
+                            
+                            const pages = [];
+                            
+                            // Add "1..." if there's a gap at the start
+                            if (startPage > 1) {
+                              pages.push(
+                                <button
+                                  key={1}
+                                  className="w-10 h-10 p-0 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700"
+                                  onClick={() => setCurrentPage(1)}
+                                >
+                                  1
+                                </button>
+                              );
+                              if (startPage > 2) {
+                                pages.push(
+                                  <span key="start-dots" className="px-2 text-gray-400">
+                                    ...
+                                  </span>
+                                );
+                              }
+                            }
+                            
+                            // Add the main page numbers (always 3 or fewer)
+                            for (let page = startPage; page <= endPage; page++) {
+                              pages.push(
+                                <button
+                                  key={page}
+                                  className={`w-10 h-10 p-0 text-sm rounded-md ${
+                                    currentPage === page
+                                      ? "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white"
+                                      : "bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700"
+                                  }`}
+                                  onClick={() => setCurrentPage(page)}
+                                >
+                                  {page}
+                                </button>
+                              );
+                            }
+                            
+                            // Add "...last" if there's a gap at the end
+                            if (endPage < totalPages) {
+                              if (endPage < totalPages - 1) {
+                                pages.push(
+                                  <span key="end-dots" className="px-2 text-gray-400">
+                                    ...
+                                  </span>
+                                );
+                              }
+                              pages.push(
+                                <button
+                                  key={totalPages}
+                                  className="w-10 h-10 p-0 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700"
+                                  onClick={() => setCurrentPage(totalPages)}
+                                >
+                                  {totalPages}
+                                </button>
+                              );
+                            }
+                            
+                            return pages;
+                          })()}
+                        </div>
+
+                        <button
+                          className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                          disabled={currentPage === totalPages}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Results Info */}
+                    <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+                      Showing {startIndex + 1}-{Math.min(endIndex, filteredQuotes.length)} of {filteredQuotes.length} quotes
+                    </div>
+                  </>
                 )}
               </div>
             )}
