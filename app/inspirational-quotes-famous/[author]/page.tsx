@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import ThemeWrapper from "@/components/ThemeWrapper";
 import dynamic from 'next/dynamic';
 import { Quote } from '@/types';
-import { Metadata } from 'next';
 import { Poppins } from "next/font/google";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import ClientPageTracker from "@/components/ClientPageTracker";
@@ -327,18 +326,4 @@ export default function AuthorQuotes({ params }: { params: { author: string } })
   );
 }
 
-export async function generateMetadata({ params }: { params: { author: string } }): Promise<Metadata> {
-  const authorName = capitalizeWords(decodeURIComponent(params.author.replace('-', ' ')));
-  return {
-    title: `Inspirational Quotes by ${authorName} | Free Daily Motivation`,
-    description: `Explore inspiring quotes from ${authorName}. Find wisdom and motivation to fuel your success. Perfect for presentations, social media, and personal growth.`,
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-      },
-    },
-  };
-}
+
