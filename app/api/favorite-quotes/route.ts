@@ -96,18 +96,10 @@ export async function GET(request: Request) {
     console.log('Found Supabase user:', userData);
 
     // Get favorites using the Supabase user ID with creation dates for sorting
-    let favoritesQuery = supabase
+    const favoritesQuery = supabase
       .from('favorites')
       .select('quote_id, created_at')
       .eq('user_id', userData.id);
-
-    // Apply sorting based on sortBy parameter
-    if (sortBy === 'oldest') {
-      favoritesQuery = favoritesQuery.order('created_at', { ascending: true });
-    } else if (sortBy === 'newest') {
-      favoritesQuery = favoritesQuery.order('created_at', { ascending: false });
-    }
-    // For most_liked and less_liked, we'll sort after getting the quotes with like counts
 
     const { data: favorites, error: favoritesError } = await favoritesQuery;
 
@@ -233,8 +225,8 @@ export async function GET(request: Request) {
       }
     }
 
-    // Transform the data
-    const formattedQuotes = quotesWithLikes.map((quote: any) => {
+    // Transform the data and add user's like timestamp for proper sorting
+    let formattedQuotes = quotesWithLikes.map((quote: any) => {
       // Ensure we handle the authors array correctly
       const authors = Array.isArray(quote.authors) 
         ? quote.authors 
@@ -245,23 +237,41 @@ export async function GET(request: Request) {
         ? quote.categories 
         : [quote.categories];
 
+      // Find when this user liked this quote
+      const userFavorite = favorites?.find(f => f.quote_id === quote.id);
+      const userLikedAt = userFavorite ? new Date(userFavorite.created_at) : new Date(0);
+
       return {
         id: String(quote.id),
         text: quote.quote_text,
         author: authors[0]?.author_name || 'Unknown Author',
         likes: quote.likeCount || 0,
         dislikes: 0,
-        category: categories[0]?.category_name || ''
+        category: categories[0]?.category_name || '',
+        userLikedAt: userLikedAt
       };
     });
 
+    // Apply sorting based on sortBy parameter (after filtering)
+    if (sortBy === 'newest') {
+      // Sort by when the user liked each quote (newest first)
+      formattedQuotes.sort((a, b) => b.userLikedAt.getTime() - a.userLikedAt.getTime());
+    } else if (sortBy === 'oldest') {
+      // Sort by when the user liked each quote (oldest first)
+      formattedQuotes.sort((a, b) => a.userLikedAt.getTime() - b.userLikedAt.getTime());
+    }
+    // most_liked and less_liked are already sorted above
+
+    // Remove the userLikedAt property from the final response
+    const finalQuotes = formattedQuotes.map(({ userLikedAt, ...quote }) => quote);
+
     // Also return available filters for the frontend
-    const availableAuthors = Array.from(new Set(formattedQuotes.map(q => q.author))).sort();
-    const availableCategories = Array.from(new Set(formattedQuotes.map(q => q.category).filter(c => c))).sort();
+    const availableAuthors = Array.from(new Set(finalQuotes.map(q => q.author))).sort();
+    const availableCategories = Array.from(new Set(finalQuotes.map(q => q.category).filter(c => c))).sort();
 
     return new NextResponse(
       JSON.stringify({ 
-        quotes: formattedQuotes,
+        quotes: finalQuotes,
         availableAuthors,
         availableCategories
       }), 

@@ -133,7 +133,7 @@ export default function FavoriteQuotesFilters({
       <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:items-center">
         {/* Sort filter */}
         <div className="flex flex-wrap gap-3 items-center">
-          <span className="text-sm text-gray-700 dark:text-gray-240">Sort by:</span>
+          <span className="text-sm text-gray-700 dark:text-gray-240">Filter by:</span>
           
           <DropdownButton
             label="Newest Liked"
