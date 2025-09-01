@@ -13,12 +13,22 @@ interface DatabaseQuote {
   }[];
 }
 
-export async function GET(_request: Request) {
+export async function GET(request: Request) {
   const supabase = createRouteHandlerClient({ cookies });
-  const { data, error } = await supabase
+  const { searchParams } = new URL(request.url);
+  const authorFilter = searchParams.get('author');
+
+  let query = supabase
     .from('quotes')
     .select('id, quote_text, authors!inner(author_name), categories!inner(category_name)')
     .order('created_at', { ascending: false });
+
+  // If author filter is provided, filter by author name
+  if (authorFilter) {
+    query = query.ilike('authors.author_name', authorFilter);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error loading quotes:', error);
@@ -34,5 +44,5 @@ export async function GET(_request: Request) {
     dislikes: 0
   }));
 
-  return NextResponse.json(quotes);
+  return NextResponse.json({ quotes });
 }
