@@ -100,6 +100,7 @@ export default function FindQuotes() {
               quote={quote}
               onNewQuote={handleNewQuote}
               selectedCategory={selectedCategory}
+              _isSingleQuote={true}
             />
           )}
           {!quote && (

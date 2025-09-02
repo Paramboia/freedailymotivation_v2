@@ -19,9 +19,10 @@ interface QuoteBoxProps {
   onNewQuote?: () => void;
   _isAuthorPage?: boolean;
   selectedCategory?: string | null;
+  _isSingleQuote?: boolean; // New prop to identify single quote pages like /find-quotes
 }
 
-export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, selectedCategory }: QuoteBoxProps) {
+export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, selectedCategory, _isSingleQuote = false }: QuoteBoxProps) {
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
@@ -107,8 +108,16 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
   return (
     <div className={cn("w-full flex justify-center mb-8")}>
       <TooltipProvider>
-        <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-[#333] h-full min-h-[280px]">
-          <div className="h-full flex flex-col">
+        <Card className={cn(
+          "w-full p-8 rounded-3xl bg-white dark:bg-[#333]",
+          _isSingleQuote 
+            ? "max-w-lg min-h-[320px]" // Smaller width for single quote pages, taller min height
+            : "max-w-2xl h-full min-h-[280px]" // Original styling for grid layouts
+        )}>
+          <div className={cn(
+            "flex flex-col",
+            _isSingleQuote ? "h-full min-h-[272px]" : "h-full" // Ensure proper height for single quotes
+          )}>
             {/* Quote text - takes up available space */}
             <div className="flex-1">
               <p className="text-lg text-gray-900 dark:text-white">
