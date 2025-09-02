@@ -111,15 +111,18 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
         <Card className={cn(
           "w-full p-8 rounded-3xl bg-white dark:bg-[#333]",
           _isSingleQuote 
-            ? "max-w-lg min-h-[320px]" // Smaller width for single quote pages, taller min height
+            ? "max-w-2xl min-h-[240px] md:min-h-[200px]" // Wider on desktop, shorter height on both mobile and desktop
             : "max-w-2xl h-full min-h-[280px]" // Original styling for grid layouts
         )}>
           <div className={cn(
             "flex flex-col",
-            _isSingleQuote ? "h-full min-h-[272px]" : "h-full" // Ensure proper height for single quotes
+            _isSingleQuote ? "h-full min-h-[192px] md:min-h-[152px]" : "h-full" // Shorter content area
           )}>
-            {/* Quote text - takes up available space */}
-            <div className="flex-1">
+            {/* Quote text - takes up available space with scroll for long quotes */}
+            <div className={cn(
+              "flex-1",
+              _isSingleQuote ? "overflow-y-auto max-h-[120px] md:max-h-[80px] pr-2 custom-scrollbar" : "" // Add scroll for single quotes
+            )}>
               <p className="text-lg text-gray-900 dark:text-white">
                 "{currentQuote.text}"
               </p>
@@ -205,6 +208,42 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
           </div>
         </Card>
       </TooltipProvider>
+      
+      {/* Custom scrollbar styles for single quote pages */}
+      {_isSingleQuote && (
+        <style jsx>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+          }
+          
+          /* Dark mode scrollbar */
+          :global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4b5563;
+          }
+          :global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+          }
+          
+          /* Firefox scrollbar */
+          .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db transparent;
+          }
+          :global(.dark) .custom-scrollbar {
+            scrollbar-color: #4b5563 transparent;
+          }
+        `}</style>
+      )}
     </div>
   );
 }
