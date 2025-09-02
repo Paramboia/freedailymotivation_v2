@@ -110,7 +110,7 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
         <Card className="w-full max-w-2xl p-8 rounded-3xl bg-white dark:bg-[#333] h-full min-h-[280px]">
           <div className="h-full flex flex-col">
             {/* Quote text - takes up available space */}
-            <div className="flex-1 flex flex-col justify-center">
+            <div className="flex-1">
               <p className="text-lg text-gray-900 dark:text-white">
                 "{currentQuote.text}"
               </p>
