@@ -26,12 +26,33 @@ const MobileLayout = ({ children }: MobileLayoutProps) => {
       const inIframe = window.self !== window.top;
       
       // Check for mobile user agent
-      const isMobileUserAgent = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const userAgent = navigator.userAgent || '';
+      const isMobileUserAgent = /Android|iPhone|iPad|iPod/i.test(userAgent);
+      
+      // Check for webview indicators
+      const isWebView = userAgent.includes('wv') || userAgent.includes('Version/') && userAgent.includes('Mobile');
+      
+      // Check for Capacitor
+      const hasCapacitor = typeof window !== 'undefined' && (window as any).Capacitor !== undefined;
       
       // Check for specific Capacitor indicators in the DOM
       const hasCapacitorScript = document.querySelector('script[src*="capacitor"]');
       
-      if (isApp || inIframe || (isMobileUserAgent && hasCapacitorScript)) {
+      // More aggressive detection - if mobile device and any app indicator
+      const shouldForceNativeApp = isApp || hasCapacitor || (isMobileUserAgent && (inIframe || isWebView || hasCapacitorScript));
+      
+      console.log('MobileLayout detection:', {
+        isApp,
+        inIframe,
+        isMobileUserAgent,
+        isWebView,
+        hasCapacitor,
+        hasCapacitorScript: !!hasCapacitorScript,
+        shouldForceNativeApp,
+        userAgent: userAgent.substring(0, 50) + '...'
+      });
+      
+      if (shouldForceNativeApp) {
         setForceNativeApp(true);
       }
     };
