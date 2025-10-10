@@ -10,6 +10,7 @@ import { Poppins } from "next/font/google";
 import type { Quote } from '@/types';
 import { analytics } from "@/lib/analytics";
 import FavoriteQuotesFilters from "@/components/FavoriteQuotesFilters";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const QuoteBox = dynamic(() => import("@/components/quote-box"), { ssr: false });
 
@@ -355,11 +356,12 @@ export default function FavoriteQuotes() {
                     {totalPages > 1 && (
                       <div className="flex items-center justify-center space-x-2 mt-8">
                         <button
-                          className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                           disabled={currentPage === 1}
                         >
-                          Previous
+                          <ChevronLeft className="h-4 w-4" />
+                          <span className="hidden sm:inline">Previous</span>
                         </button>
 
                         <div className="flex items-center space-x-1">
@@ -445,11 +447,12 @@ export default function FavoriteQuotes() {
                         </div>
 
                         <button
-                          className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-3 py-2 text-sm bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-md hover:bg-gray-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                           onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                           disabled={currentPage === totalPages}
                         >
-                          Next
+                          <span className="hidden sm:inline">Next</span>
+                          <ChevronRight className="h-4 w-4" />
                         </button>
                       </div>
                     )}
