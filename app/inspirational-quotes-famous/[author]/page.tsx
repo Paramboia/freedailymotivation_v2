@@ -210,8 +210,8 @@ export default function AuthorQuotes({ params }: { params: { author: string } })
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Previous</span>
+                  <ChevronLeft className="w-4 h-4" />
+                  <span className="hidden md:inline">Previous</span>
                 </button>
 
                 <div className="flex items-center space-x-1">
@@ -301,8 +301,8 @@ export default function AuthorQuotes({ params }: { params: { author: string } })
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
                 >
-                  <span className="hidden sm:inline">Next</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <span className="hidden md:inline">Next</span>
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             )}
