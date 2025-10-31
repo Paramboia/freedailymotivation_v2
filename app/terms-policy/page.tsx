@@ -275,7 +275,7 @@ export default function TermsAndPolicy() {
                 <p className="mb-4 dark:text-gray-300">
                   If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
                 </p>
-                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                <div className="bg-gray-100 dark:bg-[#333] p-4 rounded-lg mb-4">
                   <p className="dark:text-gray-300 mb-2">
                     <strong>Vibe coder:</strong> Miguel Macedo Parente
                   </p>
