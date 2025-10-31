@@ -62,6 +62,12 @@ export async function GET() {
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>${baseUrl}/terms-policy</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>${baseUrl}/favorite-quotes</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
@@ -123,6 +129,12 @@ function generateFallbackSitemap() {
   </url>
   <url>
     <loc>${baseUrl}/about</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/terms-policy</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

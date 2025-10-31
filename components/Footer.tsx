@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Info } from 'lucide-react';
+import { Facebook, Info, Shield } from 'lucide-react';
 import Link from 'next/link';
 
 const Footer = () => {
@@ -22,10 +22,14 @@ const Footer = () => {
           <span className="hidden sm:inline">Join the Community</span>
         </Link>
       </div>
-      <div className="absolute left-4 flex items-center">
+      <div className="absolute left-4 flex items-center gap-4">
         <Link href="/about" className="flex items-center">
           <Info className="h-5 w-5 mr-1 text-white dark:text-gray-300 hover:text-white/80 focus:text-white/80" />
           <span className="hidden sm:inline text-white dark:text-gray-300 hover:text-white/80 focus:text-white/80">About Us</span>
+        </Link>
+        <Link href="/terms-policy" className="flex items-center">
+          <Shield className="h-5 w-5 mr-1 text-white dark:text-gray-300 hover:text-white/80 focus:text-white/80" />
+          <span className="hidden sm:inline text-white dark:text-gray-300 hover:text-white/80 focus:text-white/80">Privacy Policy</span>
         </Link>
       </div>
     </footer>
