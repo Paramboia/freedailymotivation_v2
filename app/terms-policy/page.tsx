@@ -300,7 +300,7 @@ export default function TermsAndPolicy() {
             </div>
             <div className="mt-8">
               <Link href="/about">
-                <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444] mr-4">Back to About</Button>
+                <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444] mr-4">Back to About Us</Button>
               </Link>
               <Link href="/">
                 <Button variant="secondary" className="dark:bg-[#333] dark:text-white dark:hover:bg-[#444]">Back to Home Page</Button>
