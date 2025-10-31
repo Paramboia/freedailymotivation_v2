@@ -38,14 +38,6 @@ export default function TermsAndPolicy() {
             <h1 className={`${poppins.className} text-[32px] md:text-[42px] lg:text-[52px] font-bold mb-8 text-[rgb(51,51,51)] dark:text-white text-center`}>Privacy Policy</h1>
             <div className="max-w-4xl text-left space-y-6">
               
-              <section>
-                <p className="mb-4 dark:text-gray-300">
-                  <strong>Effective Date:</strong> October 31, 2025
-                </p>
-                <p className="mb-4 dark:text-gray-300">
-                  <strong>Last Updated:</strong> October 31, 2025
-                </p>
-              </section>
 
               <section>
                 <h2 className={`${poppins.className} text-[24px] md:text-[28px] font-bold mb-4 text-[rgb(51,51,51)] dark:text-white`}>1. Introduction</h2>
@@ -285,7 +277,7 @@ export default function TermsAndPolicy() {
                 </p>
                 <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4">
                   <p className="dark:text-gray-300 mb-2">
-                    <strong>Developer:</strong> Miguel Macedo Parente
+                    <strong>Vibe coder:</strong> Miguel Macedo Parente
                   </p>
                   <p className="dark:text-gray-300 mb-2">
                     <strong>Website:</strong> <Link href="https://www.freedailymotivation.com" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">https://www.freedailymotivation.com</Link>
