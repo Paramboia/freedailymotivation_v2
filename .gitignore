@@ -7,6 +7,9 @@ node_modules/
 # Environment files
 .env*.local
 
+# Keystore information (contains sensitive credentials)
+KEYSTORE_INFO_KEEP_SAFE.txt
+
 # TypeScript
 next-env.d.ts
 
