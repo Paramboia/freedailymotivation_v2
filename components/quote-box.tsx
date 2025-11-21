@@ -9,7 +9,7 @@ import { Quote } from '@/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
-import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/neon-client';
+// Removed direct database imports - now using API routes
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 import Link from 'next/link';
 import { analytics } from "@/lib/analytics";
@@ -36,12 +36,20 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
 
   useEffect(() => {
     async function fetchData() {
-      const count = await getLikeCount(quote.id);
-      setLikeCount(count);
+      try {
+        // Fetch like count
+        const countResponse = await fetch(`/api/like-count?quoteId=${quote.id}`);
+        const countData = await countResponse.json();
+        setLikeCount(countData.count);
 
-      if (supabaseUserId && quote.id) {
-        const likeStatus = await getLikeStatus(supabaseUserId, quote.id);
-        setIsLiked(likeStatus);
+        // Fetch like status if user is logged in
+        if (supabaseUserId && quote.id) {
+          const statusResponse = await fetch(`/api/like-status?quoteId=${quote.id}`);
+          const statusData = await statusResponse.json();
+          setIsLiked(statusData.liked);
+        }
+      } catch (error) {
+        console.error('Error fetching like data:', error);
       }
     }
     fetchData();
@@ -60,11 +68,19 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
       return;
     }
     try {
-      const newLikeStatus = await toggleLike(supabaseUserId, currentQuote.id);
-      setIsLiked(newLikeStatus);
+      // Toggle like via API
+      const response = await fetch('/api/toggle-like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quoteId: currentQuote.id })
+      });
+      const data = await response.json();
+      setIsLiked(data.liked);
       
-      const newLikeCount = await getLikeCount(currentQuote.id);
-      setLikeCount(newLikeCount);
+      // Get updated like count
+      const countResponse = await fetch(`/api/like-count?quoteId=${currentQuote.id}`);
+      const countData = await countResponse.json();
+      setLikeCount(countData.count);
 
       // Track like action
       analytics.trackQuoteAction('like', currentQuote.id, currentQuote.author);
