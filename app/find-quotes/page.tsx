@@ -57,9 +57,7 @@ export default function FindQuotes() {
   useEffect(() => {
     async function initializeQuotes() {
       try {
-        // Fetch categories from API
-        const categoriesResponse = await fetch('/api/authors');  // Using authors endpoint as proxy for categories
-        const categoriesData = await categoriesResponse.json();
+        // Set categories directly (no API needed for static list)
         const categoryNames = ['all', 'business', 'life', 'science', 'sport'];
         setCategories(categoryNames);
 
