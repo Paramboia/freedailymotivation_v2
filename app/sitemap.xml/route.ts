@@ -1,10 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { neon } from '@neondatabase/serverless';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const sql = neon(process.env.DATABASE_URL!);
 
 // Function to convert author name to URL slug
 function nameToSlug(name: string): string {
@@ -18,14 +15,15 @@ function nameToSlug(name: string): string {
 
 export async function GET() {
   try {
-    // Get all authors from Supabase
-    const { data: authors, error } = await supabase
-      .from('authors')
-      .select('author_name')
-      .order('author_name');
+    // Get all authors from Neon
+    const authors = await sql`
+      SELECT author_name
+      FROM authors
+      ORDER BY author_name ASC
+    `;
 
-    if (error) {
-      console.error('Error fetching authors for sitemap:', error);
+    if (!authors || authors.length === 0) {
+      console.error('Error fetching authors for sitemap');
       // Fallback to static sitemap if database fails
       return generateFallbackSitemap();
     }

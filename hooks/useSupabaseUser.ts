@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
-import { createOrGetUser, testSupabaseConnection } from "@/lib/supabase-client";
+import { createOrGetUser, testNeonConnection } from "@/lib/neon-client";
 
 export function useSupabaseUser() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -10,12 +10,12 @@ export function useSupabaseUser() {
   const [isSupabaseConnected, setIsSupabaseConnected] = useState(false);
 
   useEffect(() => {
-    async function initSupabaseUser() {
-      const connectionTest = await testSupabaseConnection();
+    async function initDatabaseUser() {
+      const connectionTest = await testNeonConnection();
       setIsSupabaseConnected(connectionTest.success);
 
       if (!connectionTest.success) {
-        console.error('Failed to connect to Supabase');
+        console.error('Failed to connect to database');
         return;
       }
 
@@ -23,7 +23,7 @@ export function useSupabaseUser() {
         console.log("User signed in:", user);
         try {
           const userId = await createOrGetUser(user);
-          console.log("User ID from Supabase:", userId);
+          console.log("User ID from database:", userId);
           setSupabaseUserId(userId);
         } catch (error) {
           console.error("Error in createOrGetUser:", error);
@@ -31,7 +31,7 @@ export function useSupabaseUser() {
       }
     }
 
-    initSupabaseUser();
+    initDatabaseUser();
   }, [isLoaded, isSignedIn, user]);
 
   return { isSupabaseConnected, supabaseUserId };

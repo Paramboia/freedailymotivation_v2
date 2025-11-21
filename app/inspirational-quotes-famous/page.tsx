@@ -1,6 +1,5 @@
 import React from 'react';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { neon } from '@neondatabase/serverless';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Metadata } from 'next';
@@ -29,14 +28,16 @@ export const metadata: Metadata = {
 };
 
 export default async function InspirationalQuotesFamous() {
-  const supabase = createServerComponentClient({ cookies });
+  const sql = neon(process.env.DATABASE_URL!);
 
-  const { data: authors, error } = await supabase
-    .from('authors')
-    .select('id, author_name')
-    .order('author_name');
-
-  if (error) {
+  let authors;
+  try {
+    authors = await sql`
+      SELECT id, author_name
+      FROM authors
+      ORDER BY author_name ASC
+    `;
+  } catch (error) {
     console.error('Error fetching authors:', error);
     return <div>Error loading authors. Please try again later.</div>;
   }

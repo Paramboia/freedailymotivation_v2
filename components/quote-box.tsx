@@ -9,7 +9,7 @@ import { Quote } from '@/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
-import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/supabase-client';
+import { toggleLike, getLikeStatus, getLikeCount } from '@/lib/neon-client';
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 import Link from 'next/link';
 import { analytics } from "@/lib/analytics";

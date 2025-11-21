@@ -1,74 +1,60 @@
-import { supabase } from './supabase'
-import { UserResource } from '@clerk/types'
+import { neon } from '@neondatabase/serverless';
+import { UserResource } from '@clerk/types';
+
+const sql = neon(process.env.DATABASE_URL || process.env.NEXT_PUBLIC_DATABASE_URL!);
 
 export async function getOrCreateSupabaseUser(clerkUser: UserResource) {
   const userEmail = clerkUser.emailAddresses[0]?.emailAddress;
-  console.log('Creating or getting user:', { clerkUserId: clerkUser.id, email: userEmail })
+  console.log('Creating or getting user:', { clerkUserId: clerkUser.id, email: userEmail });
 
   try {
     // First, try to find user by Clerk ID (normal case)
-    const { data: existingUser, error: fetchError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('clerk_user_id', clerkUser.id)
-      .single()
+    const existingUser = await sql`
+      SELECT * FROM users
+      WHERE clerk_user_id = ${clerkUser.id}
+      LIMIT 1
+    `;
 
-    if (!fetchError && existingUser) {
-      console.log('User found by Clerk ID:', existingUser)
-      return existingUser
+    if (existingUser && existingUser.length > 0) {
+      console.log('User found by Clerk ID:', existingUser[0]);
+      return existingUser[0];
     }
 
     // If not found by Clerk ID, try to find by email (migration case)
     if (userEmail) {
-      const { data: emailUser, error: emailError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', userEmail)
-        .single()
+      const emailUser = await sql`
+        SELECT * FROM users
+        WHERE email = ${userEmail}
+        LIMIT 1
+      `;
 
-      if (!emailError && emailUser) {
-        console.log('User found by email - updating Clerk ID for production migration:', emailUser)
+      if (emailUser && emailUser.length > 0) {
+        console.log('User found by email - updating Clerk ID for production migration:', emailUser[0]);
         
         // Update the existing user with the new production Clerk ID
-        const { data: updatedUser, error: updateError } = await supabase
-          .from('users')
-          .update({ clerk_user_id: clerkUser.id })
-          .eq('id', emailUser.id)
-          .select()
-          .single()
+        const updatedUser = await sql`
+          UPDATE users
+          SET clerk_user_id = ${clerkUser.id}
+          WHERE id = ${emailUser[0].id}
+          RETURNING *
+        `;
 
-        if (updateError) {
-          console.error('Error updating user Clerk ID:', updateError)
-          throw updateError
-        }
-
-        console.log('User migrated to production Clerk ID:', updatedUser)
-        return updatedUser
+        console.log('User migrated to production Clerk ID:', updatedUser[0]);
+        return updatedUser[0];
       }
     }
 
     // User doesn't exist at all, create a new one
-    const newUser = {
-      clerk_user_id: clerkUser.id,
-      email: userEmail ?? null,
-      created_at: new Date().toISOString(),
-    }
+    const insertedUser = await sql`
+      INSERT INTO users (clerk_user_id, email)
+      VALUES (${clerkUser.id}, ${userEmail ?? null})
+      RETURNING *
+    `;
 
-    const { data: insertedUser, error: insertError } = await supabase
-      .from('users')
-      .insert(newUser)
-      .select()
-      .single()
-
-    if (insertError) {
-      console.error('Error creating user:', insertError)
-      throw insertError
-    }
-
-    console.log('New user created:', insertedUser)
-    return insertedUser
+    console.log('New user created:', insertedUser[0]);
+    return insertedUser[0];
   } catch (error) {
-    console.error('Unexpected error in getOrCreateSupabaseUser:', error)
-    throw error
+    console.error('Unexpected error in getOrCreateSupabaseUser:', error);
+    throw error;
   }
 }
