@@ -49,7 +49,7 @@ export async function getRandomQuote(category?: string): Promise<Quote | null> {
       `;
     }
 
-    return query && query.length > 0 ? query[0] : null;
+    return query && query.length > 0 ? (query[0] as Quote) : null;
   } catch (error) {
     console.error('Error fetching random quote:', error);
     return null;
@@ -73,7 +73,7 @@ export async function getQuotesByAuthor(authorName: string): Promise<Quote[]> {
       WHERE a.author_name = ${authorName}
       ORDER BY q.created_at DESC
     `;
-    return quotes || [];
+    return (quotes as Quote[]) || [];
   } catch (error) {
     console.error('Error fetching quotes by author:', error);
     return [];
@@ -124,7 +124,7 @@ export async function getFavoriteQuotes(userId: string): Promise<Quote[]> {
       WHERE f.user_id = ${userId}
       ORDER BY f.created_at DESC
     `;
-    return quotes || [];
+    return (quotes as Quote[]) || [];
   } catch (error) {
     console.error('Error fetching favorite quotes:', error);
     return [];
@@ -151,7 +151,7 @@ export async function searchQuotes(searchTerm: string): Promise<Quote[]> {
       ORDER BY q.created_at DESC
       LIMIT 50
     `;
-    return quotes || [];
+    return (quotes as Quote[]) || [];
   } catch (error) {
     console.error('Error searching quotes:', error);
     return [];
