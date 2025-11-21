@@ -81,7 +81,11 @@ export default function FindQuotes() {
 
   const handleNewQuote = async () => {
     try {
-      const quoteResponse = await fetch('/api/random-quote');
+      // Build URL with category filter if selected
+      const categoryParam = selectedCategory && selectedCategory !== 'all' 
+        ? `?category=${selectedCategory}` 
+        : '';
+      const quoteResponse = await fetch(`/api/random-quote${categoryParam}`);
       const quoteData = await quoteResponse.json();
       setQuote({
         id: crypto.randomUUID(),
@@ -96,9 +100,27 @@ export default function FindQuotes() {
     }
   };
 
-  const handleCategorySelect = (category: string | undefined) => {
+  const handleCategorySelect = async (category: string | undefined) => {
     setSelectedCategory(category);
-    handleNewQuote(); // Fetch a new quote when category is selected
+    
+    // Fetch new quote with selected category
+    try {
+      const categoryParam = category && category !== 'all' 
+        ? `?category=${category}` 
+        : '';
+      const quoteResponse = await fetch(`/api/random-quote${categoryParam}`);
+      const quoteData = await quoteResponse.json();
+      setQuote({
+        id: crypto.randomUUID(),
+        text: quoteData.message,
+        author: quoteData.heading.replace('- ', ''),
+        likes: 0,
+        dislikes: 0,
+        category: category || ''
+      });
+    } catch (error) {
+      console.error('Error fetching quote with category:', error);
+    }
   };
 
   return (

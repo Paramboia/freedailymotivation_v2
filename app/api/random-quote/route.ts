@@ -9,7 +9,7 @@ const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 };
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     console.log('Starting random quote fetch...');
     
@@ -22,19 +22,43 @@ export async function GET() {
 
     const sql = neon(databaseUrl);
     
-    console.log('Fetching random quote from Neon...');
+    // Get category from query params
+    const { searchParams } = new URL(request.url);
+    const category = searchParams.get('category');
+    
+    console.log('Fetching random quote from Neon...', { category });
 
-    // Fetch random quote with author
-    const quotesData = await sql`
-      SELECT 
-        q.id,
-        q.quote_text,
-        a.author_name
-      FROM quotes q
-      INNER JOIN authors a ON q.author_id = a.id
-      ORDER BY RANDOM()
-      LIMIT 1
-    `;
+    // Fetch random quote with author, optionally filtered by category
+    let quotesData;
+    
+    if (category && category !== 'all') {
+      quotesData = await sql`
+        SELECT 
+          q.id,
+          q.quote_text,
+          a.author_name,
+          c.category_name
+        FROM quotes q
+        INNER JOIN authors a ON q.author_id = a.id
+        LEFT JOIN categories c ON q.category_id = c.id
+        WHERE c.category_name = ${category}
+        ORDER BY RANDOM()
+        LIMIT 1
+      `;
+    } else {
+      quotesData = await sql`
+        SELECT 
+          q.id,
+          q.quote_text,
+          a.author_name,
+          c.category_name
+        FROM quotes q
+        INNER JOIN authors a ON q.author_id = a.id
+        LEFT JOIN categories c ON q.category_id = c.id
+        ORDER BY RANDOM()
+        LIMIT 1
+      `;
+    }
 
     if (!quotesData || quotesData.length === 0) {
       console.error('No quotes found in database');
