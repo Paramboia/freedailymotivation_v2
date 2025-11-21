@@ -80,8 +80,10 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json({
+      id: randomQuote.id,
       message: randomQuote.quote_text,
-      heading: `- ${randomQuote.author_name || 'Unknown Author'}`
+      heading: `- ${randomQuote.author_name || 'Unknown Author'}`,
+      category: randomQuote.category_name || ''
     }, { headers });
   } catch (error) {
     console.error('Random quote error:', {

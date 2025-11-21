@@ -65,12 +65,12 @@ export default function FindQuotes() {
         const quoteResponse = await fetch('/api/random-quote');
         const quoteData = await quoteResponse.json();
         setQuote({
-          id: crypto.randomUUID(),
+          id: quoteData.id, // Use real ID from database
           text: quoteData.message,
           author: quoteData.heading.replace('- ', ''),
           likes: 0,
           dislikes: 0,
-          category: ''
+          category: quoteData.category || ''
         });
       } catch (error) {
         console.error('Failed to initialize:', error);
@@ -88,12 +88,12 @@ export default function FindQuotes() {
       const quoteResponse = await fetch(`/api/random-quote${categoryParam}`);
       const quoteData = await quoteResponse.json();
       setQuote({
-        id: crypto.randomUUID(),
+        id: quoteData.id, // Use real ID from database
         text: quoteData.message,
         author: quoteData.heading.replace('- ', ''),
         likes: 0,
         dislikes: 0,
-        category: selectedCategory || ''
+        category: quoteData.category || selectedCategory || ''
       });
     } catch (error) {
       console.error('Error fetching new quote:', error);
@@ -111,12 +111,12 @@ export default function FindQuotes() {
       const quoteResponse = await fetch(`/api/random-quote${categoryParam}`);
       const quoteData = await quoteResponse.json();
       setQuote({
-        id: crypto.randomUUID(),
+        id: quoteData.id, // Use real ID from database
         text: quoteData.message,
         author: quoteData.heading.replace('- ', ''),
         likes: 0,
         dislikes: 0,
-        category: category || ''
+        category: quoteData.category || category || ''
       });
     } catch (error) {
       console.error('Error fetching quote with category:', error);
