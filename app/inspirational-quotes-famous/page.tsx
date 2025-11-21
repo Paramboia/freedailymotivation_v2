@@ -16,6 +16,7 @@ const poppins = Poppins({
 const ClientPageTracker = nextDynamic(() => import('@/components/ClientPageTracker'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Disable caching completely
 
 // Helper function to convert author name to URL-friendly format
 function nameToSlug(name: string) {
