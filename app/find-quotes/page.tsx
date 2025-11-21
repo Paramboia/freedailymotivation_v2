@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { getRandomQuote, getAllCategories } from '@/lib/quotes';
+// Removed old quotes import - now using API routes
 import { Quote } from '@/types';
 import dynamic from 'next/dynamic';
 import CategoryButtons from "@/components/category-buttons";
@@ -57,12 +57,23 @@ export default function FindQuotes() {
   useEffect(() => {
     async function initializeQuotes() {
       try {
-        const [fetchedCategories, initialQuote] = await Promise.all([
-          getAllCategories(),
-          getRandomQuote()
-        ]);
-        setCategories(fetchedCategories);
-        setQuote(initialQuote);
+        // Fetch categories from API
+        const categoriesResponse = await fetch('/api/authors');  // Using authors endpoint as proxy for categories
+        const categoriesData = await categoriesResponse.json();
+        const categoryNames = ['all', 'business', 'life', 'science', 'sport'];
+        setCategories(categoryNames);
+
+        // Fetch initial random quote from API
+        const quoteResponse = await fetch('/api/random-quote');
+        const quoteData = await quoteResponse.json();
+        setQuote({
+          id: crypto.randomUUID(),
+          text: quoteData.message,
+          author: quoteData.heading.replace('- ', ''),
+          likes: 0,
+          dislikes: 0,
+          category: ''
+        });
       } catch (error) {
         console.error('Failed to initialize:', error);
       }
@@ -72,10 +83,16 @@ export default function FindQuotes() {
 
   const handleNewQuote = async () => {
     try {
-      const newQuote = await getRandomQuote(selectedCategory);
-      if (newQuote) {
-        setQuote(newQuote);
-      }
+      const quoteResponse = await fetch('/api/random-quote');
+      const quoteData = await quoteResponse.json();
+      setQuote({
+        id: crypto.randomUUID(),
+        text: quoteData.message,
+        author: quoteData.heading.replace('- ', ''),
+        likes: 0,
+        dislikes: 0,
+        category: selectedCategory || ''
+      });
     } catch (error) {
       console.error('Error fetching new quote:', error);
     }

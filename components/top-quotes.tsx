@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { getMostLikedQuotes, getMostDislikedQuotes } from '@/lib/quotes';
+// Removed old quotes import - functions not implemented in Neon yet
 import { Quote } from '@/types';
 import { Card } from "@/components/ui/card";
 
@@ -11,12 +11,11 @@ export default function TopQuotes() {
 
   useEffect(() => {
     async function fetchTopQuotes() {
-      const [likedQuotes, dislikedQuotes] = await Promise.all([
-        getMostLikedQuotes(5),
-        getMostDislikedQuotes(5)
-      ]);
-      setMostLiked(likedQuotes);
-      setMostDisliked(dislikedQuotes);
+      // Note: getMostLikedQuotes and getMostDislikedQuotes not yet implemented in Neon
+      // TODO: Create API endpoints for these features
+      console.log('Top quotes feature not yet implemented with Neon');
+      setMostLiked([]);
+      setMostDisliked([]);
     }
     fetchTopQuotes();
   }, []);
