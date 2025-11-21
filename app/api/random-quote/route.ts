@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 
-interface Quote {
-  quote_text: string;
-  author_name: string;
-}
-
 // Headers for all responses
 const headers = {
   'Content-Type': 'application/json',

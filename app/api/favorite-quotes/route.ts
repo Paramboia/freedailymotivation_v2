@@ -151,7 +151,7 @@ export async function GET(request: Request) {
     }
 
     // Transform and sort the data
-    let formattedQuotes = quotesQuery.map((quote: any) => ({
+    const formattedQuotes = quotesQuery.map((quote: any) => ({
       id: String(quote.id),
       text: quote.quote_text,
       author: quote.author_name || 'Unknown Author',
