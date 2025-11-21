@@ -1,19 +1,19 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { neon } from '@neondatabase/serverless';
 
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-    const { data, error } = await supabase
-      .from('authors')
-      .select('author_name')
-      .order('author_name');
-
-    if (error) {
-      console.error('Error fetching authors:', error);
-      return NextResponse.json({ error: 'Failed to fetch authors' }, { status: 500 });
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 500 });
     }
+
+    const sql = neon(databaseUrl);
+    const data = await sql`
+      SELECT author_name
+      FROM authors
+      ORDER BY author_name ASC
+    `;
 
     return NextResponse.json(data);
   } catch (error) {

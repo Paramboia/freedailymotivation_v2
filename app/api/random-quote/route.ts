@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-interface Author {
-  author_name: string;
-}
+import { neon } from '@neondatabase/serverless';
 
 interface Quote {
   quote_text: string;
-  authors: Author[] | null;
+  author_name: string;
 }
-
-export const runtime = 'edge';
 
 // Headers for all responses
 const headers = {
@@ -24,63 +18,28 @@ export async function GET() {
   try {
     console.log('Starting random quote fetch...');
     
-    // Verify and log environment variables (without exposing sensitive data)
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const databaseUrl = process.env.DATABASE_URL;
     
-    console.log('Environment check:', {
-      hasUrl: !!supabaseUrl,
-      hasKey: !!supabaseKey,
-      urlLength: supabaseUrl?.length || 0,
-      keyLength: supabaseKey?.length || 0
-    });
-
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('Missing environment variables:', {
-        url: !supabaseUrl ? 'missing' : 'present',
-        key: !supabaseKey ? 'missing' : 'present'
-      });
-      throw new Error('Missing Supabase environment variables');
+    if (!databaseUrl) {
+      console.error('Missing DATABASE_URL environment variable');
+      throw new Error('Missing DATABASE_URL environment variable');
     }
 
-    // Create Supabase client specifically for this request
-    console.log('Creating Supabase client...');
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false
-      }
-    });
+    const sql = neon(databaseUrl);
     
-    console.log('Fetching quotes...');
+    console.log('Fetching random quote from Neon...');
 
-    // Fetch quotes with authors using inner join
-    const { data: quotesData, error } = await supabase
-      .from('quotes')
-      .select(`
-        id,
-        quote_text,
-        authors:authors!inner (
-          author_name
-        )
-      `);
-
-    if (error) {
-      console.error('Supabase query error:', {
-        message: error.message,
-        code: error.code,
-        details: error.details,
-        hint: error.hint
-      });
-      return NextResponse.json(
-        { 
-          error: 'Failed to fetch random quote',
-          details: `Supabase query error: ${error.message}`,
-          code: error.code
-        },
-        { status: 500, headers }
-      );
-    }
+    // Fetch random quote with author
+    const quotesData = await sql`
+      SELECT 
+        q.id,
+        q.quote_text,
+        a.author_name
+      FROM quotes q
+      INNER JOIN authors a ON q.author_id = a.id
+      ORDER BY RANDOM()
+      LIMIT 1
+    `;
 
     if (!quotesData || quotesData.length === 0) {
       console.error('No quotes found in database');
@@ -93,31 +52,17 @@ export async function GET() {
       );
     }
 
-    // Select a random quote
-    const randomIndex = Math.floor(Math.random() * quotesData.length);
-    const randomQuote = quotesData[randomIndex];
+    const randomQuote = quotesData[0];
 
     console.log('Quote fetched successfully:', {
       id: randomQuote.id,
-      hasAuthor: !!randomQuote.authors,
+      hasAuthor: !!randomQuote.author_name,
       quoteLength: randomQuote.quote_text.length
     });
 
-    // Ensure we're treating authors as an array
-    const authors = Array.isArray(randomQuote.authors) 
-      ? randomQuote.authors 
-      : [randomQuote.authors];
-
-    const formattedQuote: Quote = {
-      quote_text: randomQuote.quote_text,
-      authors: authors.map(author => ({ author_name: author.author_name }))
-    };
-
-    console.log('Quote formatted successfully');
-
     return NextResponse.json({
-      message: formattedQuote.quote_text,
-      heading: `- ${formattedQuote.authors?.[0]?.author_name || 'Unknown Author'}`
+      message: randomQuote.quote_text,
+      heading: `- ${randomQuote.author_name || 'Unknown Author'}`
     }, { headers });
   } catch (error) {
     console.error('Random quote error:', {
