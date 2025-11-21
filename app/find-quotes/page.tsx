@@ -58,7 +58,7 @@ export default function FindQuotes() {
     async function initializeQuotes() {
       try {
         // Set categories directly (no API needed for static list)
-        const categoryNames = ['all', 'business', 'life', 'science', 'sport'];
+        const categoryNames = ['business', 'life', 'science', 'sport'];
         setCategories(categoryNames);
 
         // Fetch initial random quote from API
