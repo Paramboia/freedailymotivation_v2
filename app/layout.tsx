@@ -54,14 +54,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://freedailymotivation.com'),
+  metadataBase: new URL('https://www.freedailymotivation.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://freedailymotivation.com',
+    url: 'https://www.freedailymotivation.com',
     title: 'Free Daily Motivation - Inspirational Quotes',
     description: 'Get your daily dose of motivation with inspirational quotes from famous figures across business, sports, science, and life.',
     siteName: 'Free Daily Motivation',
