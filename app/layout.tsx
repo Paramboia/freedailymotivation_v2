@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     siteName: 'Free Daily Motivation',
     images: [
       {
-        url: '/og_image.jpg',
+        url: '/og_image.jpg?v=2',
         width: 1200,
         height: 675,
         alt: 'Free Daily Motivation - Inspirational Quotes',
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     title: 'Free Daily Motivation - Inspirational Quotes',
     description: 'Get your daily dose of motivation with inspirational quotes from famous figures across business, sports, science, and life.',
     images: {
-      url: '/og_image.jpg',
+      url: '/og_image.jpg?v=2',
       alt: 'Free Daily Motivation - Inspirational Quotes',
     },
     creator: '@freedailymotiv',
