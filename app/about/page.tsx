@@ -36,7 +36,7 @@ export default function AboutUs() {
                 Find more details on our <Link href="/terms-policy" className="text-blue-600 hover:underline">Terms and Privacy Policy</Link>.
               </p>
               <p className="mb-4 dark:text-gray-300">
-                A site by <Link href="https://www.linkedin.com/in/miguel-macedo-parente/" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer"> Miguel Macedo Parente</Link>.
+                Built by <Link href="https://miguelparente.com/?ref=miguelos" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Miguel Macedo Parente</Link>.
               </p>
             </div>
             <Link href="/">
