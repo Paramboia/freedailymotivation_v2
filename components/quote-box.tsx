@@ -8,7 +8,7 @@ import { RefreshCw, Copy, Send, ThumbsUp } from "lucide-react";
 import { Quote } from '@/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 // Removed direct database imports - now using API routes
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 import Link from 'next/link';
@@ -26,7 +26,8 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
   const [currentQuote, setCurrentQuote] = useState(quote);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(quote.likes);
-  const { user: _user } = useUser();
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
   const { supabaseUserId } = useSupabaseUser();
 
   useEffect(() => {
@@ -63,6 +64,11 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
   };
 
   const handleLike = async () => {
+    if (!isSignedIn) {
+      openSignIn();
+      return;
+    }
+
     if (!supabaseUserId) {
       console.error('No user ID available');
       return;
@@ -153,18 +159,17 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
               </p>
               
               <div className="flex justify-between items-center">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleLike}
-                      disabled={!supabaseUserId}
-                      className={cn(
-                        "flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-[#444]",
-                        isLiked && "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 dark:hover:from-pink-600 dark:hover:via-purple-600 dark:hover:to-indigo-600"
-                      )}
-                    >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleLike}
+                        className={cn(
+                          "flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-[#444]",
+                          isLiked && "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 dark:hover:from-pink-600 dark:hover:via-purple-600 dark:hover:to-indigo-600"
+                        )}
+                      >
                       <ThumbsUp className={cn(
                         "h-5 w-5",
                         isLiked && "fill-current text-white"
@@ -173,7 +178,7 @@ export default function QuoteBox({ quote, onNewQuote, _isAuthorPage = false, sel
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{!supabaseUserId ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
+                    <p>{!isSignedIn ? "Sign in to like quotes" : isLiked ? "Unlike this quote" : "Like this quote"}</p>
                   </TooltipContent>
                 </Tooltip>
 
